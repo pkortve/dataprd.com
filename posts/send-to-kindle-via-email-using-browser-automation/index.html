@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Send to Kindle via email - using browser automation | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Send to Kindle via email - using browser automation</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>I often read web articles on the Kindle e-reader for less eye strain. In order to achieve that, I use the <a href="https://www.amazon.com/gp/sendtokindle">Send to Kindle</a> browser extension, maintained by Amazon. In the past few years many of Kindle publishing services just came and go, so the official Send to Kindle was always the most stable one to use. However, one important feature is not supported, sending articles from mobile or tablet - by just sending the URL to an email address, not an article&rsquo;s content attached, processable by the @free.kindle.com email addresses. Here, my script is presented, which could run on any machines using Python to check an email box with unread emails containing URLs and send the articles&rsquo; content to the Kindle e-reader.</p>
+<h1></h1>
+<h1 id="approaches">Approaches</h1>
+<ul>
+<li>I&rsquo;ve experimented with a few, supposedly more elegant approaches
+<ul>
+<li>Web page content parsing
+<ul>
+<li>Readability libraries are now maintained by Mercury as an API at <a href="https://mercury.postlight.com/web-parser/">https://mercury.postlight.com/web-parser/</a> - it was not capable of handling special characters (ISO-8859-2 charset, with e.g. accents as ????)</li>
+<li>Used the <a href="https://github.com/buriy/python-readability">Python-readability</a> project, that errored out on some webpages</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>So I decided to leverage the most stable parser for the purpose, the Amazon extension that I use day by day on a manual basis.</p>
+<h1></h1>
+<h1 id="send-to-kindle-via-web-browser-automation---specification">Send to Kindle via web browser automation - Specification</h1>
+<ul>
+<li>Read a Gmail account&rsquo;s specific folder for unread emails
+<ul>
+<li>In the below script, Kindle IMAP label, created in Gmail</li>
+</ul>
+</li>
+<li>Parse the first http(s) URL in the email</li>
+<li>Open up Chrome browser with the send to Kindle extension</li>
+<li>Use the Send to Kindle extension to send the article content to the Kindle</li>
+<li>Mark the messages processed as read</li>
+</ul>
+<h1></h1>
+<h1 id="prerequisites">Prerequisites</h1>
+<ul>
+<li>Windows or Linux</li>
+<li>Python 2.7</li>
+<li>Chrome browser (Firefox was not working with Selenium and Send-To-Kindle extension
+<ul>
+<li>Chrome browser having the <a href="https://www.amazon.com/gp/sendtokindle">Send to Kindle</a> extension installed</li>
+</ul>
+</li>
+<li><a href="https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver">Selenium&rsquo;s Chrome web driver</a> installed</li>
+<li>pip install selenium</li>
+<li>Gmail rule setup, emails sent to <a href="mailto:mail+kindle@gmail.com">mail+kindle@gmail.com</a> should be labeled as Kindle (= put to Kindle IMAP folder)
+<ul>
+<li>Email messages sent to <a href="mailto:your_mail+@gmail.com">your_mail+@gmail.com</a> will arrive to your inbox, but you can setup various filtering rules for managing such emails</li>
+</ul>
+</li>
+</ul>
+<h1></h1>
+<h1 id="script">Script</h1>
+<p>Richly commented Python 2.7 code, reading and processing emails</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gmail_uname = &#39;&#39; #without @gmail.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gmail_password = &#39;&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>imap_folder_of_mails = &#39;Kindle&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>amz_uname = &#39;&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>amz_password = &#39;&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chromepath = &#39;C:/Users/{user}/AppData/Local/Google/Chrome/User Data&#39; #use / and don&#39;t add /Default at the end
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import imaplib # For email parsing
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import time # For waits
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import re
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>from selenium import webdriver #For selenium
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>from selenium.webdriver import ActionChains
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>from selenium.webdriver.common.by import By
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>from selenium.webdriver.common.keys import Keys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>from selenium.webdriver.chrome.options import Options
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def read():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Login to Kindle Imap folder of gmail
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    imap = imaplib.IMAP4_SSL(&#34;imap.gmail.com&#34;, 993)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    imap.login(gmail_uname, gmail_password)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    imap.select(imap_folder_of_mails)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Use search(), not status() to get unread messages
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    status, response = imap.search(None, &#39;(UNSEEN)&#39;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    unread_msg_nums = response[0].split()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Get the content of the unread messages
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    for e_id in unread_msg_nums:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        _, response = imap.fetch(e_id, &#39;(UID BODY[TEXT])&#39;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        emails.append(response[0][1])  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Mark emails as read - not necessary as parsed emails will be marked as read without this command
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # for e_id in unread_msg_nums:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    #    imap.store(e_id, &#39;+FLAGS&#39;, &#39;Seen&#39;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Tuple hosting all the pages to be sent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>emails = [] 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Parse the emails for the URLs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>if emails:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Open the browser
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    options = webdriver.ChromeOptions()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    options.add_argument(&#39;user-data-dir=&#39; + chromepath) #Path to your chrome profile
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    driver = webdriver.Chrome(chrome_options=options)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    actions = ActionChains(driver)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># For each of the websites
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    for email in emails:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        try:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            # Get the first word of the email, that is the URL to be sent to Kindle
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            words = re.findall(r&#39;(https?://S+)&#39;, email)    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            url = words[0]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            print url
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            driver.get(url)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    	# Wait 11 seconds - needed for Send to Kindle extension
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            time.sleep(11)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            # Push SHIFT + K for send to Kindle extension to send the article
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            actions.key_down(Keys.ALT).send_keys(&#39;k&#39;).key_up(Keys.ALT).perform()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>          	# Wait for the article to be sent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            time.sleep(13)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>       	# Login to Amazon, if needed
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            try:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                # Check for Amazon logo - not a necessary step - if not found, jump to exception
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                driver.find_element_by_xpath(&#34;//html/body/div[1]/div[1]/div[3]/div/div/form/div/div/div/h1&#34;) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                # Send the UserID
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element = driver.find_element_by_xpath(&#34;//html/body/div[1]/div[1]/div[3]/div/div/form/div/div/div/div[1]/input&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element.clear()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element.send_keys(amz_uname)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                # Send the Amazon Password
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element = driver.find_element_by_xpath(&#34;//html/body/div[1]/div[1]/div[3]/div/div/form/div/div/div/div[2]/input&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element.clear()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element.send_keys(amz_password)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                # Click the login button
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element = driver.find_element_by_xpath(&#34;//html/body/div[1]/div[1]/div[3]/div/div/form/div/div/div/div[3]/span/span/input&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                element.click() 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                # Wait for parsing by Send to Kindle extension
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                time.sleep(20)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            except:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                print &#34;Already logged in / changed login screen&#34;, sys.exc_info()[0]        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        except:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            print &#34;Unparseable URL in email&#34;, sys.exc_info()[0]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    driver.quit()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    
+</span></span></code></pre></div>
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/selenium/">selenium</a><a href="/tags/browser-automation/">browser automation</a><a href="/tags/kindle/">kindle</a><a href="/tags/send-to-kindle/">send to kindle</a><a href="/tags/send-to-kindle-email/">send to kindle email</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/data-mining-web-selenium-tutorial/">&larr; Data mining from webpages with Selenium Python WebDriver Browser Automation - a Big data tutorial</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/analysis-fundamentals-tutorial/">Weather data analysis and visualization - Big data tutorial Part 1/9 - Fundamentals &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

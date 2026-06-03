@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Top 7 challenges of building a data lake | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Top 7 challenges of building a data lake</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>January 7, 2017</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a> / <a href="/categories/data-security/">Data security</a> / <a href="/categories/data-governance/">Data governance</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>While from the technical perspective, deployment, management and provisioning tools are available to quickly set up a Hadoop cluster, introducing it to the organization is a tough task. Here are the biggest challenges of building a data lake   <strong>1. Understand the purpose and limitations of the technology</strong></p>
+<ul>
+<li>Hadoop environment provides a vendor independent tool-chain for data storage, management and analytics in a scalable fashion - it can manage infinite amount of data and with add-ons makes real-time and data science use-cases available for the enterprise</li>
+<li>Many organizations does not have Big Data. They just load their RDBMS content and get suprised that a 20 node enterprise Hadoop setup&rsquo;s performance is subpar compared with a single PostgreSQL instance. Sure, because the purpose and capabilities are different - we should compare apples with apples after all</li>
+<li>In 95% of the cases stakeholders think that this new technology will substitute their painful proprietary data environment of RDMBSs. It is a highly distributed environment so the case is that is is never capable to substitute proprietary data systems. But it can live well beneath those providing extreme value. The purpose of the data lake is different. Injest data, all of your data, and deal with portions of it without costly ETLs to move it from here to there. Refine your data system, be it processing, reporting or prediction models by slowly adding more datasets.</li>
+</ul>
+<p><strong>2. Security</strong></p>
+<ul>
+<li>In today&rsquo;s world of information security and huge data breaches, a security framework is the most important step when introducing a data lake</li>
+<li>When building a data lake our goal is to have all data at one place and make it available for various teams. But for years our only goal was to make the data generally unavailable (only available to those with permissions)</li>
+<li>Keep in mind that we are dealing with a framework that was built for scientific usage without enterprise in mind, therefore planning and deployment of the security framework should be a well defined sub-project of ours.</li>
+</ul>
+<p><strong>3. Data governance (confidentiality, integrity and availability)</strong></p>
+<ul>
+<li>An RDBMS enforces a schema, also many rules, e.g. you cannot add a string to an integer field. A data lake does not really have such enforcement mechanisms by default - you can put anything, anywhere. What will this lead to? Everybody puts everything, everywhere. You should setup a governance structure</li>
+<li>Policies, procedures, processes, responsible personnel (RACI framework), documentation, a technology enforcing those and rich documentation to avoid chaos. However, constructing such a framework is a tough task.</li>
+<li>So what is the data, who put it there, why is it there, how and when it changes, who owns it? Construct a data dictionary, know your data, the sources and sinks of it and enforce keeping it up-to-date.</li>
+<li>For further information on data governance challenges, take a look at <a href="/posts/data-governance-in-the-big-data-and-hadoop-world-whitepaper/">this whitepaper</a>.</li>
+</ul>
+<p><strong>4. Cost structure of software and support for open-source tools</strong></p>
+<ul>
+<li>Commercial, enterprise data software had huge license costs and relatively not high implementation costs. Everyone understood that when paying for a product, the costs are paid upfront - so as for buying anything in a store</li>
+<li>Now no or minimal license costs are involved - it is simply hard to admit that something almost free can deliver great value</li>
+<li>However, being a new technology, support and fast evolution of the stack requires continuous and not so negligible operation investments</li>
+<li>As the tools are vendor independent there is a shift towards independent contractors providing great service in this space</li>
+<li>When an organization can avoid vendor lock-in to a big IT provider, it simply should and set up a project structure that members could be quickly swapped for enabling agile integration</li>
+<li>To put it simply, there is a need to continuously pay for vendor independent personnel, expertise and not the software license or ever increasing service costs of specific solution providers.</li>
+</ul>
+<p><strong>5. Availability of data experts</strong></p>
+<ul>
+<li>It is easy to find RDBMS analysts with established and well known certificates assuring professional support of the proprietary technology stack</li>
+<li>Unlike with big data - it is not only hard to identify vendors for the various building blocks of the technology, it is hard to understand what expertise is needed for a project - is it DevOps, Linux ops, deployment automation, data science, data analysis, programming in MapReduce, with Spark for Scala, etc. There is no such as a SQL analyst running our ETLs and reporting anymore but a team of professionals with Big Data stack operation, Big Data stack development and data, data science expertise, who should be aware of our problems and subject matter</li>
+<li>Education of the users and stakeholders: responsible knows little of this world - current architects will be challenged to integrate the tools to the enterprise, BI analysts will be having a hard time to compile Scala notebooks. Current RDBMS operators will have hard time to identify data assets around the lake. It is a new paradigm and people should learn, support from professionals of the domain is essential, especially when integration budgets rise into the space of millions of dollars.</li>
+</ul>
+<p><strong>6. Rigid, on-premise operation environment</strong></p>
+<ul>
+<li>Many organizations don&rsquo;t trust the cloud and starts an onsite Big Data cluster. Dealing with network setup, security, sizing, procurement, problems around the data center, support structure often causes years of delays. The integration could be done when the hardware is already at it&rsquo;s end of life-cycle&hellip;</li>
+<li>Cloud enables flexibility. The time needs and performance concerns of onsite deployments complicates data projects as much as cloud is the only option to start with and showcase the value of the technology to win further organizational support on spreading it. POCs should take as little time as possible, therefore infrastructure related questions should be the least of the concerns.</li>
+</ul>
+<p><strong>7. Project management</strong></p>
+<ul>
+<li>Classic waterfall or ad-hoc project management methods won&rsquo;t really work for complex data projects due to time needs and the incapability to manage unknowns of the data: to avoid killing a quick win, agile proof-of-concepts have to be done, first to identify the value and challenges with the data and when accepted, those should be extended to the production phases</li>
+<li>When due to deployment issues the production phase is delayed (see point 5), project members get demotivated. We have not yet dealt with actual data, just building the environment and nobody has the lust anymore to learn the new programming paradigms and data management rules</li>
+<li>Motivation is a key: engineers from various background joins such projects - the knowledge area to learn is huge and while Big Data is a hot topic, 90% of the development efforts goes into the not so joyous ETL scripting.</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/hadoop/">hadoop</a><a href="/tags/data-security/">data security</a><a href="/tags/data-governance/">data governance</a><a href="/tags/data-lake/">data lake</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/">&larr; Evaluation of Apache Kylin 1.5.4.1 with HDP 2.5, performance comparison w Hive</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/performance-test-pig-vs-hive-code-examples/">Performance test of Pig vs Hive with code examples &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

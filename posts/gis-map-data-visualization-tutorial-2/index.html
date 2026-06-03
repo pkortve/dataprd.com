@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 7/9 - Visualizing: GIS &amp; map part 2 | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 7/9 - Visualizing: GIS &amp; map part 2</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-79">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 7/9</h2>
+<h3 id="data-visualization---gis-map-based-using-kartograph---subsection-22">Data visualization - GIS, map based using Kartograph - Subsection 2/2</h3>
+<p>The two examples showcased in the previous part:</p>
+<ul>
+<li><a href="http://kartograph.org/showcase/animated-symbols/">http://kartograph.org/showcase/animated-symbols/</a></li>
+<li><a href="http://kartograph.org/showcase/clustering/">http://kartograph.org/showcase/clustering/</a></li>
+</ul>
+<p>I&rsquo;ve combined the two together:</p>
+<ul>
+<li>Using the files from the animated symbols of the first one and</li>
+<li>Added tooltip data by altering the addSymbol function in the JS section of index.html</li>
+<li>Tooltips containing PRCP data for each decades</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>symbols <span style="color:#0550ae">=</span> map<span style="color:#0550ae">.</span>addSymbols<span style="color:#1f2328">({</span>
+</span></span><span style="display:flex;"><span>type<span style="color:#1f2328">:</span> <span style="color:#0550ae">$</span>K<span style="color:#0550ae">.</span>Bubble<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>data<span style="color:#1f2328">:</span> weatherStations<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>location<span style="color:#1f2328">:</span> function<span style="color:#1f2328">(</span>d<span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#cf222e">return</span> d<span style="color:#0550ae">.</span>ll <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>attrs<span style="color:#1f2328">:</span> symbolAttrs<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>tooltip<span style="color:#1f2328">:</span> function<span style="color:#1f2328">(</span>d<span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#cf222e">return</span> <span style="color:#0550ae">$.</span>trim<span style="color:#1f2328">(</span>d<span style="color:#0550ae">.</span>Weather<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span>Rainfall <span style="color:#0550ae">1900</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1900</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1910</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1910</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1920</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1920</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1930</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1930</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1940</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1940</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1950</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1950</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1960</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1960</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1970</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1970</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1980</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1980</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">1990</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">1990</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+  &#39;</span>Rainfall <span style="color:#0550ae">2000</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">2000</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span><span style="color:#1f2328">;</span>Rainfall <span style="color:#0550ae">2010</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">2010</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;+ &#39;</span>Rainfall <span style="color:#0550ae">2013</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#39; +d[&#39;</span><span style="color:#0550ae">2013</span><span style="color:#0a3069">&#39;]+&#39;</span> mm<span style="color:#0a3069">&#39;; }</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">});</span>
+</span></span></code></pre></div><p>Looking at the map, some tooltip refinement was needed as those were out of the page, due to their large size: As I&rsquo;ve defined a big tooltip to show I&rsquo;ve changed the positioning by altering <em><strong>kartograph.min.js</strong></em> Changing this line <em><strong>kartograph.min.js</strong></em></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>t={position:{target:&#34;mouse&#34;,viewport:e(window),adjust:{x:7,y:7}},show:{delay:20}
+</span></span></code></pre></div><p>to this</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>t={position:{my: &#39;bottom left&#39;, target:&#34;mouse&#34;,viewport:e(window),adjust:{x:7,y:-7}}
+</span></span></code></pre></div><p>By using the <a href="http://qtip2.com/options#position" title="Qtip2 JS plugin documentation">documentation</a> of the <a href="http://qtip2.com/options#position" title="Qtip2 JS plugin">Qtip2 JS plugin</a>. <strong>Download the example diagram of interactive HTML with JQuery and supporting JS files: <a href="/media/Map_diagram.zip" title="Kartograph interactive map">Map_Diagram.zip</a></strong> Hint: <em>should you need to edit your resulting SVG vector map, install <a href="http://www.inkscape.org/en/" title="Inkscape Vector Editor"><strong>Inkscape</strong></a>, an easy to use graphical SVG editor (e.g. delete a polygon, a border of a country, add elements, add text, etc.)</em></p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/sed-linux-example-tutorial/">&larr; Weather data analysis and visualization - Big data tutorial Part 6/9 - SED example</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/html-charts-data-visualization-tutorial/">Weather data analysis and visualization - Big data tutorial Part 8/9 - Visualizing: HTML charts &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

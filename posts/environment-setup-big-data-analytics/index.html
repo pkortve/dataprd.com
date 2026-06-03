@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Environment setup for big data analytics | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Environment setup for big data analytics</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 4, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>This articles covers basic tools and technologies to use when conducting the first steps on big data analysis.</p>
+<ul>
+<li>Linux as the base OS
+<ul>
+<li><a href="https://www.debian.org/" title="Debian Linux">Debian</a></li>
+<li><a href="http://www.ubuntu.com/" title="Ubuntu Linux">Ubuntu</a></li>
+<li><a href="http://www.redhat.com/" title="Redhat Linux">RedHat</a></li>
+<li><a href="http://www.centos.org/" title="CentOS Linux">CentOS</a></li>
+</ul>
+</li>
+<li>For basic data processing:
+<ul>
+<li>Bash shell: environment for running multiple command-line Linux tools for data manipulation
+<ul>
+<li>Comes pre-installed with Linux; check <a href="http://www.gnu.org/software/bash/manual/bashref.html" title="Bash reference manual">Reference manual</a> for usage</li>
+<li>Bash might be not the default Linux shell, <a href="http://unix.stackexchange.com/questions/1373/how-do-i-switch-from-an-unknown-shell-to-bash" title="Switch to Bash shell">see how to switch to it</a></li>
+<li>Learn Bash by <a href="http://linuxconfig.org/bash-scripting-tutorial" title="Bash examples">examples</a></li>
+<li>Most important Linux Commands and phenomenons to master for data manipulation:
+<ul>
+<li><a href="http://www.unix.com/man-page/linux/0/cat/" title="Cat Reference Card">cat</a> - output/concetanate a stream / file</li>
+<li><a href="http://www.unix.com/man-page/POSIX/1/head/" title="Head Reference Card">head</a>, <a href="http://www.unix.com/man-page/freebsd/1/tail/" title="Tail Reference Card">tail</a> - show the head or the tail of a stream / file</li>
+<li><a href="http://www.unix.com/man-page/OpenSolaris/1/grep" title="Grep Reference Card">grep</a> - to filter streams / lines of a file</li>
+<li><a href="http://www.unix.com/man-page/freebsd/1/sed/" title="Sed Reference Card">sed</a> - to manipulate streams / lines of a file</li>
+<li>Regular expressions - used in a wide set of Linux tools
+<ul>
+<li><a href="http://www.grymoire.com/unix/Regular.html" title="Explanation and tutorials">Explanation and tutorials</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AWK - simple data reformatter with compact coding features
+<ul>
+<li><a href="http://www.gnu.org/software/gawk/manual/gawk.html" title="The GNU Awk User's Guide">The GNU Awk User&rsquo;s Guide</a></li>
+<li><a href="http://www.grymoire.com/Unix/Awk.html" title="AWK Tutorials">AWK Tutorials</a></li>
+</ul>
+</li>
+<li>Python - easy to learn, effective programming language with a huge amount of libraries available for various tasks. Great for data manipulation used from the command line.
+<ul>
+<li>Python <a href="http://www.python.org/" title="Python Download">Download</a></li>
+<li><a href="http://www.python.org/doc/" title="Python Documentation">Python Documentation</a></li>
+<li><a href="https://wiki.python.org/moin/BeginnersGuide" title="Python Beginners Guide">Python Beginners Guide</a></li>
+<li><a href="http://www.learnpython.org/" title="Python Tutorials">Python Tutorials</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>And the big data analysis framework chosen based on the type of data analyzed. For the first step tutorials our suggestion would be:
+<ul>
+<li>Hadoop, single cluster setup (can be downloaded pre-installed to a virtual appliance)</li>
+<li>Java based MapReduce programs</li>
+<li>Pig MapReduce query language</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/linux/">linux</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/mapreduce/">MapReduce</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/a-big-data-course/">&larr; A Big Data Course</a>
+      </div>
+      
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

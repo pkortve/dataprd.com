@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 6/9 - SED example | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 6/9 - SED example</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-69">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 6/9</h2>
+<h3 id="manipulating-output-data-with-the-linux-sed-command---sed-example">Manipulating output data with the Linux SED command - SED example</h3>
+<p><a href="http://kartograph.org/showcase/animated-symbols/" title="Kartograph demo">This Kartograph tutorial</a> uses JSON as dataformat, so I needed the same format for my own data that the tutorial uses - example:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[{&#34;Weather&#34;: &#34;ARAD RO&#34;, &#34;ll&#34;: [21.35, 46.1331], &#34;1882&#34;: 742.0 ? {&#34;Weather&#34;: &#34;MURSKA SOBOTA RAKICAN SI&#34;, &#34;ll&#34;: [16.2, 46.7], ? &#34;1962&#34;: 931.0}]
+</span></span></code></pre></div><p>And the resulting data from PIG is not compatible with it, as it have different markup, presented here:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>((ARAD RO,46.1331,21.35),{((1882,742)),((1883,680)),((1884,656)),((1885,656)),((1886,770)),((1887,718)),((1888,467)),((1889,893)),((1890,570)),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>?
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>92))})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>((DEVA RO,45.8667,22.9),?
+</span></span></code></pre></div><p>So I&rsquo;ve used the SED Linux command to alter the resulting dataset from Pig</p>
+<h4 id="sed-example">SED example</h4>
+<p><strong>Sed command 1</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sed &#39;s/(([A-Z ]*),([0-9.]*),([0-9.]*))/[{&#34;Weather&#34;: &#34;1&#34;, &#34;ll: [3, 2], /g&#39; rain_orig.csv &gt; rain_new.csv &amp;&amp; cat rain_new.csv
+</span></span></code></pre></div><p>This command checks for ?<strong>(any number of capital characters)</strong>?, followed by ?<strong>,</strong>? and ?<strong>(any number of 0-9 numbers or ?.?)?</strong> blocks of two separated by a ?,? so is valid for <strong>?((ARAD RO,46.1331,21.35)?</strong> and changes this string to <strong>[{&ldquo;Weather&rdquo;: ?ARAD RO?, &ldquo;ll&rdquo;: [21.35, 46.1331]</strong> The syntax:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sed &#39;s/  /  /g&#39; input &gt; output
+</span></span></code></pre></div><p><em>for each string of the input find:</em></p>
+<p><em>regular expression / change it to something.</em></p>
+<p>1, 2 in SED Command 1 is a link to the regular expressions defined in the first part, in our case, 1 refers to ARAD RO, which is encapsulated in ? ? marks I parse <strong><em>rain_orig.csv</em></strong> , the output of PIG and output it to <strong><em>rain_new.csv</em></strong> <strong>Sed command 2</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sed &#39;s/{((([0-9]*),/&#34;1&#34;: /g&#39; rain_new.csv &gt; rain_new2.csv &amp;&amp; cat rain_new2.csv
+</span></span></code></pre></div><p>The followings are set up as the above, parsing for {((number, and changing it to ?number? ? valid for years <strong>Sed command 3</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sed &#39;s/)),((([0-9]*),/, &#34;1&#34;:/g&#39; rain_new2.csv &gt; rain_new3.csv &amp;&amp; cat rain_new3.csv
+</span></span></code></pre></div><p>While this one parses for )),((numbers), and changes it to numbers So after running all the <strong>3 SED commands</strong> we have the needed results in the format of</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>b&gt;[{&#34;Weather&#34;: &#34;ARAD RO&#34;, &#34;ll&#34;: [21.35, 46.1331], &#34;1882&#34;: 742.0, &#34;1883&#34;: 680.0, ?b&gt;
+</span></span></code></pre></div><p>One manual task left is to properly close the encapsulation at the end of the JSON file by changing <strong>}</strong> , to <strong>}]</strong> The JSON for the Map is available now, and I&rsquo;ve saved it to the directory of the new map visualization example.</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/gis-map-data-visualization-tutorial-1/">&larr; Weather data analysis and visualization - Big data tutorial Part 5/9 - Visualizing: GIS &amp; map</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/gis-map-data-visualization-tutorial-2/">Weather data analysis and visualization - Big data tutorial Part 7/9 - Visualizing: GIS &amp; map part 2 &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

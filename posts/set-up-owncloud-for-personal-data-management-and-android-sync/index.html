@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Set up Owncloud for personal data management and Android sync | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Set up Owncloud for personal data management and Android sync</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-security/">Data security</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>If privacy is a concern and you&rsquo;d be feeling better to host your own CalDav and CarDav (calendar and contact) data but still would like to access it from your smartphone and web Owncloud is a straightforward open-source tool to use. Remark: hosting your email would only be a possibility if high availability server hardware and internet connection is available for use.</p>
+<ul>
+<li>Register a cheap domain with Namecheap and configure <a href="https://www.namecheap.com/support/knowledgebase/category.aspx/11/dynamic-dns">DynamicDNS</a></li>
+<li>Add this script to CRON to regularly update Namecheap on your IP address
+<ul>
+<li>Do this on the Internet interface of your host or OpenWRT router</li>
+<li>Use this script</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>urllib2.urlopen(&#34;http://dynamicdns.park-your-domain.com/update?host=%s&amp;domain=%s&amp;password=%s&#34; % (&#34;subdomain&#34;, &#34;yourdomain.com&#34;, &#34;hash.by.namecheap..82d9365e23be655&#34;))
+</span></span></code></pre></div><ul>
+<li>Set it in crontab</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>crontab -e
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#Add this to run IP update script every 0:05
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        5 0 * * * /path/to/script
+</span></span></code></pre></div><ul>
+<li>Use an Ubuntu Server (14.04 64)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#57606a">#Install Owncloud from Repository</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd <span style="color:#0550ae">~</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>wget http<span style="color:#1f2328">:</span><span style="color:#0550ae">//</span>download<span style="color:#0550ae">.</span>opensuse<span style="color:#0550ae">.</span>org<span style="color:#0550ae">/</span>repositories<span style="color:#0550ae">/</span>isv<span style="color:#1f2328">:</span>ownCloud<span style="color:#1f2328">:</span>community<span style="color:#0550ae">/</span>xUbuntu_14<span style="color:#0550ae">.</span><span style="color:#0550ae">04</span><span style="color:#0550ae">/</span>Release<span style="color:#0550ae">.</span>key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo sh <span style="color:#0550ae">-</span>c <span style="color:#0a3069">&#34;echo &#39;deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/xUbuntu_14.04/ /&#39; &gt;&gt; /etc/apt/sources.list.d/owncloud.list&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo apt<span style="color:#0550ae">-</span>get update
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo apt<span style="color:#0550ae">-</span>get install owncloud
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo apt<span style="color:#0550ae">-</span>get install mysql<span style="color:#0550ae">-</span>server
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Define MySQL password</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Create MySQL table</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo mysql <span style="color:#0550ae">-</span>u root <span style="color:#0550ae">-</span>p <span style="color:#57606a">#DefinedPwHere</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	CREATE DATABASE owncloud<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	GRANT ALL ON owncloud<span style="color:#0550ae">.*</span> to <span style="color:#0a3069">&#39;owncloud&#39;</span><span style="color:#f6f8fa;background-color:#82071e">@</span><span style="color:#0a3069">&#39;localhost&#39;</span> IDENTIFIED BY <span style="color:#0a3069">&#39;database_password&#39;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	exit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Set file permissions</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo chown <span style="color:#0550ae">-</span>R www<span style="color:#0550ae">-</span>data<span style="color:#1f2328">:</span>www<span style="color:#0550ae">-</span>data <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>owncloud
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>owncloud <span style="color:#0550ae">-</span>type d <span style="color:#0550ae">-</span>exec chmod <span style="color:#0550ae">750</span> <span style="color:#1f2328">{}</span> <span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>owncloud <span style="color:#0550ae">-</span>type f <span style="color:#0550ae">-</span>exec chmod <span style="color:#0550ae">640</span> <span style="color:#1f2328">{}</span> <span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Enable Apache SSL</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo a2enmod ssl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo a2ensite default<span style="color:#0550ae">-</span>ssl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo service apache2 reload
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo a2enmod rewrite
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Generate SSL certs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo openssl req <span style="color:#0550ae">-</span>x509 <span style="color:#0550ae">-</span>nodes <span style="color:#0550ae">-</span>days <span style="color:#0550ae">365</span> <span style="color:#0550ae">-</span>newkey rsa<span style="color:#1f2328">:</span><span style="color:#0550ae">2048</span> <span style="color:#0550ae">-</span>keyout <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>apache2<span style="color:#0550ae">/</span>ssl<span style="color:#0550ae">/</span>apache<span style="color:#0550ae">.</span>key <span style="color:#0550ae">-</span>out <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>apache2<span style="color:#0550ae">/</span>ssl<span style="color:#0550ae">/</span>apache<span style="color:#0550ae">.</span>crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Modify Apache configuration</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo nano <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>apache2<span style="color:#0550ae">/</span>sites<span style="color:#0550ae">-</span>available<span style="color:#0550ae">/</span>default<span style="color:#0550ae">-</span>ssl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Add this to the file being edited with Nano</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	ServerName YourServerName
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        ServerAdmin webmaster<span style="color:#f6f8fa;background-color:#82071e">@</span>localhost
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	DocumentRoot <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	        Options FollowSymLinks
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                	AllowOverride None
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                Options Indexes FollowSymLinks MultiViews
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                AllowOverride None
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                Order allow<span style="color:#1f2328">,</span>deny
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                allow from all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	ErrorLog <span style="color:#0550ae">$</span><span style="color:#1f2328">{</span>APACHE_LOG_DIR<span style="color:#1f2328">}</span><span style="color:#0550ae">/</span>error<span style="color:#0550ae">.</span>log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        LogLevel warn
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	CustomLog <span style="color:#0550ae">$</span><span style="color:#1f2328">{</span>APACHE_LOG_DIR<span style="color:#1f2328">}</span><span style="color:#0550ae">/</span>ssl_access<span style="color:#0550ae">.</span>log combined
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        SSLEngine on
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		SSLCertificateFile <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>apache2<span style="color:#0550ae">/</span>ssl<span style="color:#0550ae">/</span>apache<span style="color:#0550ae">.</span>crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		SSLCertificateKeyFile <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>apache2<span style="color:#0550ae">/</span>ssl<span style="color:#0550ae">/</span>apache<span style="color:#0550ae">.</span>key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        <span style="color:#0a3069">&#34;.(cgi|shtml|phtml|php)$&#34;</span><span style="color:#0550ae">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                SSLOptions <span style="color:#0550ae">+</span>StdEnvVars
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	        SSLOptions <span style="color:#0550ae">+</span>StdEnvVars
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	        Options Indexes FollowSymLinks MultiViews
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                	AllowOverride All
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                Order allow<span style="color:#1f2328">,</span>deny
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	        Allow from all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                	<span style="color:#57606a"># add any possibly required additional directives here</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	                <span style="color:#57606a"># e.g. the Satisfy directive (see below for details):</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        	        Satisfy Any
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	        
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo service apache2 restart
+</span></span></code></pre></div><ul>
+<li>Access your Owncloud at http://host/owncloud
+<ul>
+<li>Follow install steps, use MySQL, owncloud as database and use your database password as root or owncloud user</li>
+</ul>
+</li>
+<li><a href="https://owncloud.org/seven/">Use your Owncloud</a></li>
+<li>Configure your router to forward requests of yourdomain:443 to yourowncloudhost:443 to access Owncloud from the Internet</li>
+<li>Configure mobile device sync
+<ul>
+<li><a href="http://davdroid.bitfire.at/configuration">Use DavDroid for your Android phone</a>
+<ul>
+<li>CalDAV: https://yourowncloudhost/remote.php/caldav/</li>
+<li>CardDAV: https://yourowncloudhost/remote.php/carddav/</li>
+</ul>
+</li>
+<li>As most likely a self-signed certificate is used, set it up with <a href="http://cadroid.bitfire.at/">CADroid</a> accessible from FDroid market</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/security/">security</a><a href="/tags/caldav/">caldav</a><a href="/tags/cardav/">cardav</a><a href="/tags/davdroid/">davdroid</a><a href="/tags/namecheap/">namecheap</a><a href="/tags/dyndns/">dyndns</a><a href="/tags/android/">android</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/secure-environment-for-communication/">&larr; Secure Linux based environment - communication for SMEs</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/e-learning-framework-on-line-tests/">E-learning framework, on-line tests &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 8/9 - Visualizing: HTML charts | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 8/9 - Visualizing: HTML charts</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-89">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 8/9</h2>
+<h3 id="data-visualization---interactive-html5-charts-with-flot-js-library">Data visualization - Interactive HTML5 charts with Flot JS Library</h3>
+<p>The two best tools for HTML5 charting I have checked out are</p>
+<ul>
+<li>JQplot</li>
+<li>Flot</li>
+</ul>
+<p>I&rsquo;ve chosen <a href="http://www.flotcharts.org/flot/examples/series-toggle/index.html" title="Flot's interactive chart">Flot&rsquo;s interactive chart</a> with switchable diagrams and came to an idea that it would be nice to also have trend lines for the charts and used it as an <a href="http://www.flotcharts.org/flot/examples/series-toggle/index.html" title="Flot's interactive chart">example</a>. Both tools use propriety data sets, instead of manipulating their example parsers, I&rsquo;ve chosen to alter my data to comply with the provided examples. After altering the files with SED, so as above, I have came to a problem — Hadoop is a parallel system, all processes are analyzing portions of the dataset, resulting dataset is unordered and if it is complex, it can&rsquo;t be ordered with big. So I had data like:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Weather station, (1950, 55), (1940, 50), (1960, 67)
+</span></span></code></pre></div><p>Unordered key-value pairs, which was not a problem for the map tutorial but is a problem for Flot as it plots the graph iterating through the dataset. The dataset have to be ordered by the keys, resembling decades in the above example. I&rsquo;ve dropped SED and chosen to create a Python script to make replacements in the datasets and also to order the key-value pairs for Flot to have it properly shown. <em><strong>Pythonsort.txt</strong></em> , the input file is the resulting file from the last SED command, aka <em><strong>rain_new3.csv</strong></em></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>import collections
+</span></span><span style="display:flex;"><span>with open (&#34;pythonsort.txt&#34;, &#34;r&#34;) as myfile:
+</span></span><span style="display:flex;"><span>    # For each line
+</span></span><span style="display:flex;"><span>    for line in myfile.readlines():
+</span></span><span style="display:flex;"><span>		# If line does not contain &#34;: { 
+</span></span><span style="display:flex;"><span>		if line.find(&#39;&#34;: {&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			# Replace &#34;: { to &#39; - Rain&#34;: {
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;&#34;: {&#39;, &#39; - Rain&#34;: {&#39;)
+</span></span><span style="display:flex;"><span>			# Print string to output
+</span></span><span style="display:flex;"><span>			print string			
+</span></span><span style="display:flex;"><span>		if line.find(&#39;label&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;&#34;,&#39;, &#39; - Rain&#34;,&#39;)
+</span></span><span style="display:flex;"><span>			print string
+</span></span><span style="display:flex;"><span>		if line.find(&#39;data&#39;) == -1 and line.find(&#39;label&#39;) == -1 and line.find(&#39;&#34;: {&#39;) == -1:
+</span></span><span style="display:flex;"><span>			print line
+</span></span><span style="display:flex;"><span>		#Print this line anyway with Flot&#39;s markup on showing lines and data points too
+</span></span><span style="display:flex;"><span>		print &#39;lines: { show: true },points: { show: true },&#39;
+</span></span><span style="display:flex;"><span>		if line.find(&#39;data&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			# Do multiple replace to comply with Pyhton collections
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;data: [[&#39;, &#39;{&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;]]},&#39;, &#39;}&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;,&#39;, &#39;:&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;: &#39;, &#39;, &#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;[&#39;, &#39;&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;]&#39;, &#39;&#39;)
+</span></span><span style="display:flex;"><span>			# Convert the string to a Python collection
+</span></span><span style="display:flex;"><span>			tempco = eval(string)
+</span></span><span style="display:flex;"><span>			# Order the collection of maps by their keys
+</span></span><span style="display:flex;"><span>			od = collections.OrderedDict(sorted(tempco.items()))
+</span></span><span style="display:flex;"><span>			# Convert the ordered collection to a string
+</span></span><span style="display:flex;"><span>			string = str(od)
+</span></span><span style="display:flex;"><span>			# Make multiple replacement to comply with Flot&#39;s input format
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;OrderedDict([(&#39;, &#39;data: [[&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;)])&#39;, &#39;]]},&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;(&#39;, &#39;[&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;)&#39;, &#39;]&#39;)
+</span></span><span style="display:flex;"><span>			print string
+</span></span><span style="display:flex;"><span># Print trendline charts in the input format of Flot
+</span></span><span style="display:flex;"><span>with open (&#34;pythonsort.txt&#34;, &#34;r&#34;) as myfile:
+</span></span><span style="display:flex;"><span>    for line in myfile.readlines():
+</span></span><span style="display:flex;"><span>		if line.find(&#39;&#34;: {&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;&#34;: {&#39;, &#39; - Rain trend&#34;: {&#39;)
+</span></span><span style="display:flex;"><span>			print string	
+</span></span><span style="display:flex;"><span>		if line.find(&#39;label&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;&#34;,&#39;, &#39; - Rain trend&#34;,&#39;)
+</span></span><span style="display:flex;"><span>			print string
+</span></span><span style="display:flex;"><span>		if line.find(&#39;data&#39;) == -1 and line.find(&#39;label&#39;) == -1 and line.find(&#39;&#34;: {&#39;) == -1:
+</span></span><span style="display:flex;"><span>			print line
+</span></span><span style="display:flex;"><span>		print &#39;lines: { show: true },points: { show: true },&#39;
+</span></span><span style="display:flex;"><span>		if line.find(&#39;data&#39;) &gt; 0:
+</span></span><span style="display:flex;"><span>			string = line.replace(&#39;data: [[&#39;, &#39;{&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;]]},&#39;, &#39;}&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;,&#39;, &#39;:&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;: &#39;, &#39;, &#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;[&#39;, &#39;&#39;)
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;]&#39;, &#39;&#39;)
+</span></span><span style="display:flex;"><span>			tempco = eval(string)
+</span></span><span style="display:flex;"><span>			od = collections.OrderedDict(sorted(tempco.items()))
+</span></span><span style="display:flex;"><span>			y = od.values()
+</span></span><span style="display:flex;"><span>			N = len(y)
+</span></span><span style="display:flex;"><span>			x = range(N)
+</span></span><span style="display:flex;"><span>			B = (sum(x * y for i in xrange(N)) - 1./N*sum(x)*sum(y)) / (sum(x**2 for i in xrange(N)) - 1./N*sum(x)**2)
+</span></span><span style="display:flex;"><span>			A = 1.*sum(y)/N - B * 1.*sum(x)/N
+</span></span><span style="display:flex;"><span>			string = &#39;data: [&#39;
+</span></span><span style="display:flex;"><span>			for key, value in od.iteritems(): 	
+</span></span><span style="display:flex;"><span>			    string+=(&#34;[%s, %s], &#34; % (key, A+B*key))
+</span></span><span style="display:flex;"><span>			string+=&#39;]},&#39;
+</span></span><span style="display:flex;"><span>			string = string.replace(&#39;, ]},&#39;, &#39;]},&#39;)
+</span></span><span style="display:flex;"><span>			print string
+</span></span></code></pre></div><p>Be cautious about the opening and closure marks of the dataset ( []{} ), those have to be set manually. I have made some minor cross-browser compatible modifications on the CSS to have many series shown in columns, below the diagram. After adding the resulting dataset to Flot&rsquo;s minimally modified example, toggling of PRCP charts for each weather stations and toggling their trend line became possible. <strong>Download the example Flot diagram and Python script: <a href="/media/Flot_Diagram.zip" title="Flot interactiv chart">Flot_Diagram.zip</a></strong></p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/gis-map-data-visualization-tutorial-2/">&larr; Weather data analysis and visualization - Big data tutorial Part 7/9 - Visualizing: GIS &amp; map part 2</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/analysis-results-presentation-tutorial/">Weather data analysis and visualization - Big data tutorial Part 9/9 - Results &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

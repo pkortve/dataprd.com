@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Powerbi on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/powerbi/</link>
+		<description>Recent content in Powerbi on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 09 Jan 2017 21:13:16 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/powerbi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Configure Apache Kylin with ODBC to work with MS PowerBI</title>
+				<link>https://dataprd.com/posts/configure-apache-kylin-with-odbc-to-wowk-with-ms-powerbi/</link>
+				<pubDate>Mon, 09 Jan 2017 21:13:16 +0000</pubDate>
+				<guid>https://dataprd.com/posts/configure-apache-kylin-with-odbc-to-wowk-with-ms-powerbi/</guid>
+				<description>&lt;h1 id=&#34;powerbi-and-kylin---reporting-from-hadoop-via-odbc&#34;&gt;PowerBI and Kylin - reporting from Hadoop via ODBC&lt;/h1&gt;&#xA;&lt;p&gt;This article discusses how to setup an ODBC interface for Kylin to work with Microsoft PowerBI. See previous article on the &lt;a href=&#34;https://dataprd.com/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/&#34;&gt;detailed dataset, environment setup, on what Kylin is and how to create a cube in Kylin&lt;/a&gt;. For the tutorial&amp;rsquo;s purposes, we will analyze the previously loaded flight delay data with Hadoop, Hive, HBase, Kylin, Kylin ODBC connector and MS PowerBI as an interface. With &lt;a href=&#34;https://powerbi.microsoft.com/en-us/&#34;&gt;PowerBI&lt;/a&gt;, Microsoft provides a capable and simple BI tool for free (desktop version) - as competition heats up, this is a great strategy to gain some market share.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

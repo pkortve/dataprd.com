@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Elastics on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/elastics/</link>
+		<description>Recent content in Elastics on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 13 Mar 2014 13:11:16 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/elastics/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Secure Linux based environment - communication for SMEs</title>
+				<link>https://dataprd.com/posts/secure-environment-for-communication/</link>
+				<pubDate>Thu, 13 Mar 2014 13:11:16 +0000</pubDate>
+				<guid>https://dataprd.com/posts/secure-environment-for-communication/</guid>
+				<description>&lt;p&gt;Data governance procedures includes the management of communication assets (e-mail, instant messaging, phone calls), which are considered as business secrets. While small enterprises should make calculations on using the cloud as the price benefit might worth the negative impact on data management and ownership, a medium/large sized company is suggested to use own solutions with own security and data backup policies. Hereby - &lt;em&gt;in brief&lt;/em&gt; - I present an &lt;em&gt;exemplary cost-effective,&lt;/em&gt; secure setup for small to medium enterprises own infrastructure based on encrypted communication and messaging storage with data security and backup in mind. &lt;em&gt;This is a high-level overview: data governance practices, backup policies, disaster recovery, update procedures, security testing, physical security, etc. are to be defined&lt;/em&gt;. &lt;img src=&#34;https://dataprd.com/images/uploads/2014/08/MidSecure.png&#34; alt=&#34;Middle sized company secure network&#34;&gt; Linux based servers: CentOS or Ubuntu Office 1: ~100-200 users&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

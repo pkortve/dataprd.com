@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Puppet on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/puppet/</link>
+		<description>Recent content in Puppet on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 08 Aug 2014 17:12:52 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/puppet/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Create a Hadoop Cluster easily by using PXE boot, Kickstart, Puppet and Ambari to auto-deploy nodes</title>
+				<link>https://dataprd.com/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/</link>
+				<pubDate>Fri, 08 Aug 2014 17:12:52 +0000</pubDate>
+				<guid>https://dataprd.com/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/</guid>
+				<description>&lt;p&gt;This tutorial is to showcase unattended and automatic install of multiple &lt;strong&gt;CentOS 6.5 x86_64 Hadoop nodes&lt;/strong&gt; pre-configured with &lt;strong&gt;Ambari-agents&lt;/strong&gt; and an &lt;strong&gt;Ambari-server&lt;/strong&gt; host. After configuring automatic install of bare metal (No OS pre-installed) nodes, deploying a Hadoop cluster will be a matter of clicks. The setup uses:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;PXE boot&lt;/strong&gt; (for automatic OS install)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;TFTP server&lt;/strong&gt; (for PXE network install image)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Apache server&lt;/strong&gt; (to serve the kickstart file for unattended install)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;DHCP server&lt;/strong&gt; (for assigning IP addresses for the nodes)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;DNS server&lt;/strong&gt; (for internal domain name resolution)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Puppet-master&lt;/strong&gt; (for automatic configuration management of all hosts in the network, Ambari install included in Puppet manifests)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Ambari-master and agents&lt;/strong&gt; (for managing Hadoop ecosystem deployment)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The setup assumes that the nodes are on the &lt;em&gt;192.168.0.0/255.255.255.0&lt;/em&gt; network, the master is on &lt;em&gt;192.168.0.1&lt;/em&gt; and its hostname is &lt;em&gt;bigdata1.hdp&lt;/em&gt; The domain for the network server by the configuration is &lt;em&gt;hdp&lt;/em&gt; and the clients are named as &lt;em&gt;bigdata[1-254].hdp&lt;/em&gt; &lt;a href=&#34;https://dataprd.com/files/2014/08/provision.zip&#34; title=&#34;Hadoop Kickstart install&#34;&gt; Download all files here (configuration files, PXEBoot Linux image, Kickstart file and custom script for adding a node on the master).&lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

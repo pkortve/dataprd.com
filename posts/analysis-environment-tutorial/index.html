@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 3/9 - Environment | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 3/9 - Environment</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-39">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 3/9</h2>
+<h3 id="preparation---analysis-environment">Preparation - Analysis Environment</h3>
+<p>As the analyzed data is relatively small to get it processed on a single machine, I have spared some time to set-up a new Hadoop cluster ? I have administrative access to a smaller cluster of regular PCs chained into a Hadoop cluster but this one was reserved the time I made the experiment. Anyway, analyzing a small dataset with some big data tools is resulting in the same development efforts as analyzing Petabytes of data on a cluster of thousands of machines? Only it takes less CPU time ? one can still learn the basics on small datasets.</p>
+<h4 id="setting-up-the-environment-choosing-the-tools"><strong>Setting up the environment, choosing the tools</strong></h4>
+<p><strong>OS:</strong> Ubuntu 13.10 Chosen Linux as the power of the shell is great for data manipulation. The &ldquo;magic&rdquo; toolset needed is the following:</p>
+<ul>
+<li>Bash shell and AWK for easy text file procession</li>
+<li>Python for data gathering and manipulation</li>
+<li>A web server to play with for the blog post</li>
+<li>Tools for GIS playground: geographical information system for map based data visualization</li>
+</ul>
+<p>Linux is more suitable and easy to handle for development tasks like the above. I have installed Python and Kartograph: as the weather stations are geographically distributed, I would like to make some graphs based on a map. The open-source Kartograph GIS framework provided me an easy to use alternative for map creation and web-based visualization. It is more or less well documented and have some nice tutorials. Download it and install using <a href="http://kartograph.org/docs/kartograph.py/install-ubuntu.html" title="Kartograph Ubuntu Install Guide">this guide</a>. I have used a virtual machine to run Hortonwork&rsquo;s Hadoop ? it is a pre-configure environment with a handy web-based UI. Pre-installed are Hadoop, Pig, Hive: all the goodies needed for an analysis ? open-source and free, sparing you a lot of hassle by eliminating the need for a lengthy sysadmin session on Hadoop. Installed <a href="https://help.ubuntu.com/community/VirtualBox/Installation" title="Virtualbox Ubuntu">Virtualbox </a>on Ubuntu. Downloaded <a href="http://hortonworks.com/products/hortonworks-sandbox/" title="Hortonworks Sandbox">Hortonworks Hadoop 2 Sandbox bundle</a> for Virtualbox. The analysis was done using a single virtual Hadoop machine. <a href="http://hortonworks.com/products/hortonworks-sandbox/" title="Hortonworks Sandbox">Hortonworks Hadoop</a> is a bundle of open-source tools: Hadoop itself and multiple extras: query languages that are translated to map-reduce jobs, monitoring and job scheduling tools and a great web-based UI to integrate it all called Hue.[/symple_toggle]</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/acquire-dataset-tutorial/">&larr; Weather data analysis and visualization - Big data tutorial Part 2/9 - Dataset</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/hadoop-pig-tutorial/">Weather data analysis and visualization - Big data tutorial Part 4/9 - Hadoop &amp; Pig &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Security of a Hadoop cluster | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Security of a Hadoop cluster</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 14, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-security/">Data security</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>Hadoop is not only a data processing but a data warehouse solution. When we are talking about high amount of data we are talking about business value (the basis of the services) for a company. As Hadoop uses many nodes, network devices all the equipment must have been included in a security plan - no weakest links are allowed. <strong>To secure our assets the following tools and approaches can be used.</strong></p>
+<ul>
+<li>Planning and securing the network (e.g. <a href="/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/" title="Setting up a firewall to secure Hadoop cluster's network with Shorewall">usage of firewalls</a>, securing all network peripherals)</li>
+<li>Access control settings, strengthening authentication - e.g. using a jumbpox server)</li>
+<li>File permissions, user and group access set fine-grained</li>
+<li>Thorough logging</li>
+<li>Securing the environment (OS and daemons outside of Hadoop)
+<ul>
+<li>Not only software and IT system security but physical access control is also taken into account</li>
+</ul>
+</li>
+<li>Described disaster recovery plans and procedures</li>
+<li>Data backup policy</li>
+</ul>
+<p><strong>Securing Hadoop - that was not built by focusing on security.</strong> Some of the problems:</p>
+<ul>
+<li>No fine grain auth: Kerberos</li>
+<li>Data is not encrypted on HDFS</li>
+<li>Hadoop moves its data throughout the network in plain mode (network sniffing possible)</li>
+<li>Hadoop is never used alone (security of other components)</li>
+<li>Backup &amp; recovery is not working as for smaller datasets</li>
+<li>HDFS client spoofing is possible</li>
+</ul>
+<p>Hadoop has a secure mode: <a href="http://hadoop.apache.org/docs/r2.3.0/hadoop-project-dist/hadoop-common/SecureMode.html">http://hadoop.apache.org/docs/r2.3.0/hadoop-project-dist/hadoop-common/SecureMode.html</a> Features:</p>
+<ul>
+<li>Data Encryption on RPC</li>
+<li>Data Encryption on Block data transfer.</li>
+<li>Data Encryption on HTTP</li>
+<li>Permissions for both HDFS and local fileSystem paths</li>
+<li>Standard Linux attributes</li>
+<li>ACL (Access Control List) fine grained instead of standard Linux chmod like setup - <a href="http://hortonworks.com/blog/hdfs-acls-fine-grained-permissions-hdfs-files-hadoop/">http://hortonworks.com/blog/hdfs-acls-fine-grained-permissions-hdfs-files-hadoop/</a></li>
+</ul>
+<p>Tools available:</p>
+<ul>
+<li><a href="http://knox.apache.org/">Apache Knox</a> - The Knox Gateway provides a single access point for all REST interactions with Hadoop clusters. In this capacity, the Knox Gateway is able to provide valuable functionality to aid in the control, integration, monitoring and automation of critical administrative and analytical needs of the enterprise.</li>
+<li><a href="https://github.com/intel-hadoop/project-rhino/">Project Rhino</a> - Protection for private information that limits performance impact. Project Rhino is our open source effort to enhance the existing data protection capabilities of the Hadoop ecosystem to address challenges, and contribute the code back to Apache.</li>
+<li><a href="http://incubator.apache.org/projects/sentry.html">Apache Sentry</a> - Sentry is a highly modular system for providing fine grained role based authorization to both data and metadata stored on an Apache Hadoop cluster.</li>
+</ul>
+<p>The developer community is actively working on the problems to provide solutions out-of-the-box. E.g.</p>
+<ul>
+<li>REST data encryption (Hadoop-9331)</li>
+<li>Token based authentication (MapReduce-5025)</li>
+<li>HBase Per KeyValue security (HBase-6222)</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/hadoop/">hadoop</a><a href="/tags/security/">security</a><a href="/tags/data-security/">data security</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/">&larr; Setting up a firewall to secure a Hadoop cluster&#39;s network with Shorewall</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/data-mining-web-python-mechanize-tutorial/">Data mining from webpages with Python Mechanize Browser Automation - a Big data tutorial &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 1/9 - Fundamentals | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 1/9 - Fundamentals</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-19">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 1/9</h2>
+<h3 id="analysis-fundamentals">Analysis fundamentals</h3>
+<p>This experiment analyses the weather changes in the Carpathian Basin from 1900 to 2014 using a dataset of daily measurements of weather stations nearby our point of experiment. High emphasis is put on interactive visualization, as it is inevitable to make the comprehension of information easy. Big data analytics is gaining a lot of attention. This tutorial is to provide an overview on some open-source tools capable to support distributed analysis on huge datasets. Nonetheless it analysis the weather trends of the Carpathian Basin of Central Europe and provides an easy to use visualization on the changes.</p>
+<h3 id="steps-of-a-big-data-experiment">Steps of a big data experiment</h3>
+<ol>
+<li>Decide what you would like to measure, define your interests</li>
+<li>Do a background research, check sources</li>
+<li>Gather the data</li>
+<li>Decide what information interests you, plan to convert raw data to information</li>
+<li>Measure, analyze</li>
+<li>Evaluate, validate, conclude</li>
+<li>Visualize, communicate</li>
+</ol>
+<p><strong>1. Decide what you would like to measure, define your interests</strong> — Weather data:</p>
+<ul>
+<li>Available for public download</li>
+<li>Gaining a lot of attention due to current weather changes and extremes</li>
+<li>Interests me :)</li>
+</ul>
+<p><strong>2. Do a background research, check sources</strong> — Check what is available:</p>
+<ul>
+<li>Data sources</li>
+<li>Former measurement and experiment data, quality of the data and presentation</li>
+<li>Analysis tools supporting the experiment — a proper toolset can spare a lot of time</li>
+</ul>
+<p><strong>3. Gather the data</strong> — Publicly available and downloadable historical weather data from NOAA — National Climatic Data Center.</p>
+<p><strong>4. Decide what information interests you, plan to convert raw data to information</strong> — Changes of weather, temperature, rainfall, snow levels in my near neighborhood during the last decade and the beginning of the 21st century. Information synthesized must be compatible with the visualization framework too.</p>
+<p><strong>5. Measure, analyze</strong> — I have chosen the more and more popular <a href="/posts/hadoop-pig-tutorial/">Apache Hadoop</a> and its high-level query language, <a href="/posts/hadoop-pig-tutorial/">Pig</a> for a parallel map-reduce based analysis (multiple nodes and threads for handling vast amounts of information). Hadoop is an open-source distributed data analysis tool, which uses a so-called map-reduce method to speed up parallel data analytics on a cluster of machines.</p>
+<p><strong>6. Evaluate, validate, conclude</strong> — Checking if the output is valid — as weather analysis results are available widely, I&rsquo;ve checked statistics of <a href="http://weatherspark.com">other providers</a>: if the results concur, the experiment is valid. Trickier is if you don&rsquo;t have references; in that case, grabbing a smaller dataset out of a bigger one and analyzing it by hand — with another approach and toolset — can help validate the method you&rsquo;ve used for the analysis.</p>
+<p><strong>7. Visualize, communicate</strong> — You have the information you wanted but without the colors and flavors, it is worth nothing — even worse if nobody can get aware of its existence. So do not underestimate this part: create an attractive, search engine friendly report or a scientific publication that is easy to comprehend, to gain some attention for your work efforts. I&rsquo;ve used some interactive web-based charts as HTML5 provides a portable and SEO friendly format for data visualization.</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/send-to-kindle-via-email-using-browser-automation/">&larr; Send to Kindle via email - using browser automation</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/acquire-dataset-tutorial/">Weather data analysis and visualization - Big data tutorial Part 2/9 - Dataset &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

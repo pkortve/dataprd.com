@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Data mining from webpages with Python Mechanize Browser Automation - a Big data tutorial | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Data mining from webpages with Python Mechanize Browser Automation - a Big data tutorial</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="data-mining-from-the-web-with-python-mechanize-browser-automation---big-data-tutorial">Data mining from the web with Python Mechanize Browser Automation - Big data tutorial</h2>
+<p>In this example the Python Mechanize package is used for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) and is to be used when feature-rich Javascript and Ajax website data mining or automated test case setup is to be built. A <a href="/posts/data-mining-web-selenium-tutorial/" title="Data mining from webpages with Selenium Python WebDriver Browser Automation ? a Big data tutorial">Selenium browser automation example can be found here</a>. This rich commented <strong>Python Mechanize Browser Automation example</strong> does the following:</p>
+<ul>
+<li>Logs in to a webpage with custom credentials</li>
+<li>Opens an other page by knowing the session used for login</li>
+<li>Finds a form and two input fields of it
+<ul>
+<li>Adds multiple list elements in a for cycle to the first field
+<ul>
+<li>Adds multiple list elements in an other for cycle to the second field
+<ul>
+<li>Lists the results of the above query</li>
+<li>The list can have multiple sub pages (the list shows limited results and have a pager)
+<ul>
+<li>Checks all the links of the query matching a pattern</li>
+<li><em>LABEL: PAGE</em> - Opens all the links from the next page
+<ul>
+<li>Mines all the unfiltered data from the opened pages</li>
+<li>Goes back to <em>LABEL: PAGE</em> step recursively</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Import Python Mechanize Browser Automation Library
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import mechanize
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Import regular Expressions
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import re
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import collections
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Dropdown values for the forms
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dropdownelements = [&#39;Selection1&#39;, &#39;Selection2&#39;]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dropdownelements2 = [&#39;Selection10&#39;, &#39;Selection20&#39;]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Initialize the browser
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser = mechanize.Browser()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser.set_handle_robots(False)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Simulate Firefox
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser.addheaders = [(&#39;User-agent&#39;, &#39;Firefox&#39;)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Open the page
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser.open(&#34;http://www.tobecheckedpage&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Select the form named login, e.g. in the HTML  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser.select_form(name=&#34;login&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Find the form element named login and add myloginid to it
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser[&#34;login&#34;] = &#34;myloginid&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Find the form element named password and add mypassword to it
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>browser[&#34;password&#34;] = &#34;mypassword&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Click on the submit button
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>response = browser.submit()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># For all dropdownelements
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>for dropdownelement in dropdownelements:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	# For all dropdownelements2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	for dropdownelement2 in dropdownelements2:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Open a page
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		page = browser.open(&#34;http://www.tobecheckedpage/page&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Get the response to console
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		print page.read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Find element by name, e.g. in the HTML 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		browser.select_form(name=&#34;code&#34;)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Find input element option and add dropdownelement as value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		browser.form[ &#39;options&#39; ] = dropdownelement
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Find input element keywords and add dropdownelement2 as value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		browser.form[ &#39;keywords&#39; ] = dropdownelement2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Submit the form
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		browser.submit()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Call recursive checker - as form has been sent, we have the results of the query
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		checklinks(browser, country, job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The recursive query to chech multi pages of search results; check the main part of the code first
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def checklinks(browser, dropdownelements, dropdownelements2):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	# Initialize a second browser with the same properties that the first has
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	browser2 = browser
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	# Get all the links on the search query page
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	for link in browser.links():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# For all links do:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Filter the links that has RegExp in their href
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	    siteMatch = re.compile( &#39;/RegExp&#39; ).search( link.url )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# If link contains RegExp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	    if siteMatch:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Then open the link
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		resp = browser2.follow_link( link )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# And store its content
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		content = resp.get_data()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# Do data mining in the content of the detail page resulting from the query result page
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	# An other for cycle checking all the links on the result page (again)	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	for link in browser.links():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		#Check if the link has the text &#39;Next &gt;&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		siteMatch = re.compile( &#39;Next &gt;&#39; ).search( link.text )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		# If it has
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		if siteMatch:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			# Then follow the link (go to next page of the results)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			resp = browser.follow_link( link )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			# Call recursive checker - as form has been sent, we have the results of the query
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			checklinks(browser, country, job)
+</span></span></code></pre></div>
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/selenium/">selenium</a><a href="/tags/web-data/">web data</a><a href="/tags/data-mining/">data mining</a><a href="/tags/browser-automation/">browser automation</a><a href="/tags/tutorial/">tutorial</a><a href="/tags/example/">example</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/security-of-a-hadoop-cluster/">&larr; Security of a Hadoop cluster</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/data-mining-web-selenium-tutorial/">Data mining from webpages with Selenium Python WebDriver Browser Automation - a Big data tutorial &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Configure Apache Kylin with ODBC to work with MS PowerBI | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Configure Apache Kylin with ODBC to work with MS PowerBI</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>January 9, 2017</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h1 id="powerbi-and-kylin---reporting-from-hadoop-via-odbc">PowerBI and Kylin - reporting from Hadoop via ODBC</h1>
+<p>This article discusses how to setup an ODBC interface for Kylin to work with Microsoft PowerBI. See previous article on the <a href="/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/">detailed dataset, environment setup, on what Kylin is and how to create a cube in Kylin</a>. For the tutorial&rsquo;s purposes, we will analyze the previously loaded flight delay data with Hadoop, Hive, HBase, Kylin, Kylin ODBC connector and MS PowerBI as an interface. With <a href="https://powerbi.microsoft.com/en-us/">PowerBI</a>, Microsoft provides a capable and simple BI tool for free (desktop version) - as competition heats up, this is a great strategy to gain some market share.</p>
+<h2 id="windows-7810-odbc-reporting-client-setup">Windows 7/8/10 ODBC reporting client setup</h2>
+<ul>
+<li><a href="http://kylin.apache.org/docs15/tutorial/odbc.html">Install Kylin ODBC connector</a></li>
+<li><a href="https://powerbi.microsoft.com/en-us/downloads/">Install Microsoft PowerBI</a></li>
+<li>Configure it to your Hadoop cluster&rsquo;s Kylin instance
+<ul>
+<li>Prerequisite is Microsoft Visual C++ 2012 Redistributable 32/64</li>
+<li>Open ODBC 32/64 in Windows search pane (Win+R)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/uploads/2017/01/KylinODBC_1.jpg" alt=""> Add a new KylinODBCDriver DSN</p>
+<ul>
+<li>Set IP/DNS and Port to your Kylin instance, choose your cube</li>
+</ul>
+<p><img src="/images/uploads/2017/01/KylinODBC_2.jpg" alt=""> Detailed Kylin server connection setup via the ODBC driver</p>
+<ul>
+<li>Open PowerBI
+<ul>
+<li>Load data from ODBC</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/uploads/2017/01/KylinODBC_3.jpg" alt=""> Get data via ODBC</p>
+<ul>
+<li>Choose your just created DSN</li>
+</ul>
+<p><img src="/images/uploads/2017/01/KylinODBC_4.jpg" alt=""> Chosee the created Kylin DSN as the ODBC data source     <img src="/images/uploads/2017/01/KylinODBC_5.jpg" alt=""> Choose the cube of interest</p>
+<ul>
+<li>Create a new visualization
+<ul>
+<li>Barchart
+<ul>
+<li>Where axis is CARRIER</li>
+<li>and value is Average of DEPDELAY</li>
+<li><strong>And here we see in PowerBI which carrier had what average of departure delays</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><a href="/images/uploads/2017/01/KylinODBC_6.jpg"><img src="/images/uploads/2017/01/KylinODBC_6-1024x601.jpg" alt=""></a> PowerBI interface on flight delay analysis (click to zoom)</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/interactive-visualization/">interactive visualization</a><a href="/tags/apache-kylin/">apache kylin</a><a href="/tags/powerbi/">powerbi</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/data-governance-in-the-big-data-and-hadoop-world-whitepaper/">&larr; Data Governance in the Big Data and Hadoop world - Whitepaper</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/">Evaluation of Apache Kylin 1.5.4.1 with HDP 2.5, performance comparison w Hive &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

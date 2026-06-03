@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Analysis tutorial with Tableau Desktop | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Analysis tutorial with Tableau Desktop</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>May 11, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>Tableau Desktop supports visual analysis and data discovery, converts the raw information to easy to understand graphical format with interactive charts. No coding is required to create rich visualization. Tableau Business Intelligence toolset have a Desktop, Server and Cloud version (none open-source products but as good as worth a post on the open-bigdata blog). In this post I check its<a href="http://www.tableausoftware.com/products/trial"> Desktop evaluation version</a> that let us connect to many data sources (including Hadoop, MySQL, Excel, Text, &hellip;). I will use <a href="/media/Weather.zip">the same Weather.Csv</a> as in the <a href="/posts/analysis-fundamentals-tutorial/">Hadoop analysis tutorial</a>.</p>
+<blockquote>
+<p><a href="https://www.forbes.com">www.forbes.com</a>: <em>The next Excel.</em> <em>Text editor + spreadsheet + visual analysis</em> <a href="https://www.gartner.com">www.gartner.com</a>: <em>Tableau is a self-contained BI platform with data mashup capabilities and direct data connectors, is one way to move when you are hitting the limits with Excel. ?Tableau has the intuitive, visual-based, interactive data exploration experience that customers love to use and competitors love to imitate.</em></p>
+</blockquote>
+<p>Let&rsquo;s do the <a href="/posts/analysis-results-presentation-tutorial/">same type of charts that has been showcased as a HTML+JS example</a> in the weather analysis tutorial. Now there will be no programming exercises, all will be done in a matter of some clicks. However&hellip; By using Hadoop and query languages we can analyze Petabytes of Data and have a plot drawn while with Tableau Desktop only a single node data analysis is possible, so the dataset must be lot smaller than the Petabyte scale of Hadoop.</p>
+<h2 id="precipitation-data-with-tableau-desktop">Precipitation data with Tableau Desktop</h2>
+<p><a href="/posts/analysis-fundamentals-tutorial/">The example using HTML is available in the Weather Hadoop analysis tutorial.</a> <img src="/images/uploads/2014/08/tableau_tutorial001.jpg" alt=""></p>
+<ul>
+<li>Start-up Tableau Desktop</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial002.jpg" alt=""></p>
+<ul>
+<li>Click on <em>Connect to Data</em> and choose <em>Text file</em> as source - <a href="/media/Weather.zip">Input downloadable here</a></li>
+<li>You can add multiple data sources in <em>File &gt; Open</em>, however we only need the one now</li>
+<li>Click on <em>Load Data</em> and then <em>Go to Worksheet</em></li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial003.jpg" alt=""></p>
+<ul>
+<li>Add <em>Longitude</em> and <em>Latitude</em> as a <em>Dimension</em> attribute (selectable from drop down by clicking on them after dragged to the <em>Columns</em> and <em>Rows</em>)</li>
+<li>Choose <em>Map</em> on the <em>Show Me</em> Panel</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial004.jpg" alt=""></p>
+<ul>
+<li>Add <em>Prcp</em> Measure to the <em>Filters</em>(by drag and drop)</li>
+<li>Get only valid numbers up from 0 in the Filter Tab as the CSV contains -9999 where no measurement data is available those are eliminated</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial005.jpg" alt=""></p>
+<ul>
+<li>Add <em>AVG(Prcp)</em> to the Marks AVG is selectable by clicking on the right on the <em>Prcp</em> mark after dragging it to <em>Marks</em> by selecting <em>Measures</em> &gt; <em>AVG</em></li>
+<li>Click on the left side of it, choose Color to have a Color scale auto assigned dependent on the value of the AVG</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial006.jpg" alt=""></p>
+<ul>
+<li>Do the above again (Add <em>AVG(Prcp)</em> as mark)</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial007.jpg" alt=""></p>
+<ul>
+<li>Now click on the left side of the second <em>AVG(Prcp)</em> mark and choose <em>Size</em> as a <em>Mark Factor</em> This way not only color coding but size became a differentiating factor too</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial008.jpg" alt=""></p>
+<ul>
+<li>Add <em>Year</em> to the <em>Columns</em> values</li>
+<li>Click <em>Filter</em> on the right</li>
+<li>Add <em>*0</em> as <em>a Filter regular expression</em> , that way we will check every decades only so as in the HTML example</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial009.jpg" alt=""></p>
+<ul>
+<li>As a result we can scroll through the decades of AVG(Prcp) / given year (non-decade based AVG but AVG for specific year shown, scrollable by decades)</li>
+</ul>
+<p><img src="/images/uploads/2014/08/tableau_tutorial010.jpg" alt=""></p>
+<ul>
+<li>To generate the <em>AVG(PRCP)/year</em> for each station, this screenshot tells all steps</li>
+<li>Add <em>Year</em> to <em>Columns</em></li>
+<li>Add <em>Station Name</em> and <em>AVG(Prcp)</em> to <em>Rows</em></li>
+<li>Add <em>PRCP filter</em> to filter non-applicable -9999 values out, so as in the above example</li>
+<li>Choose the Continuous Line Diagram type on the Show me panel</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/interactive-visualization/">interactive visualization</a><a href="/tags/data-mining/">data mining</a><a href="/tags/tutorial/">tutorial</a><a href="/tags/tableau/">Tableau</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/">&larr; Create a Hadoop Cluster easily by using PXE boot, Kickstart, Puppet and Ambari to auto-deploy nodes</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/">Setting up a firewall to secure a Hadoop cluster&#39;s network with Shorewall &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

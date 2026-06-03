@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Hive on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/hive/</link>
+		<description>Recent content in Hive on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 09 Jan 2017 20:24:45 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/hive/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Evaluation of Apache Kylin 1.5.4.1 with HDP 2.5, performance comparison w Hive</title>
+				<link>https://dataprd.com/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/</link>
+				<pubDate>Mon, 09 Jan 2017 20:24:45 +0000</pubDate>
+				<guid>https://dataprd.com/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/</guid>
+				<description>&lt;p&gt;&lt;strong&gt;Apache Kylin&lt;/strong&gt; is a data cube solution on top of Hadoop providing an ODBC interface for BI tools. OLAP cubes boosts performance for analytics via using a subset of data, enriched with pre-calculations on specific dimensions of interest. It enables loading dimensions from a Hive data source, therefore accelerating BI tool access via pre-calculating data and adding it to HBase. In our example we have a large dataset of flight information:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Performance test of Pig vs Hive with code examples</title>
+				<link>https://dataprd.com/posts/performance-test-pig-vs-hive-code-examples/</link>
+				<pubDate>Fri, 08 Aug 2014 17:40:07 +0000</pubDate>
+				<guid>https://dataprd.com/posts/performance-test-pig-vs-hive-code-examples/</guid>
+				<description>&lt;p&gt;Performance testing high level Hadoop query languages with &lt;strong&gt;example scripts.&lt;/strong&gt; Analysis of NOAA weather data: Western-European weather stations from 1980 to 2014, daily dataset of temperature (tmin and tmax) and precipitation data (prcp). Dataset is a structured table, non-existent measurement cells are filled with &lt;em&gt;-9999&lt;/em&gt;. &lt;strong&gt;Example:&lt;/strong&gt; STATION,STATION_NAME,DATE,PRCP,TMAX,TMIN GHCND:NLE00109300,STAVENISSE NL,19800101,53,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800102,21,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800103,133,-9999,-9999 &amp;hellip; GHCND:NLE00109202,MARUM NL,20080602,0,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080603,36,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080604,4,-9999,-9999 &amp;hellip; Data size: &lt;strong&gt;1 Gb / 4 Gb / 8 Gb&lt;/strong&gt; &lt;a href=&#34;https://dataprd.com/files/2014/08/w_333_mb.csv.zip&#34;&gt;(the same 333 Mb data file replicated 3 / 12 / 24 times)&lt;/a&gt; HDFS block size: &lt;strong&gt;128 Mb&lt;/strong&gt; Platform:&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,97 @@
+<link type="text/css" href="bootstrap.css" rel="stylesheet">
+<link type="text/css" href="k.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-1.8.3.min.js" ></script>
+<link rel="stylesheet" type="text/css" href="jquery-qtip.css">
+<script type="text/javascript" src="jquery-qtip-min.js"></script>
+<script type="text/javascript" src="raphael-min.js"></script>
+<script type="text/javascript" src="kartograph-min.js"></script>
+<script type="text/javascript" src="chroma-min.js"></script>
+
+<script type="text/javascript">
+   $(function() {
+   
+    $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+    $.fn.qtip.defaults.style.def = false;
+	
+      var map, c, scale, updateMap, symbols,
+         key = '1900',
+         maxRad = 50;
+
+      c = $('#map');
+      c.height(c.width()*.4);
+
+      map = window.m = $K.map('#map');
+
+      map.loadMap('map.svg', function() {
+         map.addLayer('world', {
+            styles: {
+               fill: '#dfdcdc',
+               stroke: '#fff'
+            }
+         });
+
+         $.getJSON('data.json', function(weatherStations) {
+
+            scale = $K.scale.linear(weatherStations, key);
+            colscale = chroma.scale(chroma.brewer.PiYG.slice().reverse());
+
+            function symbolAttrs(Weather) {
+               return {
+                  r: (Weather[key]) /40,  // radius in pixel
+                  stroke: '#fff',
+                  'stroke-width': scale(Weather[key])*1,
+                  fill: colscale(scale(Weather[key])),
+                  'fill-opacity': 0.5,
+               };
+            }
+
+            symbols = map.addSymbols({
+               type: $K.Bubble,
+               data: weatherStations,
+               location: function(d) { return d.ll },
+               attrs: symbolAttrs,
+			   tooltip: function(d) { return $.trim(d.Weather)+'<br>Rainfall 1900: ' +d['1900']+' mm'+ '<br>Rainfall 1910: ' +d['1910']+' mm'+ '<br>Rainfall 1920: ' +d['1920']+' mm'+ '<br>Rainfall 1930: ' +d['1930']+' mm'+ '<br>Rainfall 1940: ' +d['1940']+' mm'+ '<br>Rainfall 1950: ' +d['1950']+' mm'+ '<br>Rainfall 1960: ' +d['1960']+' mm'+ '<br>Rainfall 1970: ' +d['1970']+' mm'+ '<br>Rainfall 1980: ' +d['1980']+' mm'+ '<br>Rainfall 1990: ' +d['1990']+' mm'+  '<br>Rainfall 2000: ' +d['2000']+' mm'+ '<br>Rainfall 2010: ' +d['2010']+' mm'+ '<br>Rainfall 2013: ' +d['2013']+' mm'; }
+            });
+
+            updateMap = function() {
+               key = $('.dataset.btn-primary').data('val');
+               scale = $K.scale.linear(weatherStations, key);
+               symbols.update({
+               }, 300, 'backOut');
+            }
+         });
+      });
+
+      $('.btn').click(function(event) {
+         var tgt = $(event.target), par = tgt.parent();
+         $('.btn', par).removeClass('btn-primary');
+         tgt.addClass('btn-primary');
+         updateMap();
+      });
+   });
+
+</script>
+
+<div>
+   <div id="map">
+
+   </div>
+   <div>
+      <label>Rainfall of</label> 
+      <div class="btn-group" style="display:inline-block">
+         <button class="dataset btn-large btn btn-primary" data-val="1900">1900</button>
+		 <button class="dataset btn-large btn" data-val="1910">1910</button>
+		 <button class="dataset btn-large btn" data-val="1920">1920</button>
+		 <button class="dataset btn-large btn" data-val="1930">1930</button>
+		 <button class="dataset btn-large btn" data-val="1940">1940</button>
+		 <button class="dataset btn-large btn" data-val="1950">1950</button>
+		 <button class="dataset btn-large btn" data-val="1960">1960</button>
+		 <button class="dataset btn-large btn" data-val="1970">1970</button>
+		 <button class="dataset btn-large btn" data-val="1980">1980</button>
+		 <button class="dataset btn-large btn" data-val="1990">1990</button>
+         <button class="dataset btn-large btn" data-val="2000">2000</button>
+		 <button class="dataset btn-large btn" data-val="2010">2010</button>
+         <button class="dataset btn-large btn" data-val="2013">2013</button>
+      </div>
+   </div>
+</div>

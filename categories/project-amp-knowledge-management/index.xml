@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Project &amp;Amp; Knowledge Management on Dataprd.Com</title>
+		<link>https://www.open-bigdata.com/categories/project-amp-knowledge-management/</link>
+		<description>Recent content in Project &amp;Amp; Knowledge Management on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 26 Aug 2017 13:07:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://www.open-bigdata.com/categories/project-amp-knowledge-management/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>IT support for project management processes</title>
+				<link>https://www.open-bigdata.com/posts/it-support-for-project-management-processes/</link>
+				<pubDate>Sat, 26 Aug 2017 13:07:00 +0000</pubDate>
+				<guid>https://www.open-bigdata.com/posts/it-support-for-project-management-processes/</guid>
+				<description>&lt;p&gt;I co-authored lecture notes on IT support for project management processes e-learning book. _&lt;strong&gt;For a full-fledged overview check the lecture notes of IT support for project management processes E-learning course authored by Lajos Jeno Fulop Dr. and Peter Kortvelyesi.&lt;a href=&#34;//www.inf.u-szeged.hu/oktatas/kurzusleirasok/PMTananyag/index.html&#34;&gt; &lt;/a&gt;&lt;/strong&gt;_The course is &lt;a href=&#34;http://www.inf.u-szeged.hu/oktatas/kurzusleirasok/PMTananyag/index.html&#34;&gt;published at the pages of the University of Szeged.&lt;/a&gt; The objective of the course is to provide an overview on the IT tool and system support of modern project management. As for complex projects it is inevitable to have a collaborative tracking system the authors lists the main tools and their usage. The aim is to build on previous project management experience and given knowledge by providing an overview on wide spread &lt;strong&gt;project management****methodologies&lt;/strong&gt; including:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>E-learning framework, on-line tests</title>
+				<link>https://www.open-bigdata.com/posts/e-learning-framework-on-line-tests/</link>
+				<pubDate>Thu, 13 Mar 2014 13:08:56 +0000</pubDate>
+				<guid>https://www.open-bigdata.com/posts/e-learning-framework-on-line-tests/</guid>
+				<description>&lt;p&gt;I&amp;rsquo;ve been involved in lecturing courses on &lt;em&gt;IT support of Project Management&lt;/em&gt; and &lt;em&gt;Big Data&lt;/em&gt; at institutions during the last years. As there have been many participants I&amp;rsquo;ve been looking into solutions to facilitate the homework hand-in and evaluation process and the automated assessment of final tests. &lt;em&gt;The main idea was to support me and not me supporting the system - so an out-of-the-box working tool was preferred.&lt;/em&gt; After some tries on automated test creation with &lt;a href=&#34;https://www.limesurvey.org/en/&#34; title=&#34;https://www.limesurvey.org/en/&#34;&gt;Limesurvey&lt;/a&gt; - which is a great tool for survey creation - I found &lt;a href=&#34;https://moodle.org&#34; title=&#34;https://moodle.org&#34;&gt;Moodle&lt;/a&gt; which supports not only lot easier test creation but the whole e-learning process. The tool is open-source, have a great documentation and great functionality - which of only a few pieces I use regularly. So to share news with a specified group, assign homeworks with deadlines and create automated, shuffled tests - the use-cases I need - it does all. Let&amp;rsquo;s install on a Ubuntu 14.04 Server. In terminal:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>A Big Data Course</title>
+				<link>https://www.open-bigdata.com/posts/a-big-data-course/</link>
+				<pubDate>Wed, 12 Mar 2014 09:26:36 +0000</pubDate>
+				<guid>https://www.open-bigdata.com/posts/a-big-data-course/</guid>
+				<description>&lt;p&gt;The published diagram is to detail a setup of a Big Data Course.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Fundamentals on databases (SQL and NoSQL), statistics (the R framework) and graph databases&lt;/li&gt;&#xA;&lt;li&gt;The focus is on the Hadoop eco-system and it&amp;rsquo;s programming paradigm, MapReduce&lt;/li&gt;&#xA;&lt;li&gt;MapReduce is available to be used with easier to master high level query languages like Pig and Hive&lt;/li&gt;&#xA;&lt;li&gt;While Hadoop is for batch processing there are other usage areas:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Real-time data access by HBase NoSQL daemon&lt;/li&gt;&#xA;&lt;li&gt;Fast but lower data volume processor, Spark&lt;/li&gt;&#xA;&lt;li&gt;Machine learning framework that can be run on top of Hadoop: Mahout&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;To be able to use these tools a well built, secure cluster is to be planned and developed, then operated securly&lt;/li&gt;&#xA;&lt;li&gt;After the data analysis is done, final steps of visualization are detailed - to make an impact by using the achieved analytic results&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;A &lt;a href=&#34;http://www.u-szeged.hu/tanrend?browse=kurzus&amp;amp;kurzusId=1591460&amp;amp;ciklusId=2014-2015-1#browse&#34;&gt;derivative of the course&lt;/a&gt; is held at the University of Szeged. &lt;a href=&#34;https://www.open-bigdata.com/wp-content/uploads/2014/08/Course.png&#34;&gt;&lt;img src=&#34;https://www.open-bigdata.com/wp-content/uploads/2014/08/Course.png&#34; alt=&#34;Big Data Course&#34;&gt;&lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

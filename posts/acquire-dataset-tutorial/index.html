@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 2/9 - Dataset | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 2/9 - Dataset</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-29">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 2/9</h2>
+<h3 id="preparation---dataset">Preparation - Dataset</h3>
+<p>Weather data from NOAA — National Climatic Center — is accessible using a great toolset that lets you select your area of interest on a map interactively. Custom dataset is downloadable via the <a href="http://www.ncdc.noaa.gov/cdo-web/datasets">NOAA map tool</a>.</p>
+<p>The detailed experiment dataset used in this tutorial is <strong><a href="/media/Weather.zip" title="Download historical weather data of the Carpathian Basin">downloadable here: Weather.zip</a></strong>.</p>
+<h4 id="the-experiment-weather-dataset-covers"><strong>The experiment weather dataset covers:</strong></h4>
+<p>Weather stations and their location of the Carpathian Basin, daily historical data from 01.01.1900 to 14.02.2014.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Station ID</th>
+					<th>Location</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>GHCND:UPM00033397</td>
+					<td>SAMBOR, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033631</td>
+					<td>UZHHOROD, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROM00015085</td>
+					<td>BISTRITA, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033634</td>
+					<td>BEREGOVO, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:LOE00105562</td>
+					<td>HURBANOVO, LO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033398</td>
+					<td>DROHOBYCH, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033633</td>
+					<td>MEJGOR E, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROM00015280</td>
+					<td>VARFU OMUL, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00100898</td>
+					<td>BAIA MARE, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033638</td>
+					<td>KHUST, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:SIE00115196</td>
+					<td>MURSKA SOBOTA RAKICAN, SI</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108890</td>
+					<td>CARANSEBES, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108891</td>
+					<td>CEAHLAU TOACA, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033524</td>
+					<td>DOLINA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:SIE00115096</td>
+					<td>VELIKI DOLENCI, SI</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00100903</td>
+					<td>DROBETA TURNU S., RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00100902</td>
+					<td>CLUJ NAPOCA, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:LO000011934</td>
+					<td>POPRAD TATRY, LO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00100904</td>
+					<td>TG JIU, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033645</td>
+					<td>YAREMCHA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:RIE00111909</td>
+					<td>NOVI SAD, RB</td>
+			</tr>
+			<tr>
+					<td>GHCND:AUW00034165</td>
+					<td>VIENNA, AU</td>
+			</tr>
+			<tr>
+					<td>GHCND:HU000012942</td>
+					<td>PECS POGANY, HU</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108899</td>
+					<td>RAMNICU VALCEA, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00100829</td>
+					<td>ARAD, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108898</td>
+					<td>OCNA SUGATAG, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:HRE00105203</td>
+					<td>OSIJEK, HR</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108894</td>
+					<td>DEVA, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033647</td>
+					<td>RAKHOV, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108897</td>
+					<td>MIERCUREA CIUC, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033646</td>
+					<td>POGEGEVSKAYA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033518</td>
+					<td>NIGNIY STUDENIY, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:ROE00108901</td>
+					<td>SIBIU, RO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033514</td>
+					<td>VELIKIY BEREZNY, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:LOE00116344</td>
+					<td>KOSICE, LO</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033515</td>
+					<td>PLAY, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033516</td>
+					<td>SLAVSKO, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033657</td>
+					<td>SELIATYN, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033517</td>
+					<td>NIGNIE VOROTA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:AU000005901</td>
+					<td>WIEN, AU</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033511</td>
+					<td>TURKA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:RIE00100818</td>
+					<td>BELGRADE OBSERVATORY, RB</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033513</td>
+					<td>STPIY, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:UPM00033651</td>
+					<td>KOLOMYIA, UP</td>
+			</tr>
+			<tr>
+					<td>GHCND:LOE00116364</td>
+					<td>ORAVSKA LESNA, LO</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>The data format of the rows of the experiment dataset:</strong> STATION,STATION_NAME,ELEVATION,LATITUDE,LONGITUDE,DATE,PRCP,SNWD,SNOW,TMAX,TMIN,WESD Where:</p>
+<ul>
+<li>WESD - Water equivalent of snow on the ground (tenths of mm)</li>
+<li>TMAX - Maximum temperature (tenths of degrees C)</li>
+<li>SNWD - Snow depth (mm)</li>
+<li>SNOW - Snowfall (mm)</li>
+<li>PRCP - Precipitation (tenths of mm)</li>
+<li>TMIN - Minimum temperature (tenths of degrees C)</li>
+</ul>
+<p><strong>Example from the CSV:</strong> Remark: <em>-9999 marks no measurement data is available, rows with all -9999 measurement data are not in the CSV</em></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610101,0,-9999,-9999,24,-14,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610102,0,-9999,-9999,53,-21,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610103,0,-9999,-9999,102,-20,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610104,0,-9999,-9999,124,-18,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610105,0,-9999,-9999,132,44,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610106,0,-9999,-9999,60,-13,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610107,0,-9999,-9999,67,-16,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610108,0,-9999,-9999,8,-46,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610109,0,-9999,-9999,-8,-55,-9999
+</span></span><span style="display:flex;"><span>GHCND:ROE00108901,SIBIU RO,444,45.8,24.15,19610110,15,-9999,-9999,6,-18,-9999
+</span></span></code></pre></div>
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/analysis-fundamentals-tutorial/">&larr; Weather data analysis and visualization - Big data tutorial Part 1/9 - Fundamentals</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/analysis-environment-tutorial/">Weather data analysis and visualization - Big data tutorial Part 3/9 - Environment &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Privacy on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/privacy/</link>
+		<description>Recent content in Privacy on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 13 Mar 2014 13:13:23 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/privacy/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Data security on Android</title>
+				<link>https://dataprd.com/posts/data-security-on-android/</link>
+				<pubDate>Thu, 13 Mar 2014 13:13:23 +0000</pubDate>
+				<guid>https://dataprd.com/posts/data-security-on-android/</guid>
+				<description>&lt;p&gt;The biggest data generator is in our pockets - so securing it to protect privacy is the very first step to do before starting to use a device. Steps to secure Android&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Remove all non-needed apps&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Acquire root permissions on your phone (phone specific, use &lt;a href=&#34;http://forum.xda-developers.com/&#34;&gt;XDA forum&lt;/a&gt;)&lt;/li&gt;&#xA;&lt;li&gt;Use &lt;a href=&#34;https://play.google.com/store/apps/details?id=com.keramidas.TitaniumBackup&amp;amp;hl=hu&#34;&gt;Titanium Backup&lt;/a&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Backup all your data&lt;/li&gt;&#xA;&lt;li&gt;Freeze or uninstall all non necessary programs&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Remove all which is vendor specific (Samsung, Sony, MIUI fork, &amp;hellip;)&lt;/li&gt;&#xA;&lt;li&gt;Remove all Google packages&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Disable all unused or privacy wise dangerous services with &lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=2392490&#34;&gt;Disable Services&lt;/a&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;If some vital functions are not working you can re-enable it&lt;/li&gt;&#xA;&lt;li&gt;Regularly, apps with disabled services still work (e.g. disabling LocationAccess for Facebook app)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://dataprd.com/images/uploads/2014/08/DisableServices.jpg&#34; alt=&#34;DisableServices&#34;&gt; &lt;img src=&#34;https://dataprd.com/images/uploads/2014/08/DisableServices.png&#34; alt=&#34;DisableServices&#34;&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

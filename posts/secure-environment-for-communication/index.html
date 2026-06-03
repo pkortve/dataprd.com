@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Secure Linux based environment - communication for SMEs | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Secure Linux based environment - communication for SMEs</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-security/">Data security</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>Data governance procedures includes the management of communication assets (e-mail, instant messaging, phone calls), which are considered as business secrets. While small enterprises should make calculations on using the cloud as the price benefit might worth the negative impact on data management and ownership, a medium/large sized company is suggested to use own solutions with own security and data backup policies. Hereby - <em>in brief</em> - I present an <em>exemplary cost-effective,</em> secure setup for small to medium enterprises own infrastructure based on encrypted communication and messaging storage with data security and backup in mind. <em>This is a high-level overview: data governance practices, backup policies, disaster recovery, update procedures, security testing, physical security, etc. are to be defined</em>. <img src="/images/uploads/2014/08/MidSecure.png" alt="Middle sized company secure network"> Linux based servers: CentOS or Ubuntu Office 1: ~100-200 users</p>
+<pre><code>* Server 1 (Medium) 
+  * VPN connection (OpenVPN) 
+    * VPN tunnel for Office2
+    * VPN tunnel for mobile workers
+  * DNS server (Bind)
+  * DHCP server (DHCPd)
+  * Firewall (IPTables with Shorewall) 
+    * NET to FW: ALLOW E-MAIL, SSH, VPN ports
+    * NET to FW and LOC: REJECT
+  * E-mail 
+    * Postfix server with SSL 
+      * SMTPs
+    * Dovecot mail server 
+      * IMAPs
+    * Alternative: Zimbra collaboration suite with calendar and file sharing capability
+  * Instant messaging 
+    * XAMPP
+  * VoIP 
+    * Elastics bundle
+    * Harder alternative: Asterisk
+  * File server 
+    * Owncloud with Dropbox-like services, CalDav and CarDav calendar and contact sync and web interface 
+      * Alternative: Samba for network file system
+      * Alternative: Zimbra collaboration suite with calendar and file sharing capability
+    * RSync of all data on VPN to Office2 NAS every night
+  * Nagios with configured alerts (e-mail, SMS)
+  * LDAP (OpenLDAP)
+  * SSH (OpenSSH)
+  * Puppet for configuration management
+* Server 2 (Medium) 
+  * Server 1 mirrored, heartbeat with automatic failover
+  * Puppet for configuration management
+</code></pre>
+<ul>
+<li>Office 2: ~10-20 users
+<ul>
+<li>Server3 (Micro)
+<ul>
+<li>VPN connection to Office1 with OpenVPN
+<ul>
+<li>All connections through Office1 Firewall</li>
+</ul>
+</li>
+<li>Firewall (IPTables with OpenWRT)</li>
+</ul>
+</li>
+<li>NAS with RAID for data backup</li>
+</ul>
+</li>
+<li>Mobile workers
+<ul>
+<li>Access e-mail <em>only</em> without VPN (CalDav and CarDav can be configured too by firewall HTTP allow and HTTPd .htaccess tweaks)</li>
+<li>Access file share, VoIP and Instant messaging, Office1 internal network with VPN</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/linux/">linux</a><a href="/tags/shorewall/">shorewall</a><a href="/tags/firewall/">firewall</a><a href="/tags/caldav/">caldav</a><a href="/tags/cardav/">cardav</a><a href="/tags/data-security/">data security</a><a href="/tags/communication/">communication</a><a href="/tags/postfix/">postfix</a><a href="/tags/zimbra/">zimbra</a><a href="/tags/ldap/">ldap</a><a href="/tags/ssh/">ssh</a><a href="/tags/nagios/">nagios</a><a href="/tags/owncloud/">owncloud</a><a href="/tags/asterisk/">asterisk</a><a href="/tags/elastics/">elastics</a><a href="/tags/openvpon/">openvpon</a><a href="/tags/dhcpd/">dhcpd</a><a href="/tags/bind/">bind</a><a href="/tags/xampp/">xampp</a><a href="/tags/smtps/">smtps</a><a href="/tags/imaps/">imaps</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/data-security-on-android/">&larr; Data security on Android</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/set-up-owncloud-for-personal-data-management-and-android-sync/">Set up Owncloud for personal data management and Android sync &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

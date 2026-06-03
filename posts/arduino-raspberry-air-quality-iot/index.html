@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>August 26, 2017</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>I was very interested in monitoring the surrounding air&rsquo;s quality, so I built a box that monitors Particle Matters (PM), gas concentrations, temperature and humidity. The historical data is persisted and accessible via the network ? translating to a typical IOT use case. The box built is based on Arduino with its sensors and a RaspberryPi. Arduino is a great platform for electronics prototyping with a convenient development IDE ? it allows to connect sensors to the board and share the data via multiple interfaces (such as serial port, attached SD card, network, etc.). The networking and data persistence are solved via a Raspberry Pi Zero W, providing SD-card based data plotting, having a host and guest Wifi network for data access and data sharing with cloud providers.</p>
+<h2 id="specification">Specification</h2>
+<ul>
+<li>Start measurement as soon as powered on ? if power is interrupted, have the ability to resume without user interactions</li>
+<li>Store historic measurements</li>
+<li>Be capable of logging in to an own SSID: AirQuality Wifi network to read sensor data</li>
+<li>Join preconfigured Wifi networks automatically</li>
+<li>Every 30 seconds, share the following data on the LCD screen</li>
+<li>Every 5 minutes, persist 10 records to the SD card /air/data.csv (to spare the SD Card&rsquo;s longevity via batch jobs)</li>
+</ul>
+<p><strong>CSV format:</strong> DD/MM/YYYY;HH:MM:SS;WindDeg;WindSpeed;Start_Time;PM_Ratio;PM_Conc.;MQ_Raw;Temperature;Humidity</p>
+<table>
+	<thead>
+			<tr>
+					<th><strong>Field</strong></th>
+					<th><strong>Format</strong></th>
+					<th><strong>Source</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Date</td>
+					<td>String, DD/MM/YYYY</td>
+					<td>RPI</td>
+			</tr>
+			<tr>
+					<td>Time</td>
+					<td>String, HH:MM:SS</td>
+					<td>RPI</td>
+			</tr>
+			<tr>
+					<td>Wind_Degrees</td>
+					<td>3 char Stringe.g. NNW</td>
+					<td>RPI, Openweathermaps API</td>
+			</tr>
+			<tr>
+					<td>Wind_Speed</td>
+					<td>Float, mph</td>
+					<td>RPI, Openweathermaps API</td>
+			</tr>
+			<tr>
+					<td>Start_Time</td>
+					<td>Int, minutes passed</td>
+					<td>Arduino</td>
+			</tr>
+			<tr>
+					<td>PM_Ratio</td>
+					<td>Float, sensor reading of DSM501A</td>
+					<td>Arduino</td>
+			</tr>
+			<tr>
+					<td>PM_Concentration</td>
+					<td>Based on the ration to PM ug/m3 curve of DSM501A</td>
+					<td>Arduino</td>
+			</tr>
+			<tr>
+					<td>MQ_Raw</td>
+					<td>Integer, based on the readier of MQ135</td>
+					<td>Arduino</td>
+			</tr>
+			<tr>
+					<td>Temperature</td>
+					<td>Float, based on the readier of DHT22</td>
+					<td>Arduino</td>
+			</tr>
+			<tr>
+					<td>Humidity</td>
+					<td>Float, based on the readier of DHT22</td>
+					<td>Arduino</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="hardware">Hardware</h2>
+<p>The costs were incredibly low - on the other hand, the efforts invested were rather on the high end. All the parts were coming from Ebay / Aliexpress</p>
+<table>
+	<thead>
+			<tr>
+					<th><strong>Hardware</strong></th>
+					<th><strong>Costs</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong><strong>Data collection</strong></strong></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>Arduino Uno R3</td>
+					<td>4 $</td>
+			</tr>
+			<tr>
+					<td>Raspberry Pi Zero W</td>
+					<td>10 $</td>
+			</tr>
+			<tr>
+					<td>8 GB MicroSD card</td>
+					<td>5 $</td>
+			</tr>
+			<tr>
+					<td><strong><strong>Sensors</strong></strong></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>DSM501A Dust Sensor</td>
+					<td>5 $</td>
+			</tr>
+			<tr>
+					<td>IIC/I2C 1602 LCD Display Module</td>
+					<td>3 $</td>
+			</tr>
+			<tr>
+					<td>DHT22 Temperature &amp; humidity</td>
+					<td>3 $</td>
+			</tr>
+			<tr>
+					<td>MB102 3.3v, 5v solderless power module for 6 components</td>
+					<td>1 $</td>
+			</tr>
+			<tr>
+					<td>MQ135 Quality Sensor Hazardous Gas Detection Module For Arduino</td>
+					<td>1.5 $</td>
+			</tr>
+			<tr>
+					<td><strong><strong>Power, cables, misc</strong></strong></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>Chocolate paperboard box</td>
+					<td>Found it in the drawer</td>
+			</tr>
+			<tr>
+					<td>Wiring Arduino components: Cable kit - 120pcs 10cm Male to Male + Female to Male + Female to Female Jumper Wire Dupont Cables, multiple color</td>
+					<td>2 $</td>
+			</tr>
+			<tr>
+					<td>Arduino to Raspberry comm. &amp; power: USB-B male to USB male cable (printer cable)</td>
+					<td>2 $</td>
+			</tr>
+			<tr>
+					<td>Arduino to Raspberry comm. &amp; power: Adapter: Micro USB male to USB female adapter to connect Rapsberry Pi Micro USB data port to Arduino via USB-B male to USB male cable</td>
+					<td>1 $</td>
+			</tr>
+			<tr>
+					<td>Powering Raspberry: Micro USB to USB male cable</td>
+					<td>1 $</td>
+			</tr>
+			<tr>
+					<td>Powering sensors: Mini USB male to USB male cable powering the MB102 power module via USB. <em>Alternatively a USB power boost line DC 5V to DC 9V / 12V Step UP Module USB Converter Adapter Cable 2.1x5.5mm Plug for would work as MB102 power module has a round 9-12V input port as well</em></td>
+					<td>1 $</td>
+			</tr>
+			<tr>
+					<td>Powering sensors: MB102 power module for powering an MB102 breadboard or 6 Arduino components</td>
+					<td>1 $</td>
+			</tr>
+			<tr>
+					<td>Charger: Blitzwolf 2 port, 2 * 2.4 A USB charger for powering the components</td>
+					<td>5 $</td>
+			</tr>
+			<tr>
+					<td><strong>Sum</strong></td>
+					<td>~45 $</td>
+			</tr>
+	</tbody>
+</table>
+<p><a href="/images/uploads/2017/08/AirQ1.jpg"><img src="/images/uploads/2017/08/AirQ1-1017x1024.jpg" alt=""></a></p>
+<p><em>Air quality monitor hardware - I</em></p>
+<p><a href="/images/uploads/2017/08/AirQ2.jpg"><img src="/images/uploads/2017/08/AirQ2-941x1024.jpg" alt=""></a></p>
+<p><em>Air quality monitor hardware - II</em></p>
+<h2 id="wiring">Wiring</h2>
+<h3 id="power">Power</h3>
+<p>The MB102 power module&rsquo;s 2 channels are both set to 5V, powering all 4 sensors; meaning that the VCC and GND pins of the devices are wired in accordance with the sensors</p>
+<ul>
+<li>DHT22 Temperature</li>
+<li>MQ135 Air quality</li>
+<li>IIC/I2C LCD</li>
+<li>DHT501A Dust</li>
+</ul>
+<h3 id="arduino-side-wiring">Arduino side wiring</h3>
+<ul>
+<li>A0 analog goes to A0 of MQ135</li>
+<li>A4 goes to IIC/I2C LCD&rsquo;s SDA</li>
+<li>A5 goes to IIC/I2C LCD&rsquo;s SCL</li>
+<li>D2, digital goes to the only one Digital out of DHT22 Temperature</li>
+<li>D8, digital goes to the 3rd (middle) digital pin of the DHT501A Dust</li>
+</ul>
+<h3 id="connecting-the-raspberry-pi-and-arduino-together--via-usb-with-serial-protocol">Connecting the Raspberry Pi and Arduino together ? via USB with serial protocol</h3>
+<ul>
+<li>Micro USB to USB male is going to the Raspberry&rsquo;s power port and to the charger</li>
+<li>The Raspberry powers the Arduino on its second USB port via a micro USB to USB female adapter and USB male to USB-B male (printer) cable; such case interference of Raspberry power input and MB102 adapter&rsquo;s power could be avoided. This is also the connection for the Arduino to Raspberry serial communication protocol via USB, so that the Raspberry and Arduino can communicate with each other</li>
+<li>Mini USB male to USB male cable is going from the charger towards the MB102 power module</li>
+</ul>
+<h2 id="sensors">Sensors</h2>
+<h3 id="dht22-temperature--humidity-sensor">DHT22 temperature &amp; humidity sensor</h3>
+<p>A surprisingly high precision sensor. Also, super easy to use via its digital channel and library available. A great tutorial for the DHT22 is available here - <a href="/files/2017/08/DHT22HowTo_1.pdf">Download saved PDF from blog</a> - <a href="http://www.instructables.com/id/How-to-use-DHT-22-sensor-Arduino-Tutorial/">http://www.instructables.com/id/How-to-use-DHT-22-sensor-Arduino-Tutorial/</a></p>
+<h3 id="mq135-gas-sensor">MQ135 gas sensor</h3>
+<p>Returns an analog voltage based on gas concentration in the environment. It detects NH3, NOx, alcohol, Benzene, smoke and CO2.</p>
+<ul>
+<li>The higher the value, the higher the gas concentration</li>
+<li>Unfortunately, with home methods, it&rsquo;s almost impossible to calibrate</li>
+<li>It needs a burn-in period (running for 2 days continuously) to stabilize measurements</li>
+<li>Measurements are correlating highly with temperature and humidity</li>
+</ul>
+<p>I experimented a lot by using the datasheet&rsquo;s curves but as the sensor has one value outputted while measuring various gases and I cannot really know when the air could be considered as clean as atmospheric air (with cca 400 PPM CO2), it is hard to translate the values. Still, spikes will show gas concentration increase. All in all, I just use the bear reading of the sensor&rsquo;s analog voltage output and I&rsquo;m not trying to translate it due to the above problem. Datasheet - <a href="/files/2017/08/DHT22HowTo_1.pdf">Download saved PDF from blog</a> - <a href="https://www.olimex.com/Products/Components/Sensors/SNS-MQ135/resources/SNS-MQ135.pdf">https://www.olimex.com/Products/Components/Sensors/SNS-MQ135/resources/SNS-MQ135.pdf</a></p>
+<h4 id="mq135-sensor-readings"><strong>MQ135 sensor readings</strong></h4>
+<p><em>Note: MQ135 sensors could differ and readings could be based on the power supply as well</em></p>
+<ul>
+<li>Normal air returns 50-150 based on temperature and humidity (higher temp. and humid. returns higher values)</li>
+<li>Breath around 200</li>
+<li>Alcohol reads at 400</li>
+<li>Lighting a match underneath the sensor returns approximately 700</li>
+</ul>
+<p>For further references check the following website on experimenting with the MQ135 ? and as sensors could differ, here, different measurements are presented - <a href="/files/2017/08/MQ135-Experiment-3.pdf">Download saved PDF from blog</a> - <a href="https://olimex.wordpress.com/2015/05/26/experimenting-with-gas-sensors-and-arduino/">https://olimex.wordpress.com/2015/05/26/experimenting-with-gas-sensors-and-arduino/</a></p>
+<ul>
+<li>The page lists the following readings
+<ul>
+<li>MQ-135 normal air output 130</li>
+<li>Isopropyl alcohol 700</li>
+<li>Lighter gas 760</li>
+<li>Benzine 450</li>
+<li>Breath1 150</li>
+<li>Breath2 140</li>
+</ul>
+</li>
+</ul>
+<p>A longer description on the MQ135 is available here - <a href="/files/2017/08/MQ135-Experiment-4.pdf">Download saved PDF from blog</a> - <a href="http://microcontrollerslab.com/interfacing-mq-135-gas-sensor-arduino/">http://microcontrollerslab.com/interfacing-mq-135-gas-sensor-arduino/</a></p>
+<h3 id="dsm501a-dust-sensor">DSM501A dust sensor</h3>
+<p>A cheap, photo voltaic dust sensor, seems to be working quite well. It has a heater and an infrared emitter, the beam is facing against the sensor. The heat circulates the air within its sensor area and the reflection created by the dust, hitting the sensor is output as the value - the higher the dust, the higher the amount of light reflection and reading will be. I added the spec sheet&rsquo;s curve to Excel and got a polynomial equation on how the sensor readings can translate to <em>?</em> g/m3 - although not PM2.5 or PM10 but PM detected by the sensor.</p>
+<blockquote>
+<p><em>PM ?g/m3 concentration =? (2.5383 * sensorReading^2) + (85.392 * sensorReading) - 5.8319;</em></p>
+</blockquote>
+<h4 id="dsm-501a-sensor-readings">DSM 501A sensor readings</h4>
+<ul>
+<li>Filtered air near an air purifier reads at around 30 <em>?</em> g / m3</li>
+<li>Smoke of a match lighted under the sensor could bump it up to 1200 <em>?</em> g / m3</li>
+<li>Nearby a major 6 lane motorway, outside, the readings have an averaging of 60 <em>?</em> g / m3.</li>
+</ul>
+<p>DSM501A Specification sheet - <a href="/files/2017/08/Specification_DSM501_5.pdf">Download saved PDF from blog</a> - <a href="http://www.samyoungsnc.com/products/3-1%20Specification%20DSM501.pdf">http://www.samyoungsnc.com/products/3-1%20Specification%20DSM501.pdf</a> Alternative libraries are available at:</p>
+<ul>
+<li><a href="https://github.com/richardhmm/DIYRepo/tree/master/arduino/libraries/DSM501">https://github.com/richardhmm/DIYRepo/tree/master/arduino/libraries/DSM501</a></li>
+<li><a href="https://github.com/empierre/arduino/blob/master/DustSensor_SamYoung_DSM501.ino">https://github.com/empierre/arduino/blob/master/DustSensor_SamYoung_DSM501.ino </a></li>
+</ul>
+<p>Remarks:</p>
+<ul>
+<li>A good alternative sensor would be a Shinyei PPD42NS for reference (ca. 10 USD), this page contains great insights into that particular hardware - <a href="http://www.howmuchsnow.com/arduino/airquality/grovedust/">http://www.howmuchsnow.com/arduino/airquality/grovedust/</a>
+<ul>
+<li>Also it&rsquo;s worth to mention Grove, as it is s a very easy, ?non-soldering, non-wiring? plug &amp; play platform and the Shinyei sensor is available in a Grove-compatible form as well at <a href="http://wiki.seeed.cc/Grove-Dust_Sensor/">http://wiki.seeed.cc/Grove-Dust_Sensor/</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="lcm1602-lcd">LCM1602 LCD</h3>
+<p>LCM1602 is a backlit, 2 row * 16 character LCD module ? the backlight can be controlled by the code. The compatibility with the LiquidCrystal_I2C library makes it quite easy to use, available at <a href="https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library">https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library</a> Basically, we have to wipe and read the display in a loop and on specific conditions we can turn the backlight on or off. Further reading on the LCD setup - <a href="/files/2017/08/LC1602.pdf">Download saved PDF from blog</a> - <a href="https://magnusglad.wordpress.com/tag/lcm1602/">https://magnusglad.wordpress.com/tag/lcm1602/</a></p>
+<h2></h2>
+<p><img src="/images/uploads/2017/08/LCD-1024x269.jpg" alt=""> LCM1602 LCD showing on 2 lines: Line1: Dust ratio | Dist concentration | MQ135 output | Alert (if any) Line2: Temperature in C | Humidity % | Wind direction | Ait quality grade (1-5, 5 is the best) <img src="/images/uploads/2017/08/LCD2-1024x269.jpg" alt=""> LCM1602 LCD showing air quality data (described above)</p>
+<h2 id="raspberry-code--data-persistence">Raspberry code &amp; data persistence</h2>
+<p>The Rasbperry Pi Zero W is a 10 $ ARM compatible computer running Linux (<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian distro</a> in my case) from a MicroSD card. It has 2 USB slots, built-in Wifi capable of being a host and a guest at the same time, Bluetooth, HDMI, and many digital ports that I considered not to use because of the limited voltage options that Raspberry provides ? Arduino is much more flexible from this perspective. Now, with lot more hardware and circuit planning, building, soldering, this project could have been done only with the Raspberry, but I chose the plug and play components in order to leverage the pros of both platforms, sparing lots and lots of development time.</p>
+<h3 id="how-to-set-up-the-raspberrypi-without-a-keyboard-and-a-monitor-headless-setup">How to set up the RaspberryPi without a keyboard and a monitor? Headless setup</h3>
+<ul>
+<li>First I installed and then configured Raspbian OS from the SD card</li>
+<li>I used headless setup, so the Raspberry would connect to my Wireless and I could log in via SSH without having all complicated micro-USB and mini-HDMI adapters hooked on for the keyboard, monitor, etc. connectivity</li>
+<li>Raspbian Install - <a href="/files/2017/08/Raspbian_Install_6.pdf">Download saved PDF from blog</a> - <a href="https://www.raspberrypi.org/documentation/installation/installing-images/">https://www.raspberrypi.org/documentation/installation/installing-images/</a></li>
+<li>Headless setup - <a href="/files/2017/08/Raspbian_Headless_7.pdf">Download saved PDF from blog</a> - <a href="https://raspberrypi.stackexchange.com/questions/10251/prepare-sd-card-for-wifi-on-headless-pi">https://raspberrypi.stackexchange.com/questions/10251/prepare-sd-card-for-wifi-on-headless-pi </a></li>
+</ul>
+<h3 id="how-can-the-raspberrypi-communicate-via-an-arduino-serial-connection-over-usb">How can the RaspberryPi communicate via an Arduino? Serial connection over USB</h3>
+<p>I&rsquo;ve used this guide on setting up the RaspberryPi USB to Arduino serial via USB connection - <a href="/files/2017/08/Arduino_To_Raspberry_8.pdf">Download saved PDF from blog</a> -? <a href="https://oscarliang.com/connect-raspberry-pi-and-arduino-usb-cable/">https://oscarliang.com/connect-raspberry-pi-and-arduino-usb-cable/</a></p>
+<h3 id="how-to-start-processes-on-the-raspberrypi-automatically-via-raspbians-rclocal">How to start processes on the RaspberryPi automatically? Via Raspbian&rsquo;s rc.local</h3>
+<p>The script starts from <strong>/etc/rc.local</strong> on the boot-up of the RaspberryPi Zero W</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#57606a">#!/bin/sh -e
+</span></span></span><span style="display:flex;"><span><span style="color:#57606a">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># rc.local</span>
+</span></span><span style="display:flex;"><span>/usr/bin/python /air/air.py <span style="color:#1f2328">&amp;</span> &gt; /air/output.log
+</span></span></code></pre></div><p>Described in - Download saved PDF from blog? - <a href="https://www.raspberrypi.org/documentation/linux/usage/rc-local.md">https://www.raspberrypi.org/documentation/linux/usage/rc-local.md</a></p>
+<h3 id="how-to-configure-the-raspberry-pi-to-be-a-wifi-host-and-a-guest-at-the-same-time-via-raspbians-network-settings">How to configure the Raspberry Pi to be a Wifi host and a guest at the same time? Via Raspbian&rsquo;s network settings</h3>
+<p>The purpose is that when there is a known network for the Raspberry, it would connect to it, so SSH to host raspberrypi.local or router DHCP-based IP of the Raspberry would be possible. Also it would download weather information from the internet and share to its database file with every reading of the Arduino. The purpose of the host network is the headless setup possibility, so without a keyboard, mouse, monitor hooked to the non-conventional ports of the Raspberry, SSH based configuration is made possible The following guide was used on the configuration - <a href="/files/2017/08/Autostart_a_Script_Raspberry.pdf"> Download saved PDF from blog</a> - <a href="http://imti.co/post/145442415333/raspberry-pi-3-wifi-station-ap">http://imti.co/post/145442415333/raspberry-pi-3-wifi-station-ap</a></p>
+<h3 id="how-to-get-ip-based-location-data-with-python-on-the-raspberrys-side">How to get IP based location data with Python? (On the Raspberry&rsquo;s side)</h3>
+<p>The IP API at?<a href="http://ip-api.com/docs/api:json">http://ip-api.com/docs/api:json</a> responds with the geographical location based on an IP address. The code snippet in Python is very compact to get hold off our latitude and longitude.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://ip-api.com/json&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude from IP-API</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>lat <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lat&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>lon <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lon&#39;</span><span style="color:#1f2328">]</span>
+</span></span></code></pre></div><h3 id="how-to-get-weather-including-wind-data-with-python-on-the-raspberrys-side">How to get weather, including wind data with Python? (On the Raspberry&rsquo;s side)</h3>
+<p>The Openweathermap API at <a href="http://api.openweathermap.org">http://api.openweathermap.org</a> can respond with detailed weather data based on a latitude and longitude (see automation based on IP above). The code snippet in Python is very compact to acquire detailed weather data.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://api.openweathermap.org/data/2.5/weather?lat=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lat<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;lon=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lon<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;appid={YOURAPIKEY}&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude based wind data</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>windDeg <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;deg&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>windSpeed <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;speed&#39;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></div><h2 id="next-steps">Next steps</h2>
+<p>There are a lot of improvement opportunities, e.g.</p>
+<ul>
+<li>Uploading the data to a RaspberryPi-based PostgreSQL database</li>
+<li>Uploading and processing the data with AWS IOT&rsquo;s platform and continuously analyzing it with AWS Quicksights</li>
+<li>CGI-based UI for RaspberryPi on setting up various Wifi connections</li>
+</ul>
+<h2 id="measurements">Measurements</h2>
+<ul>
+<li>5 days of outside air measurements taken 200 meters from a major highway showed the following:
+<ul>
+<li>PM concentrations increased by 15% during traffic rush hours</li>
+<li>Although studies state that wind direction is the most important factor in PM concentration from highways, there was no correlation between wind direction and PM concentrations</li>
+<li>MQ135 had no spikes based on rush hours - most likely it is not sensitive enough, measurements are rather dependent on temperature and humidity</li>
+</ul>
+</li>
+<li>Inside measurements show that simple HEPA filters within an apartment filter dust quite effectively, inside dust concentrations are 30% of that of the outside with filtering</li>
+</ul>
+<p><a href="/images/uploads/2017/08/Air_Quality_Measurements.png"><img src="/images/uploads/2017/08/Air_Quality_Measurements-1024x163.png" alt=""></a> Air quality measurements - diagramming PM ug/m3, MQ135, Temperature and Humidity</p>
+<h2 id="code">Code</h2>
+<h3 id="arduino--acquiring-air-quality-data-from-dsm501a-dust-mq135-gas-and-dht22-temperature-and-humidity-sensor-outputting-to-lcm1602-lcd-and-serial">Arduino ? acquiring air quality data from DSM501A dust, MQ135 gas and DHT22 Temperature and humidity sensor, outputting to LCM1602 LCD and serial</h3>
+<p>Using the Arduino IDE</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#include 
+</span></span><span style="display:flex;"><span>#include  //Humidity &amp; Temp
+</span></span><span style="display:flex;"><span>#include  //LCD
+</span></span><span style="display:flex;"><span>#include  //LCD
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* LCD */
+</span></span><span style="display:flex;"><span>    LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // Addr, En, Rw, Rs, d4, d5, d6, d7, backlighpin, polarity
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Dust - Samyoung DSM501A*/
+</span></span><span style="display:flex;"><span>    int dustpin = 8; // data from dust sensor
+</span></span><span style="display:flex;"><span>    unsigned long duration;
+</span></span><span style="display:flex;"><span>    unsigned long starttime;
+</span></span><span style="display:flex;"><span>    unsigned long sampletime_ms = 30000;  // Set sample time in milliseconds. Leave this at 30,000 (30sec) for the dust sendor to work accurately
+</span></span><span style="display:flex;"><span>    unsigned long lowpulseoccupancy = 0;
+</span></span><span style="display:flex;"><span>    float ratio = 0;
+</span></span><span style="display:flex;"><span>    float concentration = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Temperature + humidity monitor - DHT22 */
+</span></span><span style="display:flex;"><span>    int pinDHT22 = 2;
+</span></span><span style="display:flex;"><span>    SimpleDHT22 dht22;
+</span></span><span style="display:flex;"><span>    int err = SimpleDHTErrSuccess;
+</span></span><span style="display:flex;"><span>    float temperature = 0;
+</span></span><span style="display:flex;"><span>    float humidity = 0;
+</span></span><span style="display:flex;"><span>    int qIndex = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Gas sensor - MQ135  */
+</span></span><span style="display:flex;"><span>    int sensorValue;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    /*
+</span></span><span style="display:flex;"><span>     * Regarding raw values
+</span></span><span style="display:flex;"><span>     *  Clean air = 100 +- 50
+</span></span><span style="display:flex;"><span>        Alcohol =  400
+</span></span><span style="display:flex;"><span>        Gas = 600
+</span></span><span style="display:flex;"><span>    */
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Reading data from serial */
+</span></span><span style="display:flex;"><span>String wind = &#34;&#34;;         // a String to hold incoming data
+</span></span><span style="display:flex;"><span>boolean stringComplete = false;  // whether the string is complete
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>void setup()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>/* LCD */
+</span></span><span style="display:flex;"><span>      lcd.begin(16,2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Dust */
+</span></span><span style="display:flex;"><span>      Serial.begin(9600);
+</span></span><span style="display:flex;"><span>      pinMode(8,INPUT); // set pin 8 to input to read data from dust sensor 
+</span></span><span style="display:flex;"><span>      pinMode(A0,INPUT); // set pin 8 to input to read data from dust sensor 
+</span></span><span style="display:flex;"><span>      starttime = millis();//get the current time;
+</span></span><span style="display:flex;"><span>      lcd.setBacklight(LOW);        // Backlight off
+</span></span><span style="display:flex;"><span>      //lcd.setBacklight(HIGH);        // Backlight on
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Data structure on serial output for RaspberryPi */
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;Start_Time;PM_Ratio;PM_Concentration;MQ_Raw;Temperature;Humidity&#34;);
+</span></span><span style="display:flex;"><span>      Serial.println();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>void loop() {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    duration = pulseIn(dustpin, LOW); //Checks photovoltaic duration
+</span></span><span style="display:flex;"><span>    lowpulseoccupancy = lowpulseoccupancy + duration; //adds duration to our measure
+</span></span><span style="display:flex;"><span>    if ((millis()-starttime) &gt;= sampletime_ms) //if at sampletime_ms, plot the data
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      wipeLines(); //del LCD
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>      /* PM10 values */
+</span></span><span style="display:flex;"><span>      ratio = lowpulseoccupancy/(sampletime_ms*10.0);  // Percentage, values: 0 - 100
+</span></span><span style="display:flex;"><span>      concentration =  (2.5383 * pow(ratio, 2)) + (85.392 * ratio) - 5.8319; // Equations based on Samyoung DSM501A spec sheet - 
+</span></span><span style="display:flex;"><span>      if(concentration &gt; 9999) { // For LCD, don&#39;t plot values more than 999
+</span></span><span style="display:flex;"><span>        concentration = 9999;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      /* DHT values */
+</span></span><span style="display:flex;"><span>      int err = SimpleDHTErrSuccess;
+</span></span><span style="display:flex;"><span>      if ((err = dht22.read2(pinDHT22, &amp;temperature, &amp;humidity, NULL)) != SimpleDHTErrSuccess) {
+</span></span><span style="display:flex;"><span>        Serial.print(&#34;Read DHT22 failed, err=&#34;); Serial.println(err);delay(2000);
+</span></span><span style="display:flex;"><span>        return;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>      /* Mq135 Gas value */
+</span></span><span style="display:flex;"><span>      sensorValue = analogRead(A0);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      /* Calculate an air quality index for the LCD based on PM10 values*/
+</span></span><span style="display:flex;"><span>      if (ratio0.75)
+</span></span><span style="display:flex;"><span>        qIndex = 5;
+</span></span><span style="display:flex;"><span>      else if (ratio&gt;0.75 &amp;&amp; ratio1)
+</span></span><span style="display:flex;"><span>        qIndex = 4;
+</span></span><span style="display:flex;"><span>      else if (ratio&gt;1 &amp;&amp; ratio1.25)
+</span></span><span style="display:flex;"><span>        qIndex = 3;
+</span></span><span style="display:flex;"><span>      else if (ratio&gt;1.25 &amp;&amp; ratio1.5)
+</span></span><span style="display:flex;"><span>        qIndex = 2;
+</span></span><span style="display:flex;"><span>      else if (ratio&gt;1.5)
+</span></span><span style="display:flex;"><span>        qIndex = 1;
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      /* Print data to serial = Raspberry */
+</span></span><span style="display:flex;"><span>      Serial.print(starttime/1000/60); //start of experiment - in minutes
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;;&#34;);
+</span></span><span style="display:flex;"><span>      Serial.print(ratio); //PM10 ratio read
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;;&#34;);
+</span></span><span style="display:flex;"><span>      Serial.print(concentration); //PM10 mg/m2
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;;&#34;);
+</span></span><span style="display:flex;"><span>      Serial.print(sensorValue ); //Raw sensor value for MQ135
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;;&#34;);
+</span></span><span style="display:flex;"><span>      Serial.print(temperature); //Temperature in Celsius
+</span></span><span style="display:flex;"><span>      Serial.print(&#34;;&#34;);
+</span></span><span style="display:flex;"><span>      Serial.print(humidity); //Relative Humidity%
+</span></span><span style="display:flex;"><span>      Serial.println();
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>      /* Print to LCD */
+</span></span><span style="display:flex;"><span>      //Line1: PM10 ration | PM10 concentration in mg/m3 | PPM of MQ135 | QualityIndex Alert !!
+</span></span><span style="display:flex;"><span>      lcd.clear();              // clear display, set cursor position to zero
+</span></span><span style="display:flex;"><span>      lcd.setCursor (0,0);      // col 0 of line 1
+</span></span><span style="display:flex;"><span>      lcd.print(ratio);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(4,0);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(5,0);
+</span></span><span style="display:flex;"><span>      lcd.print((int)concentration);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(9,0);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(10,0);
+</span></span><span style="display:flex;"><span>      lcd.print(sensorValue);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(13,0);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(14,0);
+</span></span><span style="display:flex;"><span>      if (qIndex&gt;=1 &amp;&amp; qIndex  3)
+</span></span><span style="display:flex;"><span>        lcd.print(&#34;!!&#34;);    
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      //Line2: Temperature in C | Humidity% | Wind direction from Raspberry | QualityIndex
+</span></span><span style="display:flex;"><span>      lcd.setCursor(0,1);       // col 1 of line 2
+</span></span><span style="display:flex;"><span>      lcd.print(temperature);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(4,1);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(5,1);
+</span></span><span style="display:flex;"><span>      lcd.print(humidity);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(9,1);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(10,1);
+</span></span><span style="display:flex;"><span>      lcd.print(wind);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(13,1);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;|&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(14,1);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34;#&#34;);
+</span></span><span style="display:flex;"><span>      lcd.setCursor(15,1);
+</span></span><span style="display:flex;"><span>      lcd.print(qIndex);
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>       
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      if (stringComplete) { //If $ sign appeared from Raspberry, reset  and stringComplete
+</span></span><span style="display:flex;"><span>        wind = &#34;&#34;;
+</span></span><span style="display:flex;"><span>        stringComplete = false;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      lowpulseoccupancy = 0;  // Reset lowpulse occupancy for next measurement
+</span></span><span style="display:flex;"><span>      starttime = millis();   // Get starttime
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Reset the LCD */
+</span></span><span style="display:flex;"><span>void wipeLines() {     
+</span></span><span style="display:flex;"><span>  for (int y = 0; y  2; y++) {
+</span></span><span style="display:flex;"><span>    for (int x = 0; x  20; x++) {
+</span></span><span style="display:flex;"><span>      lcd.setCursor (x,y);
+</span></span><span style="display:flex;"><span>      lcd.print(&#34; &#34;);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* Listen to the string on wind direction from RaspberryPi */
+</span></span><span style="display:flex;"><span>void serialEvent() {
+</span></span><span style="display:flex;"><span>  while (Serial.available()) {
+</span></span><span style="display:flex;"><span>    // get the new byte:
+</span></span><span style="display:flex;"><span>    char inChar = (char)Serial.read();
+</span></span><span style="display:flex;"><span>    // add it to the wind:
+</span></span><span style="display:flex;"><span>     wind += inChar;
+</span></span><span style="display:flex;"><span>    // if the incoming character is a newline, set a flag so the main loop can react
+</span></span><span style="display:flex;"><span>    if (inChar == &#39;
+</span></span></code></pre></div><h3></h3>
+<h3 id="raspberry--getting-location-and-weather-data-reading-serial-sensor-data-from-arduino-writing-wind-data-for-arduino">Raspberry ? getting location and weather data, reading serial sensor data from Arduino, writing wind data for Arduino</h3>
+<p>Using Python 2.7 with Pip</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>import time
+</span></span><span style="display:flex;"><span>import serial
+</span></span><span style="display:flex;"><span>ser <span style="color:#0550ae">=</span> serial<span style="color:#0550ae">.</span>Serial<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">9600</span><span style="color:#1f2328">)</span> <span style="color:#57606a">#get the Arduino port by lsusb in Bash</span>
+</span></span><span style="display:flex;"><span>import urllib2
+</span></span><span style="display:flex;"><span>from urllib2 import Request<span style="color:#1f2328">,</span> urlopen<span style="color:#1f2328">,</span> URLError
+</span></span><span style="display:flex;"><span>import json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">internet_on</span><span style="color:#1f2328">():</span> <span style="color:#57606a"># Check if there is an internet connection</span>
+</span></span><span style="display:flex;"><span>    try<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        urllib2<span style="color:#0550ae">.</span>urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;https://www.google.com&#39;</span><span style="color:#1f2328">,</span> timeout<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> True
+</span></span><span style="display:flex;"><span>    except urllib2<span style="color:#0550ae">.</span>URLError as err<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">degToCompass</span><span style="color:#1f2328">(</span>num<span style="color:#1f2328">):</span> <span style="color:#57606a"># Convert the wind degrees to compass directions (where the wind is blowing from)</span>
+</span></span><span style="display:flex;"><span>    try<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        val<span style="color:#0550ae">=</span>int<span style="color:#1f2328">((</span>num<span style="color:#0550ae">/</span><span style="color:#0550ae">22.5</span><span style="color:#1f2328">)</span><span style="color:#0550ae">+.</span><span style="color:#0550ae">5</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        arr<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;N  &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;NNE&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;NE &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;ENE&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;E  &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;ESE&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;SE &#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;SSE&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;S  &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;SSW&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;SW &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;WSW&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;W  &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;WNW&#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;NW &#34;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#34;NNW&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> arr<span style="color:#1f2328">[(</span>val <span style="color:#0550ae">%</span> <span style="color:#0550ae">16</span><span style="color:#1f2328">)]</span>
+</span></span><span style="display:flex;"><span>    except<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;API&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;API&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">writeWind</span><span style="color:#1f2328">():</span> <span style="color:#57606a"># Get wind data</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> internet_on<span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>                try<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                        global windDeg
+</span></span><span style="display:flex;"><span>                        global windSpeed
+</span></span><span style="display:flex;"><span>                        response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://ip-api.com/json&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude from IP-API</span>
+</span></span><span style="display:flex;"><span>                        data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        lat <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lat&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>                        lon <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lon&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>                        response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://api.openweathermap.org/data/2.5/weather?lat=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lat<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;lon=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lon<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;appid={YOURAPIKEY}&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude based wind data</span>
+</span></span><span style="display:flex;"><span>                        data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        windDeg <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;deg&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        windSpeed <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;speed&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span>degToCompass<span style="color:#1f2328">(</span>windDeg<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                except<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;API&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;API&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;NET&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;NET&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>windDeg <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>windSpeed <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>count <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>string <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;DD/MM/YYYY;HH:MM:SS;WindDeg;WindSpeed;Start_Time;PM_Ratio;PM_Concentration;MQ_Raw;Temperature;Humidity</span>
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#39;</span>
+</span></span><span style="display:flex;"><span>writeWind<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">while</span> <span style="color:#0550ae">1</span> <span style="color:#1f2328">:</span> <span style="color:#57606a">#Read</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            goodWind <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>        string <span style="color:#0550ae">+=</span> time<span style="color:#0550ae">.</span>strftime<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">%d</span><span style="color:#0a3069">/%m/%Y;%H:%M:%S&#34;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">+</span> <span style="color:#0a3069">&#39;;&#39;</span> <span style="color:#0550ae">+</span> degToCompass<span style="color:#1f2328">(</span>windDeg<span style="color:#1f2328">)</span> <span style="color:#0550ae">+</span> <span style="color:#0a3069">&#39;;&#39;</span> <span style="color:#0550ae">+</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>windSpeed<span style="color:#1f2328">)</span> <span style="color:#0550ae">+</span> <span style="color:#0a3069">&#39;;&#39;</span> <span style="color:#57606a"># Add data from the Python side</span>
+</span></span><span style="display:flex;"><span>        string <span style="color:#0550ae">+=</span> ser<span style="color:#0550ae">.</span>readline<span style="color:#1f2328">()</span> <span style="color:#57606a"># Read a complete (/n separated) line from the Arduino, waits here, while the line arrives (every 30 seconds from the Arduino)</span>
+</span></span><span style="display:flex;"><span>        count<span style="color:#0550ae">+=</span><span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>count <span style="color:#0550ae">==</span> <span style="color:#0550ae">9</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>                ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;</span>
+</span></span></code></pre></div><h1></h1>
+<h1 id="further-references--alternatives">Further references / alternatives</h1>
+<p>I hereby list the most valuable pages I came across in terms of alternative platforms or helping understand data readings of the sensors.</p>
+<ul>
+<li>Grove sensor-based projects
+<ul>
+<li>Grove I - Air quality sensor with the easy wiring Grove platform and sensors - <a href="http://www.instructables.com/id/Room-Air-Analyzer/">http://www.instructables.com/id/Room-Air-Analyzer/</a></li>
+<li>Grove II - Air quality sensor with the easy wiring Grove platform and sensors ? <a href="http://www.instructables.com/id/Air-Quality-Test-Box/">http://www.instructables.com/id/Air-Quality-Test-Box/</a></li>
+<li>Grove III - Air quality sensor with the easy wiring Grove platform and sensors ? <a href="http://lelabtechno.com/analyseur%20air.html">http://lelabtechno.com/analyseur%20air.html</a></li>
+</ul>
+</li>
+<li>Other projects
+<ul>
+<li>Speck, networked air quality monitor, using the DMS501A dust sensor - <a href="https://www.specksensor.com/support/tech-specs">https://www.specksensor.com/support/tech-specs</a></li>
+</ul>
+</li>
+<li>Shinyei PPD42NS dust sensor
+<ul>
+<li>Tweaking the sensitivity of an alternative, Shinyei PPD42NS dust sensor and connecting it to the network via a Raspberry Pi - <a href="https://indiaairquality.com/2014/12/14/building-pickle-jr-the-low-cost-networked-pm2-5-monitor-part-2/">https://indiaairquality.com/2014/12/14/building-pickle-jr-the-low-cost-networked-pm2-5-monitor-part-2/</a></li>
+<li>Dust readings of an alternative, Shinyei PPD42NS dust sensor - <a href="http://irq5.io/2013/07/24/testing-the-shinyei-ppd42ns/">http://irq5.io/2013/07/24/testing-the-shinyei-ppd42ns/</a></li>
+</ul>
+</li>
+<li>Air quality background information
+<ul>
+<li>AQI / Air quality index - <a href="https://en.wikipedia.org/wiki/Air_quality_index">https://en.wikipedia.org/wiki/Air_quality_index</a></li>
+<li>Background on Particle Pollution Designations GuidanceParticle Pollution Designations -? <a href="https://www.epa.gov/particle-pollution-designations/particle-pollution-designations-guidance-and-data">https://www.epa.gov/particle-pollution-designations/particle-pollution-designations-guidance-and-data</a></li>
+<li>Understanding dust sensor outputs - <a href="https://forum.mysensors.org/topic/291/dust-sensor-1-4/16">https://forum.mysensors.org/topic/291/dust-sensor-1-4/16</a></li>
+<li>Dylos, a professional dust sensor manufacturer describes how to calculate PM concentration - <a href="http://billpentz.com/woodworking/cyclone/dylos.cfm">http://billpentz.com/woodworking/cyclone/dylos.cfm</a></li>
+<li>PM10 trends of the US - <a href="https://www.epa.gov/air-trends/particulate-matter-pm10-trends">https://www.epa.gov/air-trends/particulate-matter-pm10-trends</a></li>
+</ul>
+</li>
+<li>Gas sensors
+<ul>
+<li>MQ135 readings - <a href="http://davidegironi.blogspot.it/2014/01/cheap-co2-meter-using-mq135-sensor-with.html">http://davidegironi.blogspot.it/2014/01/cheap-co2-meter-using-mq135-sensor-with.html</a></li>
+<li>A detailed list of gas sensors available here: <a href="https://playground.arduino.cc/Main/MQGasSensors">https://playground.arduino.cc/Main/MQGasSensors</a></li>
+<li>An Arduino library for the MQ135 - not to used in this project - is available here? - <a href="https://hackaday.io/project/3475-sniffing-trinket/log/12363-mq135-arduino-library">https://hackaday.io/project/3475-sniffing-trinket/log/12363-mq135-arduino-library</a></li>
+</ul>
+</li>
+</ul>
+<p>*</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/dataset/">dataset</a><a href="/tags/big-data-analytics/">big data analytics</a><a href="/tags/iot/">iot</a><a href="/tags/raspberry-pi-zero-w/">raspberry pi zero w</a><a href="/tags/internet-of-things/">internet of things</a><a href="/tags/arduino/">arduino</a><a href="/tags/sensor/">sensor</a><a href="/tags/sensors/">sensors</a><a href="/tags/gas-sensor/">gas sensor</a><a href="/tags/pm-sensor/">pm sensor</a><a href="/tags/dust-sensor/">dust sensor</a><a href="/tags/pm10/">pm10</a><a href="/tags/pm2.5/">pm2.5</a><a href="/tags/air-quality/">air quality</a><a href="/tags/mq135/">mq135</a><a href="/tags/dsm501a/">dsm501a</a><a href="/tags/ppd42ns/">ppd42ns</a><a href="/tags/dht22/">dht22</a><a href="/tags/lcm1602/">lcm1602</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/it-support-for-project-management-processes/">IT support for project management processes &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tutorial on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/tutorial/</link>
+		<description>Recent content in Tutorial on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 08 Aug 2014 17:40:07 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/tutorial/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Performance test of Pig vs Hive with code examples</title>
+				<link>https://dataprd.com/posts/performance-test-pig-vs-hive-code-examples/</link>
+				<pubDate>Fri, 08 Aug 2014 17:40:07 +0000</pubDate>
+				<guid>https://dataprd.com/posts/performance-test-pig-vs-hive-code-examples/</guid>
+				<description>&lt;p&gt;Performance testing high level Hadoop query languages with &lt;strong&gt;example scripts.&lt;/strong&gt; Analysis of NOAA weather data: Western-European weather stations from 1980 to 2014, daily dataset of temperature (tmin and tmax) and precipitation data (prcp). Dataset is a structured table, non-existent measurement cells are filled with &lt;em&gt;-9999&lt;/em&gt;. &lt;strong&gt;Example:&lt;/strong&gt; STATION,STATION_NAME,DATE,PRCP,TMAX,TMIN GHCND:NLE00109300,STAVENISSE NL,19800101,53,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800102,21,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800103,133,-9999,-9999 &amp;hellip; GHCND:NLE00109202,MARUM NL,20080602,0,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080603,36,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080604,4,-9999,-9999 &amp;hellip; Data size: &lt;strong&gt;1 Gb / 4 Gb / 8 Gb&lt;/strong&gt; &lt;a href=&#34;https://dataprd.com/files/2014/08/w_333_mb.csv.zip&#34;&gt;(the same 333 Mb data file replicated 3 / 12 / 24 times)&lt;/a&gt; HDFS block size: &lt;strong&gt;128 Mb&lt;/strong&gt; Platform:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Create a Hadoop Cluster easily by using PXE boot, Kickstart, Puppet and Ambari to auto-deploy nodes</title>
+				<link>https://dataprd.com/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/</link>
+				<pubDate>Fri, 08 Aug 2014 17:12:52 +0000</pubDate>
+				<guid>https://dataprd.com/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/</guid>
+				<description>&lt;p&gt;This tutorial is to showcase unattended and automatic install of multiple &lt;strong&gt;CentOS 6.5 x86_64 Hadoop nodes&lt;/strong&gt; pre-configured with &lt;strong&gt;Ambari-agents&lt;/strong&gt; and an &lt;strong&gt;Ambari-server&lt;/strong&gt; host. After configuring automatic install of bare metal (No OS pre-installed) nodes, deploying a Hadoop cluster will be a matter of clicks. The setup uses:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;PXE boot&lt;/strong&gt; (for automatic OS install)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;TFTP server&lt;/strong&gt; (for PXE network install image)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Apache server&lt;/strong&gt; (to serve the kickstart file for unattended install)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;DHCP server&lt;/strong&gt; (for assigning IP addresses for the nodes)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;DNS server&lt;/strong&gt; (for internal domain name resolution)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Puppet-master&lt;/strong&gt; (for automatic configuration management of all hosts in the network, Ambari install included in Puppet manifests)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Ambari-master and agents&lt;/strong&gt; (for managing Hadoop ecosystem deployment)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The setup assumes that the nodes are on the &lt;em&gt;192.168.0.0/255.255.255.0&lt;/em&gt; network, the master is on &lt;em&gt;192.168.0.1&lt;/em&gt; and its hostname is &lt;em&gt;bigdata1.hdp&lt;/em&gt; The domain for the network server by the configuration is &lt;em&gt;hdp&lt;/em&gt; and the clients are named as &lt;em&gt;bigdata[1-254].hdp&lt;/em&gt; &lt;a href=&#34;https://dataprd.com/files/2014/08/provision.zip&#34; title=&#34;Hadoop Kickstart install&#34;&gt; Download all files here (configuration files, PXEBoot Linux image, Kickstart file and custom script for adding a node on the master).&lt;/a&gt;&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Analysis tutorial with Tableau Desktop</title>
+				<link>https://dataprd.com/posts/analysis-tutorial-tableau-desktop/</link>
+				<pubDate>Sun, 11 May 2014 17:09:31 +0000</pubDate>
+				<guid>https://dataprd.com/posts/analysis-tutorial-tableau-desktop/</guid>
+				<description>&lt;p&gt;Tableau Desktop supports visual analysis and data discovery, converts the raw information to easy to understand graphical format with interactive charts. No coding is required to create rich visualization. Tableau Business Intelligence toolset have a Desktop, Server and Cloud version (none open-source products but as good as worth a post on the open-bigdata blog). In this post I check its&lt;a href=&#34;http://www.tableausoftware.com/products/trial&#34;&gt; Desktop evaluation version&lt;/a&gt; that let us connect to many data sources (including Hadoop, MySQL, Excel, Text, &amp;hellip;). I will use &lt;a href=&#34;https://dataprd.com/media/Weather.zip&#34;&gt;the same Weather.Csv&lt;/a&gt; as in the &lt;a href=&#34;https://dataprd.com/posts/analysis-fundamentals-tutorial/&#34;&gt;Hadoop analysis tutorial&lt;/a&gt;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Data mining from webpages with Python Mechanize Browser Automation - a Big data tutorial</title>
+				<link>https://dataprd.com/posts/data-mining-web-python-mechanize-tutorial/</link>
+				<pubDate>Thu, 13 Mar 2014 13:31:28 +0000</pubDate>
+				<guid>https://dataprd.com/posts/data-mining-web-python-mechanize-tutorial/</guid>
+				<description>&lt;h2 id=&#34;data-mining-from-the-web-with-python-mechanize-browser-automation---big-data-tutorial&#34;&gt;Data mining from the web with Python Mechanize Browser Automation - Big data tutorial&lt;/h2&gt;&#xA;&lt;p&gt;In this example the Python Mechanize package is used for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) and is to be used when feature-rich Javascript and Ajax website data mining or automated test case setup is to be built. A &lt;a href=&#34;https://dataprd.com/posts/data-mining-web-selenium-tutorial/&#34; title=&#34;Data mining from webpages with Selenium Python WebDriver Browser Automation ? a Big data tutorial&#34;&gt;Selenium browser automation example can be found here&lt;/a&gt;. This rich commented &lt;strong&gt;Python Mechanize Browser Automation example&lt;/strong&gt; does the following:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Data mining from webpages with Selenium Python WebDriver Browser Automation - a Big data tutorial</title>
+				<link>https://dataprd.com/posts/data-mining-web-selenium-tutorial/</link>
+				<pubDate>Thu, 13 Mar 2014 13:30:28 +0000</pubDate>
+				<guid>https://dataprd.com/posts/data-mining-web-selenium-tutorial/</guid>
+				<description>&lt;h2 id=&#34;data-mining-from-the-web-with-selenium-python-webdriverbrowser-automation---big-data-tutorial&#34;&gt;Data mining from the web with Selenium Python WebDriver&amp;rsquo;Browser Automation - Big data tutorial&lt;/h2&gt;&#xA;&lt;p&gt;In this example the Selenium web test automation framework uses Firefox for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) then &lt;a href=&#34;https://dataprd.com/posts/data-mining-web-python-mechanize-tutorial/&#34; title=&#34;Data mining from webpages with Python Mechanize Browser Automation ? a Big-data tutorial&#34;&gt;Python Mechanize - having an example here&lt;/a&gt;. It uses a full suite of a web browser, so as an advantage Javascript and AJAX rich webpage parsing can be automated - in such cases it has to be used instead of &lt;a href=&#34;https://dataprd.com/posts/data-mining-web-python-mechanize-tutorial/&#34; title=&#34;Data mining from webpages with Python Mechanize Browser Automation ? a Big-data tutorial&#34;&gt;Python Mechanize &lt;/a&gt;for data mining and auto testing purposes. This rich commented &lt;strong&gt;Selenium Python WebDriver Browser Automation example&lt;/strong&gt; does the following:&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

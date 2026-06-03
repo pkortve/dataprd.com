@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Weather data analysis and visualization - Big data tutorial Part 4/9 - Hadoop &amp; Pig | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Weather data analysis and visualization - Big data tutorial Part 4/9 - Hadoop &amp; Pig</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>March 13, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-49">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 4/9</h2>
+<h3 id="analysis-with-hadoop-and-pig">Analysis with <a href="/hadoop-big-data-framework/" title="Hadoop big-data framework ? Hadoop virtual machines">Hadoop </a>and <a href="/pig-hadoop-query-language" title="Pig ? Hadoop Query Language">Pig</a></h3>
+<h4 id="igniting-hortonworks-hadoop-environment"><strong>Igniting Hortonworks Hadoop environment</strong></h4>
+<ul>
+<li>
+<p>Starting the virtual machine</p>
+</li>
+<li>
+<p>Logging in from the host machine&rsquo;s browser: 127.0.0.1:8888</p>
+<ul>
+<li>Log in with credentials supplied on login screen: hue / 1111</li>
+</ul>
+</li>
+<li>
+<p>A straightforward menu is given to manage stored files ? HDFS ?, Pig or Hive analysis scripts and to check the jobs that are running</p>
+</li>
+<li>
+<p>Upload data to the home folder/Data as zip</p>
+<ul>
+<li>The system auto unzips it to <em>Weather.csv</em> and <em>Weather_Mini.csv</em> (this one is the same data format with minimal set of rows for experimenting)</li>
+</ul>
+</li>
+<li>
+<p>Start to write and run your analyzer script, download results stored by the analyzers</p>
+</li>
+</ul>
+<h4 id="writing-the-analyzer-pig-script"><strong>Writing the analyzer PIG script</strong></h4>
+<p>Pig is an SQL like query language for Hadoop MapReduce.</p>
+<ul>
+<li>Easy to learn and use</li>
+<li>Converts queries to map-reduce programs</li>
+<li>Might be less performance effective than a well written Java map-reduce program</li>
+</ul>
+<p><strong><a href="pig-hadoop-query-language/" title="Pig ? Hadoop Query Language">Pig</a>language reference can be found <a href="http://pig.apache.org/docs/r0.7.0/piglatin_ref2.html#Overview" title="Pig Language Reference">here.</a></strong> I have built my analysis scripts around this showcased one, which analysis precipitation data. Unfortunately, only the precipitation and temperature analysis gave a big enough dataset, snow data columns has been such few that I could not get useful information out of it. The analyzer PIG example script with comments:</p>
+<ul>
+<li>-- Is the comment mark for one line, /* is the comment mark for multiple lines */</li>
+<li>After each transformation <em>Describe</em> is used to write the new schema to stdout</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-- Load the file, delimited with ,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>A = LOAD &#39;Data/Weather.csv&#39; using PigStorage(&#39;,&#39;);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Generate a scheme, $0 is the first &#34;cell&#34;, while $1 is the next, after the delimitation &#34;,&#34; mark
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Note that I only use years from the dates by using the SUBSTRING command
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>B = FOREACH A GENERATE (chararray) $0 as stationcode, $1 as station, $2 as elevation, $3 as lat, $4 as lon, (int) SUBSTRING($5, 0, 4) as year, 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(int) $6 as prcp, (int) $7 as snwd, (int) $8 as snow, (int) $9 as tmax, (int) $10 as tmin, (int) $11 as wesd;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Describe gives us the schema of the transformed dataset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE B;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Get only valid PRCP data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>C1 = FILTER B BY prcp &gt; -9999;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE C1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Group station data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>D1 = GROUP C1 by (station, year, lat, lon);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE D1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Get the averages of groups, calculate where no whole year is available
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>E1 = FOREACH D1 GENERATE group.station as station, group.lat as lat, group.lon as lon, ((int) group.year, (COUNT(C1. prcp) &gt; 364 ? SUM(C1. prcp)/10 : SUM(C1.prcp)/COUNT(C1.prcp)/10*365)) as data;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE E1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Store all station data grouped by stations and their location
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>F1 = GROUP E1 by (station, lat, lon);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE F1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Filter the data to station, location - yearly averages
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>G1 = FOREACH F1 GENERATE group, E1.data;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE G1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DUMP G1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-- Store to file
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>STORE G1 INTO &#39;out_prcp&#39;;	
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/* All commented:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>I have tried to use this part to make a sorting on the dataset of year-average PRCP data. As map-reduce is a parallel process, data is not processed in an ordered list of years, even though we have ordered it as before. As sorting of complex data types is not available in Pig, the below code results in an error (I would have to sort pairs of tuple data, - even could be converted to maps – by map keys, which are years. I had to find a workaround, which the easiest to use was Python instead of giving up on Pig and using a Java map-reduce job. For details, see the next section.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>H1 = foreach G1{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    sorted = order by data.year;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    GENERATE group.station, lat, lon, sorted;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DESCRIBE F1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DUMP F1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>*/
+</span></span></code></pre></div><p>Output file**<em>out_prcp</em> :**</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>((ARAD RO,46.1331,21.35),{((1882,742)),((1883,680)),((1884,656)),((1885,656)),((1886,770)),((1887,718)),((1888,467)),((1889,893)),((1890,570)),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>? ))})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>((DEVA RO,45.8667,22.9),?
+</span></span></code></pre></div>
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/visualizing/">visualizing</a><a href="/tags/hadoop/">hadoop</a><a href="/tags/interactive-visualization/">interactive visualization</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/analysis-environment-tutorial/">&larr; Weather data analysis and visualization - Big data tutorial Part 3/9 - Environment</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/gis-map-data-visualization-tutorial-1/">Weather data analysis and visualization - Big data tutorial Part 5/9 - Visualizing: GIS &amp; map &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

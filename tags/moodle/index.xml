@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Moodle on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/moodle/</link>
+		<description>Recent content in Moodle on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 13 Mar 2014 13:08:56 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/moodle/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>E-learning framework, on-line tests</title>
+				<link>https://dataprd.com/posts/e-learning-framework-on-line-tests/</link>
+				<pubDate>Thu, 13 Mar 2014 13:08:56 +0000</pubDate>
+				<guid>https://dataprd.com/posts/e-learning-framework-on-line-tests/</guid>
+				<description>&lt;p&gt;I&amp;rsquo;ve been involved in lecturing courses on &lt;em&gt;IT support of Project Management&lt;/em&gt; and &lt;em&gt;Big Data&lt;/em&gt; at institutions during the last years. As there have been many participants I&amp;rsquo;ve been looking into solutions to facilitate the homework hand-in and evaluation process and the automated assessment of final tests. &lt;em&gt;The main idea was to support me and not me supporting the system - so an out-of-the-box working tool was preferred.&lt;/em&gt; After some tries on automated test creation with &lt;a href=&#34;https://www.limesurvey.org/en/&#34; title=&#34;https://www.limesurvey.org/en/&#34;&gt;Limesurvey&lt;/a&gt; - which is a great tool for survey creation - I found &lt;a href=&#34;https://moodle.org&#34; title=&#34;https://moodle.org&#34;&gt;Moodle&lt;/a&gt; which supports not only lot easier test creation but the whole e-learning process. The tool is open-source, have a great documentation and great functionality - which of only a few pieces I use regularly. So to share news with a specified group, assign homeworks with deadlines and create automated, shuffled tests - the use-cases I need - it does all. Let&amp;rsquo;s install on a Ubuntu 14.04 Server. In terminal:&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

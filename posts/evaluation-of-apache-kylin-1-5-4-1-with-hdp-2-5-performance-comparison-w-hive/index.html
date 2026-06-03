@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Evaluation of Apache Kylin 1.5.4.1 with HDP 2.5, performance comparison w Hive | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Evaluation of Apache Kylin 1.5.4.1 with HDP 2.5, performance comparison w Hive</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>January 9, 2017</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p><strong>Apache Kylin</strong> is a data cube solution on top of Hadoop providing an ODBC interface for BI tools. OLAP cubes boosts performance for analytics via using a subset of data, enriched with pre-calculations on specific dimensions of interest. It enables loading dimensions from a Hive data source, therefore accelerating BI tool access via pre-calculating data and adding it to HBase. In our example we have a large dataset of flight information:</p>
+<ul>
+<li>Daily data of flights from an origin to a destination with expected and actual flight times</li>
+<li>Additional metadata is available on operators, cancellations, diverts, etc.</li>
+</ul>
+<p>The goal of the experiment was to install Kylin, load a subset of our couple of gigabytes worth flight data and connect it to Microsoft PowerBI.</p>
+<h2 id="kylin-pros-and-cons">Kylin Pros and Cons</h2>
+<p><strong>Pros</strong></p>
+<ul>
+<li>Fast performance</li>
+<li>Easy to use UI</li>
+<li>ODBC connection to conventional BI tools</li>
+<li>Free and open-source tool integrating to the Hadoop eco-system</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>A cube is pre-constructed, therefore provides access to a data snapshot. It should be re-built in case of updates and built differently in case of changes in dimensions or measures</li>
+<li>Kylin sometimes failed to build a cube or exited during the experiment</li>
+</ul>
+<h1></h1>
+<h1 id="experiment---poc-with-kylin">Experiment - POC with Kylin</h1>
+<h2 id="platform">Platform</h2>
+<ul>
+<li>8 core VM with 16 GBs of RAM</li>
+<li>CentOS 6.7</li>
+<li>HDP 2.5</li>
+<li>Kylin 1.5.4.1</li>
+<li>Hive has flight data loaded for each months of 2015 <a href="http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236&amp;DB_Short_Name=On-Time">downloadable from the Bureau of Transportation Statictics </a></li>
+</ul>
+<h2 id="data-of-interest">Data of interest</h2>
+<p>We are interested in the average delays on a month of a day and on a carrier basis. In cube terms, <strong>dimensions</strong> categorizes facts for the users&rsquo; business questions. E.g. for flights we are interested in a daily distribution of delays, so we select the day of the month or interested in an average delay per carrier, so we select carrier as dimensions. A <strong>measure</strong> is a property for the calculation, so in our example is the delay in minutes.</p>
+<h2 id="installing-kylin">Installing Kylin</h2>
+<p>Is easy - assuming Hive and HBase is working properly,</p>
+<ol>
+<li><a href="http://kylin.apache.org/download/">Download Kylin</a></li>
+<li><em>tar xzvf kylin.tar.gz</em></li>
+<li><em>export KYLIN_HOME=(UntarredFolder)</em></li>
+<li><em>cd $KYLIN_HOME &amp;&amp; ./bin/kylin.sh start</em></li>
+</ol>
+<p>Kylin logs to $KYLIN_HOME/logs/kylin.log</p>
+<h2 id="using-kylin-to-create-cubes">Using Kylin to create cubes</h2>
+<p>Access Kylin via web browser at http://hadoopIP:7070/kylin, user ADMIN and password KYLIN Unfortunately <a href="http://kylin.apache.org/docs15/tutorial/create_cube.html">Kylin&rsquo;s docs on cube creation is outdated</a> -? as the interface looks a bit different, than the documentation.</p>
+<h3 id="how-to-create-a-cube-with-kylin---step-by-step-screenshots">How to create a cube with Kylin - Step by step screenshots</h3>
+<p><img src="/images/uploads/2017/01/Kylin_00.jpg" alt=""> Add project   <img src="/images/uploads/2017/01/Kylin_11.jpg" alt=""> Add project - project properties   <img src="/images/uploads/2017/01/Kylin_17.jpg" alt=""> Load Hive source table - step 1   <img src="/images/uploads/2017/01/Kylin_18.jpg" alt=""> Load Hive source table - step 2   <img src="/images/uploads/2017/01/Kylin_20.jpg" alt=""> Add model - step 1, model info   <img src="/images/uploads/2017/01/Kylin_21.jpg" alt=""> Add model - step 2, fact table (added from Hive)   <img src="/images/uploads/2017/01/Kylin_22.jpg" alt=""> Add model - step 3, dimensions   <img src="/images/uploads/2017/01/Kylin_23.jpg" alt=""> Add model - step 4, measures   <img src="/images/uploads/2017/01/Kylin_01.jpg" alt=""> Add model - step 5, settings, partitioning   <img src="/images/uploads/2017/01/Kylin_02.jpg" alt=""> Add cube - step 1, cube info   <img src="/images/uploads/2017/01/Kylin_03.jpg" alt=""> Add cube - step 2, dimensions info   <img src="/images/uploads/2017/01/Kylin_04.jpg" alt=""> Add cube - step 3, measures info   <img src="/images/uploads/2017/01/Kylin_05.jpg" alt=""> Add cube - step 4, cube auto refresh settings   <img src="/images/uploads/2017/01/Kylin_06.jpg" alt=""> Add cube - step 5, aggregation groups   <img src="/images/uploads/2017/01/Kylin_07.jpg" alt=""> Add cube - step 6, manual configuration parameters   <img src="/images/uploads/2017/01/Kylin_08.jpg" alt=""> Add cube - step 7, overview, save   <img src="/images/uploads/2017/01/Kylin_09.jpg" alt=""> Add cube - stability issues arrise   <img src="/images/uploads/2017/01/Kylin_10.jpg" alt=""> System monitor - schedule cube building   <img src="/images/uploads/2017/01/Kylin_12.jpg" alt=""> Cube building finished Constructing the cube took <strong>7.78 minutes.</strong></p>
+<h2 id="apache-kylin-vs-apache-hive-query-performance">Apache Kylin vs Apache Hive query performance</h2>
+<h3 id="hive">Hive</h3>
+<p><strong>AVG delay on specific months of a day</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
+</span></span></code></pre></div><p><em><strong>82.31 sec</strong></em> <strong>AVG delay per carrier</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
+</span></span></code></pre></div><p><em><strong>142.73 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_14.jpg" alt=""> Hive query execution</p>
+<h3 id="kylin">Kylin</h3>
+<p><strong>AVG delay on specific months of a day</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
+</span></span></code></pre></div><p><em><strong>0.18 sec</strong></em> <strong>AVG delay per carrier</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
+</span></span></code></pre></div><p><em><strong>0.36 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_13.jpg" alt=""> Kylin query execution</p>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/hadoop/">hadoop</a><a href="/tags/hive/">hive</a><a href="/tags/performance/">performance</a><a href="/tags/data-cube/">data cube</a><a href="/tags/apache-kylin/">apache kylin</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/configure-apache-kylin-with-odbc-to-wowk-with-ms-powerbi/">&larr; Configure Apache Kylin with ODBC to work with MS PowerBI</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/top-7-challenges-of-building-a-data-lake/">Top 7 challenges of building a data lake &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>

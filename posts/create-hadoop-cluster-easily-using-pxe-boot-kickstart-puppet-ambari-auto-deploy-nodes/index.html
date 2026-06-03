@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Create a Hadoop Cluster easily by using PXE boot, Kickstart, Puppet and Ambari to auto-deploy nodes | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Create a Hadoop Cluster easily by using PXE boot, Kickstart, Puppet and Ambari to auto-deploy nodes</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>August 8, 2014</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
+        </li>
+        
+      </ul>
+    </header>
+
+    <article class="entry clr">
+      <p>This tutorial is to showcase unattended and automatic install of multiple <strong>CentOS 6.5 x86_64 Hadoop nodes</strong> pre-configured with <strong>Ambari-agents</strong> and an <strong>Ambari-server</strong> host. After configuring automatic install of bare metal (No OS pre-installed) nodes, deploying a Hadoop cluster will be a matter of clicks. The setup uses:</p>
+<ul>
+<li><strong>PXE boot</strong> (for automatic OS install)</li>
+<li><strong>TFTP server</strong> (for PXE network install image)</li>
+<li><strong>Apache server</strong> (to serve the kickstart file for unattended install)</li>
+<li><strong>DHCP server</strong> (for assigning IP addresses for the nodes)</li>
+<li><strong>DNS server</strong> (for internal domain name resolution)</li>
+<li><strong>Puppet-master</strong> (for automatic configuration management of all hosts in the network, Ambari install included in Puppet manifests)</li>
+<li><strong>Ambari-master and agents</strong> (for managing Hadoop ecosystem deployment)</li>
+</ul>
+<p>The setup assumes that the nodes are on the <em>192.168.0.0/255.255.255.0</em> network, the master is on <em>192.168.0.1</em> and its hostname is <em>bigdata1.hdp</em> The domain for the network server by the configuration is <em>hdp</em> and the clients are named as <em>bigdata[1-254].hdp</em> <a href="/files/2014/08/provision.zip" title="Hadoop Kickstart install"> Download all files here (configuration files, PXEBoot Linux image, Kickstart file and custom script for adding a node on the master).</a></p>
+<h2 id="master-server">Master Server</h2>
+<ul>
+<li>
+<p>Install <strong>CentOS 6.5 X86_64</strong> manually</p>
+<ul>
+<li>CentOS-6 updates until November 30, 2020</li>
+<li><a href="http://www.tecmint.com/centos-6-5-installation-guide-with-screenshots">Install guide</a></li>
+</ul>
+</li>
+<li>
+<p>Configure network</p>
+<ul>
+<li><a href="https://www.centos.org/docs/5/html/5.2/Deployment_Guide/s1-networkscripts-files.html">CentOS network configuration guide</a></li>
+</ul>
+</li>
+<li>
+<p><strong>dnsmasq</strong></p>
+<ul>
+<li>Install and configure dnsmasq providing a basic DHCP, DNS and TFTP server. Easily configurable, ideal for internal networks</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install dnsmasq
+</span></span></code></pre></div><ul>
+<li>
+<pre><code>* _/etc/dnsmasq.conf_
+</code></pre>
+<ul>
+<li><strong>DHCP setup</strong></li>
+<li><strong>DNS setup</strong></li>
+<li><strong>TFTP setup</strong></li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#57606a">#DNS</span>
+</span></span><span style="display:flex;"><span>domain<span style="color:#0550ae">-</span>needed
+</span></span><span style="display:flex;"><span>bogus<span style="color:#0550ae">-</span>priv
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>domain<span style="color:#0550ae">=</span>hdp
+</span></span><span style="display:flex;"><span>expand<span style="color:#0550ae">-</span>hosts
+</span></span><span style="display:flex;"><span>local<span style="color:#0550ae">=/</span>hdp<span style="color:#0550ae">/</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>listen<span style="color:#0550ae">-</span>address<span style="color:#0550ae">=</span><span style="color:#0550ae">127.0</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.1</span> 
+</span></span><span style="display:flex;"><span>listen<span style="color:#0550ae">-</span>address<span style="color:#0550ae">=</span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Local interface</span>
+</span></span><span style="display:flex;"><span>interface<span style="color:#0550ae">=</span>p4p1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#DHCP</span>
+</span></span><span style="display:flex;"><span>dhcp<span style="color:#0550ae">-</span><span style="color:#6639ba">range</span><span style="color:#0550ae">=</span>p4p1<span style="color:#1f2328">,</span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.100</span><span style="color:#1f2328">,</span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.200</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#set default gateway</span>
+</span></span><span style="display:flex;"><span>dhcp<span style="color:#0550ae">-</span>option<span style="color:#0550ae">=</span>p4p1<span style="color:#1f2328">,</span><span style="color:#0550ae">3</span><span style="color:#1f2328">,</span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#DNS servers</span>
+</span></span><span style="display:flex;"><span>server<span style="color:#0550ae">=</span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.1</span>
+</span></span><span style="display:flex;"><span>server<span style="color:#0550ae">=</span><span style="color:#0550ae">8.8</span><span style="color:#0550ae">.</span><span style="color:#0550ae">8.8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#TFTP</span>
+</span></span><span style="display:flex;"><span>enable<span style="color:#0550ae">-</span>tftp
+</span></span><span style="display:flex;"><span>tftp<span style="color:#0550ae">-</span>root<span style="color:#0550ae">=/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot
+</span></span><span style="display:flex;"><span>dhcp<span style="color:#0550ae">-</span>boot<span style="color:#0550ae">=</span>pxelinux<span style="color:#0550ae">.</span><span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Reserved IPs+MAC addresses will get added here by our custom script</span>
+</span></span></code></pre></div><ul>
+<li><strong>TFTP PXE boot files at</strong> <em>/var/lib/tftpboot</em> downloadable with the package above, containing
+<ul>
+<li>Linux image</li>
+<li>Kickstart file
+<ul>
+<li>Note config parameters below
+<ul>
+<li>Root password for each client will be <em>hadoop135</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#57606a"># NFS server, CentOS image at /var/nfs</span>
+</span></span><span style="display:flex;"><span>install
+</span></span><span style="display:flex;"><span>nfs <span style="color:#0550ae">--</span>server <span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.1</span> <span style="color:#0550ae">--</span>dir <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>nfs
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Lang and keyboard</span>
+</span></span><span style="display:flex;"><span>lang en_US<span style="color:#0550ae">.</span>UTF<span style="color:#0550ae">-</span><span style="color:#0550ae">8</span>
+</span></span><span style="display:flex;"><span>selinux <span style="color:#0550ae">--</span>enforcing
+</span></span><span style="display:flex;"><span>keyboard us
+</span></span><span style="display:flex;"><span>skipx
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Network</span>
+</span></span><span style="display:flex;"><span>network <span style="color:#0550ae">--</span>bootproto dhcp <span style="color:#0550ae">--</span>hostname bigdatax<span style="color:#0550ae">.</span>hdp
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Root pw. is hadoop135</span>
+</span></span><span style="display:flex;"><span>rootpw <span style="color:#0550ae">--</span>iscrypted <span style="color:#0550ae">$</span><span style="color:#0550ae">1</span><span style="color:#0550ae">$</span>wHydp2Aq<span style="color:#0550ae">$</span>KmJuQFeHYTe8fMsV2tUga<span style="color:#0550ae">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Allow SSH</span>
+</span></span><span style="display:flex;"><span>firewall <span style="color:#0550ae">--</span>service<span style="color:#0550ae">=</span>ssh
+</span></span><span style="display:flex;"><span>authconfig <span style="color:#0550ae">--</span>useshadow <span style="color:#0550ae">--</span>passalgo<span style="color:#0550ae">=</span>sha256 <span style="color:#0550ae">--</span>kickstart
+</span></span><span style="display:flex;"><span>timezone <span style="color:#0550ae">--</span>utc UTC
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Configure services, add extra repos, Epel</span>
+</span></span><span style="display:flex;"><span>services <span style="color:#0550ae">--</span>disabled autofs<span style="color:#1f2328">,</span>gpm<span style="color:#1f2328">,</span>sendmail<span style="color:#1f2328">,</span>cups<span style="color:#1f2328">,</span>iptables<span style="color:#1f2328">,</span>ip6tables<span style="color:#1f2328">,</span>auditd<span style="color:#1f2328">,</span>arptables_jf<span style="color:#1f2328">,</span>xfs<span style="color:#1f2328">,</span>pcmcia<span style="color:#1f2328">,</span>isdn<span style="color:#1f2328">,</span>rawdevices<span style="color:#1f2328">,</span>hpoj<span style="color:#1f2328">,</span>bluetooth<span style="color:#1f2328">,</span>openibd<span style="color:#1f2328">,</span>avahi<span style="color:#0550ae">-</span>daemon<span style="color:#1f2328">,</span>avahi<span style="color:#0550ae">-</span>dnsconfd<span style="color:#1f2328">,</span>hidd<span style="color:#1f2328">,</span>hplip<span style="color:#1f2328">,</span>pcscd<span style="color:#1f2328">,</span>restorecond<span style="color:#1f2328">,</span>mcstrans<span style="color:#1f2328">,</span>rhnsd<span style="color:#1f2328">,</span>yum<span style="color:#0550ae">-</span>updatesd
+</span></span><span style="display:flex;"><span>repo <span style="color:#0550ae">--</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Extra Packages for Enterprise Linux&#34;</span> <span style="color:#0550ae">--</span>mirrorlist<span style="color:#0550ae">=</span>https<span style="color:#1f2328">:</span><span style="color:#0550ae">//</span>mirrors<span style="color:#0550ae">.</span>fedoraproject<span style="color:#0550ae">.</span>org<span style="color:#0550ae">/</span>metalink<span style="color:#f6f8fa;background-color:#82071e">?</span>repo<span style="color:#0550ae">=</span>epel<span style="color:#0550ae">-</span><span style="color:#0550ae">6</span><span style="color:#0550ae">&amp;</span>arch<span style="color:#0550ae">=</span>x86_64
+</span></span><span style="display:flex;"><span>bootloader <span style="color:#0550ae">--</span>location<span style="color:#0550ae">=</span>mbr <span style="color:#0550ae">--</span>append<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;nofb quiet splash=quiet&#34;</span> 
+</span></span><span style="display:flex;"><span>zerombr
+</span></span><span style="display:flex;"><span>clearpart <span style="color:#0550ae">--</span>all <span style="color:#0550ae">--</span>initlabel
+</span></span><span style="display:flex;"><span>autopart
+</span></span><span style="display:flex;"><span>text
+</span></span><span style="display:flex;"><span>reboot
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Add Packages</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>packages <span style="color:#0550ae">--</span>ignoremissing
+</span></span><span style="display:flex;"><span>yum
+</span></span><span style="display:flex;"><span>dhclient
+</span></span><span style="display:flex;"><span>ntp
+</span></span><span style="display:flex;"><span>wget
+</span></span><span style="display:flex;"><span>mc
+</span></span><span style="display:flex;"><span><span style="color:#f6f8fa;background-color:#82071e">@</span>Core
+</span></span><span style="display:flex;"><span>epel<span style="color:#0550ae">-</span>release
+</span></span><span style="display:flex;"><span>puppet
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>end
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>post <span style="color:#0550ae">--</span>nochroot
+</span></span><span style="display:flex;"><span>exec  <span style="color:#0550ae">/</span>dev<span style="color:#0550ae">/</span>tty3
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#changing to VT 3 so that we can see whats going on....</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>chvt <span style="color:#0550ae">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>cp <span style="color:#0550ae">-</span>va <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>resolv<span style="color:#0550ae">.</span>conf <span style="color:#0550ae">/</span>mnt<span style="color:#0550ae">/</span>sysimage<span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>resolv<span style="color:#0550ae">.</span>conf
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>chvt <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span> <span style="color:#0550ae">2</span><span style="color:#0550ae">&gt;&amp;</span><span style="color:#0550ae">1</span> <span style="color:#0550ae">|</span> tee <span style="color:#0550ae">/</span>mnt<span style="color:#0550ae">/</span>sysimage<span style="color:#0550ae">/</span>root<span style="color:#0550ae">/</span>install<span style="color:#0550ae">.</span>postnochroot<span style="color:#0550ae">.</span>log
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>end
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>post
+</span></span><span style="display:flex;"><span>logger <span style="color:#0a3069">&#34;Starting anaconda bigdatax.hdp postinstall&#34;</span>
+</span></span><span style="display:flex;"><span>exec  <span style="color:#0550ae">/</span>dev<span style="color:#0550ae">/</span>tty3
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Changing to VT 3 so that we can see whats going on....</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>chvt <span style="color:#0550ae">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Update local time</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#0a3069">&#34;updating system time&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>sbin<span style="color:#0550ae">/</span>ntpdate <span style="color:#0550ae">-</span>sub <span style="color:#0550ae">0.</span>fedora<span style="color:#0550ae">.</span>pool<span style="color:#0550ae">.</span>ntp<span style="color:#0550ae">.</span>org
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>sbin<span style="color:#0550ae">/</span>hwclock <span style="color:#0550ae">--</span>systohc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Update all the base packages from the updates repository</span>
+</span></span><span style="display:flex;"><span>yum <span style="color:#0550ae">-</span>t <span style="color:#0550ae">-</span>y <span style="color:#0550ae">-</span>e <span style="color:#0550ae">0</span> update
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># And add the puppet package</span>
+</span></span><span style="display:flex;"><span>yum <span style="color:#0550ae">-</span>t <span style="color:#0550ae">-</span>y <span style="color:#0550ae">-</span>e <span style="color:#0550ae">0</span> install puppet
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#0a3069">&#34;Configuring puppet&#34;</span>
+</span></span><span style="display:flex;"><span>cat <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>puppet<span style="color:#0550ae">/</span>puppet<span style="color:#0550ae">.</span>conf 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vardir <span style="color:#0550ae">=</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>puppet
+</span></span><span style="display:flex;"><span>logdir <span style="color:#0550ae">=</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span><span style="color:#6639ba">log</span><span style="color:#0550ae">/</span>puppet
+</span></span><span style="display:flex;"><span>rundir <span style="color:#0550ae">=</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>run<span style="color:#0550ae">/</span>puppet
+</span></span><span style="display:flex;"><span>ssldir <span style="color:#0550ae">=</span> <span style="color:#0550ae">$</span>vardir<span style="color:#0550ae">/</span>ssl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pluginsync      <span style="color:#0550ae">=</span> <span style="color:#6a737d">true</span>
+</span></span><span style="display:flex;"><span>report          <span style="color:#0550ae">=</span> <span style="color:#6a737d">true</span>
+</span></span><span style="display:flex;"><span>ignoreschedules <span style="color:#0550ae">=</span> <span style="color:#6a737d">true</span>
+</span></span><span style="display:flex;"><span>daemon          <span style="color:#0550ae">=</span> <span style="color:#6a737d">false</span>
+</span></span><span style="display:flex;"><span>ca_server       <span style="color:#0550ae">=</span> epmhubd1<span style="color:#0550ae">.</span>hdp
+</span></span><span style="display:flex;"><span>certname        <span style="color:#0550ae">=</span> epmhubdx<span style="color:#0550ae">.</span>hdp
+</span></span><span style="display:flex;"><span>environment     <span style="color:#0550ae">=</span> ambari_dev
+</span></span><span style="display:flex;"><span>server          <span style="color:#0550ae">=</span> epmhubd1<span style="color:#0550ae">.</span>hdp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>EOF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Setup Puppet to run on system reboot</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>sbin<span style="color:#0550ae">/</span>chkconfig <span style="color:#0550ae">--</span>level <span style="color:#0550ae">345</span> puppet on
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Register Puppet, download config files</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>usr<span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>puppet agent <span style="color:#0550ae">--</span>config <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>puppet<span style="color:#0550ae">/</span>puppet<span style="color:#0550ae">.</span>conf <span style="color:#0550ae">-</span>o <span style="color:#0550ae">--</span>tags no_such_tag <span style="color:#0550ae">--</span>server bigdata1<span style="color:#0550ae">.</span>hdp <span style="color:#0550ae">--</span>no<span style="color:#0550ae">-</span>daemonize
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sync
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>end
+</span></span></code></pre></div><ul>
+<li><strong>Install Apache</strong></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install httpd
+</span></span></code></pre></div><ul>
+<li>
+<pre><code>* Move Kickstart default file to _/var/www/html/kickstart_
+</code></pre>
+<ul>
+<li>Start Apache
+<ul>
+<li>Check if kickstart is available at <a href="http://bigdata1.hdp/kickstart">http://bigdata1.hdp/kickstart</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Install NFS</strong></p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install nfs-utils nfs-utils-lib
+</span></span></code></pre></div><ul>
+<li>
+<pre><code>* Edit _/etc/exports_ and point it to your NFS shared folder 
+</code></pre>
+<ul>
+<li>In our case <em>/var/nfs</em></li>
+<li>Download the <strong>CentOS 6.5 x86_64 DVD ISO Image</strong> to this location from here: <a href="http://wiki.centos.org/Download%20">http://wiki.centos.org/Download </a></li>
+</ul>
+</li>
+<li>
+<p><strong>Puppet master setup</strong></p>
+<ul>
+<li>Puppet provisioning settings originally from
+<ul>
+<li><a href="https://blog.codecentric.de/en/2014/04/hadoop-cluster-provisioning/">https://blog.codecentric.de/en/2014/04/hadoop-cluster-provisioning/</a>
+<ul>
+<li>Modified repository information</li>
+</ul>
+</li>
+<li>Puppet classes sets
+<ul>
+<li>NTP Clock Sync</li>
+<li>Host information</li>
+<li>Installs Ambari Agents with node specific hostname settings</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>node &#39;bigdata2.hdp&#39; {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># VM-Configuration of an ambari agent that is monitored by the ambari server.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Turn off interfering services
+</span></span><span style="display:flex;"><span>include interfering_services
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Install and enable ntp
+</span></span><span style="display:flex;"><span>include ntp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Ensure that servers can find themselves even in absence of dns
+</span></span><span style="display:flex;"><span>    class { &#39;etchosts&#39;:
+</span></span><span style="display:flex;"><span>      ownhostname =&gt; &#39;bigdata2.hdp&#39;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    class { &#39;ambari_agent&#39;:
+</span></span><span style="display:flex;"><span>      serverhostname =&gt; &#34;bigdata1.hdp&#34;,
+</span></span><span style="display:flex;"><span>      ownhostname    =&gt; &#34;bigdata2.hdp&#34;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Establish ordering
+</span></span><span style="display:flex;"><span>    Class[&#39;interfering_services&#39;] -&gt; Class[&#39;ntp&#39;] -&gt; Class[&#39;etchosts&#39;] -&gt; Class[&#39;ambari_agent&#39;]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>IPtables configuration</strong> for Internet sharing, DHCP, TFTP, DNS
+<ul>
+<li>Edit <em>/etc/sysctl.conf</em> add <em>net.ipv4.ip_forward = 1</em> for allowing Net interface MASQ to Loc (internet connection sharing from internet network interface to local - needed for getting Ambari Repos)</li>
+<li><strong>Ensure that all ports configured below have running services and are accessible</strong> <strong>-</strong> otherwise install of hosts won&rsquo;t work</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># wlan0 is the external network, p4p1 is the lan, internal network
+</span></span><span style="display:flex;"><span>iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+</span></span><span style="display:flex;"><span>iptables -A FORWARD -i wlan0 -o p4p1 -m state  --state RELATED,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>iptables -A FORWARD -i p4p1 -o wlan0 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># allow TFTP
+</span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p udp --dport 69 -m state --state NEW,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># allow DHCP
+</span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p udp --dport 67:68 -m state --state NEW,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># allow DNS
+</span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p udp --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># allow NFS
+</span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p tcp --dport 1025 -m state --state NEW,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># allow HTTP
+</span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>service iptables save 
+</span></span><span style="display:flex;"><span>service iptables restart 
+</span></span></code></pre></div><ul>
+<li>
+<p><strong>Custom script to add a new host</strong></p>
+</li>
+<li>
+<pre><code>* A simple and not too elegant Bash script to add a new host 
+</code></pre>
+<ul>
+<li>Remark: checking input format, hostname as parameter, removing a host is a future task, still it works as-is</li>
+<li><em>./script.sh 00:11:22:33:44:55</em> 96 parameter is the MAC address of a client</li>
+<li>Steps
+<ul>
+<li>Reads the MAC and Counter values from counter.txt in the same directory (counter = 192.168.0.counter value of machine name and IP)</li>
+<li>Adds MAC and IP to <em>/etc/dnsmasq.conf</em> to have a fixed, DHCP assigned IP address</li>
+<li>Adds the node&rsquo;s hostname to <em>/etc/hosts</em> file for DNS to work (dnsmasq DNS server reads entries from there)</li>
+<li>Adds a TFTP entry with the MAC address for PXE boot to <em>/var/lib/tftpboot/pxelinux.cfg/-01-mac</em></li>
+<li>Adds the Kickstart file to <em>/var/www/html</em> with modified host and IP data for unattended install</li>
+<li>Adds Puppet config files to <em>/etc/puppet/manifests/site.pp</em> for the specific node to intall NTP and Ambari-agent on the node</li>
+<li>Increments Counter for the next host</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#57606a">#/bin/bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">[</span> <span style="color:#0550ae">$</span><span style="color:#57606a"># -eq 0 ]</span>
+</span></span><span style="display:flex;"><span>  then
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;Need a MAC address in format 00-11-22-33-44-55&#34;</span>
+</span></span><span style="display:flex;"><span>fi
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>macdash<span style="color:#0550ae">=$</span><span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>macpoint<span style="color:#0550ae">=</span><span style="color:#f6f8fa;background-color:#82071e">`</span>printf <span style="color:#0550ae">$</span>macdash <span style="color:#0550ae">|</span> sed <span style="color:#0a3069">&#39;s/-/:/g&#39;</span><span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#This is to store the end of IP address of range 192.168.0.0 / 255.255.255.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span><span style="color:#0550ae">=</span><span style="color:#f6f8fa;background-color:#82071e">`</span>cat counter<span style="color:#0550ae">.</span>txt<span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Modify dnsmasq.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#bigdata`echo $var`</span>
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34; &gt;&gt; /etc/dnsmasq.conf</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;dhcp-host=`echo $macpoint`,192.168.0.`echo $var`&#34;</span> <span style="color:#0550ae">&gt;&gt;</span> <span style="color:#0550ae">/</span>etc<span style="color:#0550ae">/</span>dnsmasq<span style="color:#0550ae">.</span>conf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Modify hosts</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">192.168</span><span style="color:#0550ae">.</span><span style="color:#0550ae">0.</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span> bigdata<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span><span style="color:#0550ae">.</span>hdp<span style="color:#0a3069">&#34; &gt;&gt; /etc/hosts</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Add MAC to TFTP</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>cp <span style="color:#0550ae">-</span>rf <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span>copy <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span><span style="color:#0550ae">01</span><span style="color:#0550ae">-</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span>macdash<span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#0a3069">&#34;s/kickstart/kickstart$var/g&#34;</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span><span style="color:#0550ae">01</span><span style="color:#0550ae">-</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span>macdash<span style="color:#f6f8fa;background-color:#82071e">`</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span>macdash<span style="color:#f6f8fa;background-color:#82071e">`</span>_tmp
+</span></span><span style="display:flex;"><span>mv <span style="color:#0550ae">-</span>f <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span>macdash<span style="color:#f6f8fa;background-color:#82071e">`</span>_tmp <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot<span style="color:#0550ae">/</span>pxelinux<span style="color:#0550ae">.</span>cfg<span style="color:#0550ae">/</span><span style="color:#0550ae">01</span><span style="color:#0550ae">-</span><span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span>macdash<span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Add Kickstart file</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">/</span>bin<span style="color:#0550ae">/</span>cp <span style="color:#0550ae">-</span>rf <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#0a3069">&#34;s/bigdatax/bigdata$var/g&#34;</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span>_tmp
+</span></span><span style="display:flex;"><span>mv <span style="color:#0550ae">-</span>f <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span>_tmp <span style="color:#0550ae">/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>www<span style="color:#0550ae">/</span>html<span style="color:#0550ae">/</span>kickstart<span style="color:#f6f8fa;background-color:#82071e">`</span>echo <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span><span style="color:#f6f8fa;background-color:#82071e">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Modify Puppet Manifest</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>node <span style="color:#0a3069">&#39;bigdata`echo $var`.hdp&#39;</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34; &gt;&gt; /etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;  include interfering_services</span>
+</span></span><span style="display:flex;"><span>  include ntp
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34; &gt;&gt; /etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;  class { &#39;etchosts&#39;:</span>
+</span></span><span style="display:flex;"><span>    ownhostname <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;bigdata`echo $var`.hdp&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34; &gt;&gt; /etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;  class { &#39;ambari_agent&#39;:</span>
+</span></span><span style="display:flex;"><span>    serverhostname <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#34;bigdata1.hdp&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ownhostname <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#34;bigdata`echo $var`.hdp&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34; &gt;&gt; /etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0a3069">&#34;  Class[&#39;interfering_services&#39;] -&gt; Class[&#39;ntp&#39;] -&gt; Class[&#39;etchosts&#39;] -&gt; Class[&#39;ambari_agent&#39;]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span><span style="color:#0a3069">&#34; &gt;&gt; /etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Restart</span>
+</span></span><span style="display:flex;"><span>service dnsmasq restart
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span><span style="color:#0550ae">=$</span><span style="color:#1f2328">((</span><span style="color:#cf222e">var</span><span style="color:#0550ae">+</span><span style="color:#0550ae">1</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span> <span style="color:#0550ae">&gt;</span> counter<span style="color:#0550ae">.</span>txt
+</span></span></code></pre></div><h2 id="clients">Clients</h2>
+<p>Clients automatically installs on boot from network interface if their MAC address have been added to the system by using the above script. Select Boot media: PXE boot when starting the machine.</p>
+<h2 id="provisioning">Provisioning</h2>
+<ul>
+<li>Use Puppet manifests: <a href="http://docs.puppetlabs.com/learning/">http://docs.puppetlabs.com/learning/</a>
+<ul>
+<li>For configuration management of your hosts. With Puppet you can batch apply system configurations and send commands to your hosts.</li>
+</ul>
+</li>
+<li>Current script installs Ambari-Agent</li>
+<li>SSH login is available</li>
+</ul>
+<h2 id="install-hadoop-with-ambari">Install Hadoop (with Ambari)</h2>
+<p>Install Ambari-Server and Agent on the master host computer with pre-configured Puppet Manifest</p>
+<ul>
+<li>Edit <em>/etc/puppet/environments/ambari_dev/manifest/one.pp</em> in case default hostnames need to be changed</li>
+<li>Run to configure Ambari repository</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>puppet apply /etc/puppet/environments/ambari_dev/manifest/one.pp
+</span></span></code></pre></div><ul>
+<li>
+<pre><code>* Setup and start Ambari
+</code></pre>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>ambari-server setup
+</span></span><span style="display:flex;"><span>ambari-server start
+</span></span></code></pre></div><ul>
+<li>
+<pre><code>*       * Point your browser to http://bigdata1.hdp:8080
+</code></pre>
+<ul>
+<li>Log in to the Ambari Server using the default username/password: <em>admin/admin</em>.</li>
+<li>
+<pre><code>  * Install
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>This guide will not detail Ambari and Hadoop settings. A default install will put together a cluster of Hadoop. <a href="/files/2014/08/provision.zip" title="Hadoop Kickstart install"> Download all files here (configuration files, PXEBoot Linux image, Kickstart file and custom script for adding a node on the master).</a></p>
+<hr>
+<h2 id="ambari-tutorial">Ambari Tutorial</h2>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_1.jpg" alt=""></p>
+<ul>
+<li>Open browser on bigdata1:8080</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_2.jpg" alt=""></p>
+<ul>
+<li>Choose HDP&rsquo;s version (HDP 2.1) and repository of your OS (Centos6 will use Redhat6 repo)</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_3.jpg" alt=""></p>
+<ul>
+<li>Add your hosts, you can use regular expressions like bigdata[0-200].hdp, choose manual registration as Ambari-Agents are already installed</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_4.jpg" alt=""></p>
+<ul>
+<li>Ambari will recognize all Agents in case those are properly installed and network with DNS is configured by using Dnsmasq as above</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_5.jpg" alt=""></p>
+<ul>
+<li>Pre-deploy screens assesses confronting packages and issues that might cause errors</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_6.jpg" alt=""></p>
+<ul>
+<li>Choose the Hadoop components to be deployes on your clusters</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_7.jpg" alt=""></p>
+<ul>
+<li>Assign masters for the services of your cluster</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_8.jpg" alt=""></p>
+<ul>
+<li>Assign slaves and clients for the services of your cluster</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_9.jpg" alt=""></p>
+<ul>
+<li>Parse through settings</li>
+<li>Settings that must be changed are highlighted with red</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_10.jpg" alt=""></p>
+<ul>
+<li>Review the deployment of your cluster</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_12.jpg" alt=""></p>
+<ul>
+<li>Be patient for the deploy. It may be restarted if there are failures.</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_13.jpg" alt=""></p>
+<ul>
+<li>Services will get started up after the deploy</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_14.jpg" alt=""></p>
+<ul>
+<li>Deploy finished with no errors</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_15.jpg" alt=""></p>
+<ul>
+<li>Post deploy screen shows problems and error logs and a summary on the install process (hosts and services)</li>
+</ul>
+<p><img src="/images/uploads/2014/08/Hadoop_PXE_17.jpg" alt=""></p>
+<ul>
+<li>Ambari uses Nagios for comprehensive monitoring with an easy-to-use Hadoop cluster monitoring dashboard that shows usage and status of each services</li>
+</ul>
+<h1 id="troubleshooting-hadoop-deployment-cluster">Troubleshooting Hadoop deployment, cluster</h1>
+<ul>
+<li>Kickstart&rsquo;s last lines might fail to run
+<ul>
+<li>Check if Puppet is installed</li>
+<li>Check Puppet configuration /etc/puppet/puppet.conf both
+<ul>
+<li>On master
+<ul>
+<li>If autosign is on for new clients in the network</li>
+</ul>
+</li>
+<li>And on child nodes
+<ul>
+<li>If server and certificates are configured in the section</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Puppet master won&rsquo;t start
+<ul>
+<li>Check Puppet certificates on child nodes with
+<ul>
+<li>puppet agent &ndash;test</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Fail to load Ambari on localhost:8080
+<ul>
+<li>Check if Ambari is installed and running</li>
+<li>Check if Ambari Agent is set on nodes with server attribute at /etc/ambari-agent/conf</li>
+<li>SSL cert problem is common: check if the certificates corresponds each other on master and agent, if those are not revoked or out of valid dateframe due to clock sync problems</li>
+<li>Check Ambari logs on master and agents too, if there are any SQL errors, reinstall if any</li>
+</ul>
+</li>
+<li>Fail to register Ambari-Agents
+<ul>
+<li>Update OpenSSL</li>
+<li>Check if /etc/ambari-agent config files have correct server settings</li>
+<li>Check /var/log/ambari-agent/ logs</li>
+</ul>
+</li>
+<li>Always check all outputs of the custom script adding machines by using their MAC address
+<ul>
+<li>If dnsmasq is altered at /etc/dnsmasq.conf
+<ul>
+<li>Regarding DHCP</li>
+</ul>
+</li>
+<li>If tftpboot contains the MAC address at PXEboot</li>
+<li>If the webserver has a corresponding kickstartx file and the webserver itself is accessible by the clients</li>
+<li>If Puppet has an entry for the new node on configuration</li>
+</ul>
+</li>
+<li>Can&rsquo;t access services of master
+<ul>
+<li>Check IPTables from remote nodes: web server, TFTP, DNS, DHCP ports are open and working</li>
+<li>Check DNS resolution by pinging nodes from other nodes</li>
+</ul>
+</li>
+<li>SSL certificate problems are common in Puppet and Ambari (which uses another instance of Puppet)
+<ul>
+<li>Check if NTP is running</li>
+<li>Regenerate certificates for masters and agents</li>
+</ul>
+</li>
+<li>In case of any problem
+<ul>
+<li>Check if all services are up and running</li>
+<li>Check network configuration</li>
+<li>Check if services are accessible from agent nodes</li>
+<li>Always check logs</li>
+<li>
+<pre><code>  * /var/log/puppet
+</code></pre>
+<ul>
+<li>/var/log/ambari-server</li>
+<li>/var/log/ambari-agent</li>
+<li>/var/log/messages</li>
+<li>/var/log/</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/hadoop/">hadoop</a><a href="/tags/tutorial/">tutorial</a><a href="/tags/puppet/">puppet</a><a href="/tags/ambari/">ambari</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/performance-test-pig-vs-hive-code-examples/">&larr; Performance test of Pig vs Hive with code examples</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/analysis-tutorial-tableau-desktop/">Analysis tutorial with Tableau Desktop &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+})();
+</script>
+</body>
+</html>
