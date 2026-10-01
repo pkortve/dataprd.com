@@ -108,8 +108,8 @@
       <p>While from the technical perspective, deployment, management and provisioning tools are available to quickly set up a Hadoop cluster, introducing it to the organization is a tough task. Here are the biggest challenges of building a data lake   <strong>1. Understand the purpose and limitations of the technology</strong></p>
 <ul>
 <li>Hadoop environment provides a vendor independent tool-chain for data storage, management and analytics in a scalable fashion - it can manage infinite amount of data and with add-ons makes real-time and data science use-cases available for the enterprise</li>
-<li>Many organizations does not have Big Data. They just load their RDBMS content and get suprised that a 20 node enterprise Hadoop setup&rsquo;s performance is subpar compared with a single PostgreSQL instance. Sure, because the purpose and capabilities are different - we should compare apples with apples after all</li>
-<li>In 95% of the cases stakeholders think that this new technology will substitute their painful proprietary data environment of RDMBSs. It is a highly distributed environment so the case is that is is never capable to substitute proprietary data systems. But it can live well beneath those providing extreme value. The purpose of the data lake is different. Injest data, all of your data, and deal with portions of it without costly ETLs to move it from here to there. Refine your data system, be it processing, reporting or prediction models by slowly adding more datasets.</li>
+<li>Many organizations do not have Big Data. They just load their RDBMS content and get surprised that a 20 node enterprise Hadoop setup&rsquo;s performance is subpar compared with a single PostgreSQL instance. Sure, because the purpose and capabilities are different - we should compare apples with apples after all</li>
+<li>In 95% of the cases stakeholders think that this new technology will substitute their painful proprietary data environment of RDBMSs. It is a highly distributed environment so the case is that it is never capable to substitute proprietary data systems. But it can live well beneath those providing extreme value. The purpose of the data lake is different. Ingest data, all of your data, and deal with portions of it without costly ETLs to move it from here to there. Refine your data system, be it processing, reporting or prediction models by slowly adding more datasets.</li>
 </ul>
 <p><strong>2. Security</strong></p>
 <ul>
@@ -119,7 +119,7 @@
 </ul>
 <p><strong>3. Data governance (confidentiality, integrity and availability)</strong></p>
 <ul>
-<li>An RDBMS enforces a schema, also many rules, e.g. you cannot add a string to an integer field. A data lake does not really have such enforcement mechanisms by default - you can put anything, anywhere. What will this lead to? Everybody puts everything, everywhere. You should setup a governance structure</li>
+<li>An RDBMS enforces a schema, also many rules, e.g. you cannot add a string to an integer field. A data lake does not really have such enforcement mechanisms by default - you can put anything, anywhere. What will this lead to? Everybody puts everything, everywhere. You should set up a governance structure</li>
 <li>Policies, procedures, processes, responsible personnel (RACI framework), documentation, a technology enforcing those and rich documentation to avoid chaos. However, constructing such a framework is a tough task.</li>
 <li>So what is the data, who put it there, why is it there, how and when it changes, who owns it? Construct a data dictionary, know your data, the sources and sinks of it and enforce keeping it up-to-date.</li>
 <li>For further information on data governance challenges, take a look at <a href="/posts/data-governance-in-the-big-data-and-hadoop-world-whitepaper/">this whitepaper</a>.</li>
@@ -136,19 +136,19 @@
 <p><strong>5. Availability of data experts</strong></p>
 <ul>
 <li>It is easy to find RDBMS analysts with established and well known certificates assuring professional support of the proprietary technology stack</li>
-<li>Unlike with big data - it is not only hard to identify vendors for the various building blocks of the technology, it is hard to understand what expertise is needed for a project - is it DevOps, Linux ops, deployment automation, data science, data analysis, programming in MapReduce, with Spark for Scala, etc. There is no such as a SQL analyst running our ETLs and reporting anymore but a team of professionals with Big Data stack operation, Big Data stack development and data, data science expertise, who should be aware of our problems and subject matter</li>
+<li>Unlike with big data - it is not only hard to identify vendors for the various building blocks of the technology, it is hard to understand what expertise is needed for a project - is it DevOps, Linux ops, deployment automation, data science, data analysis, programming in MapReduce, with Spark for Scala, etc. There is no such thing as a SQL analyst running our ETLs and reporting anymore but a team of professionals with Big Data stack operation, Big Data stack development and data, data science expertise, who should be aware of our problems and subject matter</li>
 <li>Education of the users and stakeholders: responsible knows little of this world - current architects will be challenged to integrate the tools to the enterprise, BI analysts will be having a hard time to compile Scala notebooks. Current RDBMS operators will have hard time to identify data assets around the lake. It is a new paradigm and people should learn, support from professionals of the domain is essential, especially when integration budgets rise into the space of millions of dollars.</li>
 </ul>
 <p><strong>6. Rigid, on-premise operation environment</strong></p>
 <ul>
-<li>Many organizations don&rsquo;t trust the cloud and starts an onsite Big Data cluster. Dealing with network setup, security, sizing, procurement, problems around the data center, support structure often causes years of delays. The integration could be done when the hardware is already at it&rsquo;s end of life-cycle&hellip;</li>
+<li>Many organizations don&rsquo;t trust the cloud and start an onsite Big Data cluster. Dealing with network setup, security, sizing, procurement, problems around the data center, support structure often causes years of delays. The integration could be done when the hardware is already at its end of life-cycle&hellip;</li>
 <li>Cloud enables flexibility. The time needs and performance concerns of onsite deployments complicates data projects as much as cloud is the only option to start with and showcase the value of the technology to win further organizational support on spreading it. POCs should take as little time as possible, therefore infrastructure related questions should be the least of the concerns.</li>
 </ul>
 <p><strong>7. Project management</strong></p>
 <ul>
 <li>Classic waterfall or ad-hoc project management methods won&rsquo;t really work for complex data projects due to time needs and the incapability to manage unknowns of the data: to avoid killing a quick win, agile proof-of-concepts have to be done, first to identify the value and challenges with the data and when accepted, those should be extended to the production phases</li>
 <li>When due to deployment issues the production phase is delayed (see point 5), project members get demotivated. We have not yet dealt with actual data, just building the environment and nobody has the lust anymore to learn the new programming paradigms and data management rules</li>
-<li>Motivation is a key: engineers from various background joins such projects - the knowledge area to learn is huge and while Big Data is a hot topic, 90% of the development efforts goes into the not so joyous ETL scripting.</li>
+<li>Motivation is a key: engineers from various backgrounds join such projects - the knowledge area to learn is huge and while Big Data is a hot topic, 90% of the development efforts go into the not so joyous ETL scripting.</li>
 </ul>
 
     </article>

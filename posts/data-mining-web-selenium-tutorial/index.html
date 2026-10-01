@@ -105,8 +105,8 @@
     
 
     <article class="entry clr">
-      <h2 id="data-mining-from-the-web-with-selenium-python-webdriverbrowser-automation---big-data-tutorial">Data mining from the web with Selenium Python WebDriver&rsquo;Browser Automation - Big data tutorial</h2>
-<p>In this example the Selenium web test automation framework uses Firefox for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) then <a href="/posts/data-mining-web-python-mechanize-tutorial/" title="Data mining from webpages with Python Mechanize Browser Automation ? a Big-data tutorial">Python Mechanize - having an example here</a>. It uses a full suite of a web browser, so as an advantage Javascript and AJAX rich webpage parsing can be automated - in such cases it has to be used instead of <a href="/posts/data-mining-web-python-mechanize-tutorial/" title="Data mining from webpages with Python Mechanize Browser Automation ? a Big-data tutorial">Python Mechanize </a>for data mining and auto testing purposes. This rich commented <strong>Selenium Python WebDriver Browser Automation example</strong> does the following:</p>
+      <h2 id="data-mining-from-the-web-with-selenium-python-webdriver-browser-automation---big-data-tutorial">Data mining from the web with Selenium Python WebDriver Browser Automation - Big data tutorial</h2>
+<p>In this example the Selenium web test automation framework uses Firefox for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) than <a href="/posts/data-mining-web-python-mechanize-tutorial/" title="Data mining from webpages with Python Mechanize Browser Automation - a Big-data tutorial">Python Mechanize - having an example here</a>. It uses a full suite of a web browser, so as an advantage Javascript and AJAX rich webpage parsing can be automated - in such cases it has to be used instead of <a href="/posts/data-mining-web-python-mechanize-tutorial/" title="Data mining from webpages with Python Mechanize Browser Automation - a Big-data tutorial">Python Mechanize</a> for data mining and auto testing purposes. This rich commented <strong>Selenium Python WebDriver Browser Automation example</strong> does the following:</p>
 <ul>
 <li>Logs in to a webpage with custom credentials</li>
 <li>Clicks on a link</li>
@@ -114,10 +114,10 @@
 <ul>
 <li>Adds multiple list elements in a for cycle to the first field
 <ul>
-<li>Adds multiple list elements in an other for cycle to the second field
+<li>Adds multiple list elements in another for cycle to the second field
 <ul>
 <li>Lists the results of the above query</li>
-<li>The list can have multiple sub pages (the list shows limited results and have a pager)
+<li>The list can have multiple sub pages (the list shows limited results and has a pager)
 <ul>
 <li>Checks all the links of the query being in a container</li>
 <li><em>LABEL: PAGE</em> - Opens all the links from the next page
@@ -135,180 +135,93 @@
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#57606a"># Selenium Python documentation at: http://selenium-python.readthedocs.org/en/latest/</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import collections
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import time
-</span></span><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># Selenium Python documentation at: http://selenium-python.readthedocs.org/en/latest/</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">collections</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">time</span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Import Selenium and its supporting packages: have to be installed</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import selenium
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>from selenium import webdriver
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>from selenium<span style="color:#0550ae">.</span>webdriver<span style="color:#0550ae">.</span>common<span style="color:#0550ae">.</span>by import By
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>from selenium<span style="color:#0550ae">.</span>webdriver<span style="color:#0550ae">.</span>support<span style="color:#0550ae">.</span>ui import WebDriverWait <span style="color:#57606a"># available since 2.4.0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>from selenium<span style="color:#0550ae">.</span>webdriver<span style="color:#0550ae">.</span>support import expected_conditions as EC <span style="color:#57606a"># available since 2.26.0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>from selenium<span style="color:#0550ae">.</span>webdriver<span style="color:#0550ae">.</span>common<span style="color:#0550ae">.</span>keys import Keys
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">selenium</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">selenium</span> <span style="color:#cf222e">import</span> webdriver
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">selenium.webdriver.common.by</span> <span style="color:#cf222e">import</span> By
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">selenium.webdriver.support.ui</span> <span style="color:#cf222e">import</span> WebDriverWait <span style="color:#57606a"># available since 2.4.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">selenium.webdriver.support</span> <span style="color:#cf222e">import</span> expected_conditions <span style="color:#cf222e">as</span> EC <span style="color:#57606a"># available since 2.26.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">selenium.webdriver.common.keys</span> <span style="color:#cf222e">import</span> Keys
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># The recursive query to chech multi pages of search results; check the main part of the code first</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">checklinks</span><span style="color:#1f2328">(</span>driver<span style="color:#1f2328">,</span> element<span style="color:#1f2328">,</span> element2<span style="color:#1f2328">):</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># Store the main URL</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	mainurl <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>current_url
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># Get all the links on the search query page; links is a Python collection of links</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># All links are stored which are in the xpath: xpath can be gathered by using Firebug in Firefox</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	links <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># For all links</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#cf222e">for</span> link <span style="color:#0550ae">in</span> links<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Open the link in the browser</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>link<span style="color:#0550ae">.</span>get_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;href&#34;</span><span style="color:#1f2328">))</span>		
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># If there is an element on the page in the given xpath</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    <span style="color:#cf222e">if</span> driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/div[4]/div/div[2]/div/&#34;</span><span style="color:#1f2328">):</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			<span style="color:#57606a"># Print the following elements; and the text contained in the container of the specified xpath</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    	<span style="color:#6639ba">print</span> element<span style="color:#1f2328">,</span>element2<span style="color:#1f2328">,</span>link<span style="color:#0550ae">.</span>text<span style="color:#1f2328">,</span>driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/div[4]/div/div[2]/div/div[2]/div/&#34;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>text
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>	
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			<span style="color:#57606a"># else print the elements and a 0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#6639ba">print</span> element<span style="color:#1f2328">,</span>element2<span style="color:#1f2328">,</span>link<span style="color:#0550ae">.</span>text<span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;0&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># Go back to the search result page	after all links of the search result page have been parsed</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>mainurl<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># Get the Next &gt; button on the pager of the search result page</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	nextlink <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_link_text<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;Next &gt;&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># If nextlink is given - if we are not on the last page</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#cf222e">if</span> nextlink<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Open the next page</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>nextlink<span style="color:#0550ae">.</span>get_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;href&#34;</span><span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Recursively check the links by recalling the above method</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		checklinks<span style="color:#1f2328">(</span>driver<span style="color:#1f2328">,</span> element<span style="color:#1f2328">,</span> element2<span style="color:#1f2328">)</span>		
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Store the main URL</span>
+</span></span><span style="display:flex;"><span>    mainurl <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>current_url
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Get all the links on the search query page; links is a Python collection of links</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># All links are stored which are in the xpath: xpath can be gathered by using Firebug in Firefox</span>
+</span></span><span style="display:flex;"><span>    links <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># For all links</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> link <span style="color:#0550ae">in</span> links<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Open the link in the browser</span>
+</span></span><span style="display:flex;"><span>        driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>link<span style="color:#0550ae">.</span>get_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;href&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># If there is an element on the page in the given xpath</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/div[4]/div/div[2]/div/&#34;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Print the following elements; and the text contained in the container of the specified xpath</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span> element<span style="color:#1f2328">,</span>element2<span style="color:#1f2328">,</span>link<span style="color:#0550ae">.</span>text<span style="color:#1f2328">,</span>driver<span style="color:#0550ae">.</span>find_elements_by_xpath<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;/html/body/div[4]/div/div[2]/div/div[2]/div/&#34;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>text
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># else print the elements and a 0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span> element<span style="color:#1f2328">,</span>element2<span style="color:#1f2328">,</span>link<span style="color:#0550ae">.</span>text<span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;0&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Go back to the search result page	after all links of the search result page have been parsed</span>
+</span></span><span style="display:flex;"><span>    driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>mainurl<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Get the &lt;a href=...&gt;Next &gt;&lt;/a&gt; button on the pager of the search result page</span>
+</span></span><span style="display:flex;"><span>    nextlink <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_link_text<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;Next &gt;&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># If nextlink is given - if we are not on the last page</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> nextlink<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Open the next page</span>
+</span></span><span style="display:flex;"><span>        driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>nextlink<span style="color:#0550ae">.</span>get_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;href&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Recursively check the links by recalling the above method</span>
+</span></span><span style="display:flex;"><span>        checklinks<span style="color:#1f2328">(</span>driver<span style="color:#1f2328">,</span> element<span style="color:#1f2328">,</span> element2<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Dropdown values for the forms</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>dropdownelements <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;Selection1&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;Selection2&#39;</span><span style="color:#1f2328">]</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>dropdownelements2  <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;Selection10&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;Selection20&#39;</span><span style="color:#1f2328">]</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Open Firefox</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>driver <span style="color:#0550ae">=</span> webdriver<span style="color:#0550ae">.</span>Firefox<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Open the webpage</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;http://www.tobecheckedpage/&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the form element named login, e.g. in the HTML  and link it to username variable</span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the form element named login, e.g. in the HTML &lt;input name=&#34;login&#34; type=&#34;text&#34; /&gt; and link it to username variable</span>
 </span></span><span style="display:flex;"><span>username <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;login&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Add your user name to the login box</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>username<span style="color:#0550ae">.</span>send_keys<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;myloginid&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the form element named password</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>password <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;password&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Add your password to the login box</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>password<span style="color:#0550ae">.</span>send_keys<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;password&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Click on the button named signin</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>driver<span style="color:#0550ae">.</span>find_element_by_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;signin&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the link appearing as Link on the page and click on it, e.g. in the HTML Link</span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the link appearing as Link on the page and click on it, e.g. in the HTML &lt;a href=&#34;continue.html&#34;&gt;Link&lt;/a&gt;</span>
 </span></span><span style="display:flex;"><span>driver<span style="color:#0550ae">.</span>find_element_by_link_text<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;Link&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># For all dropdownelements</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> element <span style="color:#0550ae">in</span> dropdownelements<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#57606a"># For all dropdownelements2</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#cf222e">for</span> element2 <span style="color:#0550ae">in</span> dropdownelements2<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Open a page</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;http://www.tobecheckedpage/page&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Find element by ID, e.g. in the HTML   </span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		form <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_id<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;code&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Form is a dropdown, parse through all the chosable options</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#cf222e">for</span> option <span style="color:#0550ae">in</span> form<span style="color:#0550ae">.</span>find_elements_by_tag_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;option&#39;</span><span style="color:#1f2328">):</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			<span style="color:#57606a">#If the currently selected option matches element</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		    <span style="color:#cf222e">if</span> option<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> element<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>				<span style="color:#57606a">#Then click on the element</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		    	option<span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Find an other form input element, having an id &#39;keywords&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		keywordsform <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_id<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;keywords&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># May be needed if Ajax is on the page and form changes; </span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># for more complex waits, e.g. wait for an element to show up, see http://selenium-python.readthedocs.org/en/latest/waits.html</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		time<span style="color:#0550ae">.</span>sleep<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Add element2 to the page</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		keywordsform<span style="color:#0550ae">.</span>send_keys<span style="color:#1f2328">(</span>element2<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Click on button, that have a class called submit, e.g. in the HTML </span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		driver<span style="color:#0550ae">.</span>find_element_by_class_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;submit&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#57606a"># Call recursive checker - as form has been sent, we have the results of the query</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		checklinks<span style="color:#1f2328">(</span>driver<span style="color:#1f2328">,</span> country<span style="color:#1f2328">,</span> job<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># For all dropdownelements2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> element2 <span style="color:#0550ae">in</span> dropdownelements2<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Open a page</span>
+</span></span><span style="display:flex;"><span>        driver<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;http://www.tobecheckedpage/page&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Find element by ID, e.g. in the HTML   &lt;form id=&#34;code&#34;&gt;</span>
+</span></span><span style="display:flex;"><span>        form <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_id<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;code&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Form is a dropdown, parse through all the chosable options</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">for</span> option <span style="color:#0550ae">in</span> form<span style="color:#0550ae">.</span>find_elements_by_tag_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;option&#39;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">#If the currently selected option matches element</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> option<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> element<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a">#Then click on the element</span>
+</span></span><span style="display:flex;"><span>                option<span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Find an other form input element, having an id &#39;keywords&#39;</span>
+</span></span><span style="display:flex;"><span>        keywordsform <span style="color:#0550ae">=</span> driver<span style="color:#0550ae">.</span>find_element_by_id<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;keywords&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># May be needed if Ajax is on the page and form changes;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># for more complex waits, e.g. wait for an element to show up, see http://selenium-python.readthedocs.org/en/latest/waits.html</span>
+</span></span><span style="display:flex;"><span>        time<span style="color:#0550ae">.</span>sleep<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Add element2 to the page</span>
+</span></span><span style="display:flex;"><span>        keywordsform<span style="color:#0550ae">.</span>send_keys<span style="color:#1f2328">(</span>element2<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Click on button, that have a class called submit, e.g. in the HTML &lt;form class=&#34;submit&#34;&gt;</span>
+</span></span><span style="display:flex;"><span>        driver<span style="color:#0550ae">.</span>find_element_by_class_name<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;submit&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>click<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Call recursive checker - as form has been sent, we have the results of the query</span>
+</span></span><span style="display:flex;"><span>        checklinks<span style="color:#1f2328">(</span>driver<span style="color:#1f2328">,</span> country<span style="color:#1f2328">,</span> job<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># Close the browser</span>
-</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>driver<span style="color:#0550ae">.</span>close<span style="color:#1f2328">()</span></span></span></code></pre></div>
     </article>
 

@@ -106,18 +106,18 @@
 
     <article class="entry clr">
       <h2 id="data-mining-from-the-web-with-python-mechanize-browser-automation---big-data-tutorial">Data mining from the web with Python Mechanize Browser Automation - Big data tutorial</h2>
-<p>In this example the Python Mechanize package is used for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) and is to be used when feature-rich Javascript and Ajax website data mining or automated test case setup is to be built. A <a href="/posts/data-mining-web-selenium-tutorial/" title="Data mining from webpages with Selenium Python WebDriver Browser Automation ? a Big data tutorial">Selenium browser automation example can be found here</a>. This rich commented <strong>Python Mechanize Browser Automation example</strong> does the following:</p>
+<p>In this example the Python Mechanize package is used for browser automation - Selenium is much more feature rich (and is also a bit more difficult to use) and is to be used when feature-rich Javascript and Ajax website data mining or automated test case setup is to be built. A <a href="/posts/data-mining-web-selenium-tutorial/" title="Data mining from webpages with Selenium Python WebDriver Browser Automation - a Big data tutorial">Selenium browser automation example can be found here</a>. This rich commented <strong>Python Mechanize Browser Automation example</strong> does the following:</p>
 <ul>
 <li>Logs in to a webpage with custom credentials</li>
-<li>Opens an other page by knowing the session used for login</li>
+<li>Opens another page by knowing the session used for login</li>
 <li>Finds a form and two input fields of it
 <ul>
 <li>Adds multiple list elements in a for cycle to the first field
 <ul>
-<li>Adds multiple list elements in an other for cycle to the second field
+<li>Adds multiple list elements in another for cycle to the second field
 <ul>
 <li>Lists the results of the above query</li>
-<li>The list can have multiple sub pages (the list shows limited results and have a pager)
+<li>The list can have multiple sub pages (the list shows limited results and has a pager)
 <ul>
 <li>Checks all the links of the query matching a pattern</li>
 <li><em>LABEL: PAGE</em> - Opens all the links from the next page
@@ -135,149 +135,78 @@
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Import Python Mechanize Browser Automation Library
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import mechanize
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Import regular Expressions
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import re
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>import collections
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Dropdown values for the forms
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dropdownelements = [&#39;Selection1&#39;, &#39;Selection2&#39;]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>dropdownelements2 = [&#39;Selection10&#39;, &#39;Selection20&#39;]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Initialize the browser
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser = mechanize.Browser()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser.set_handle_robots(False)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Simulate Firefox
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser.addheaders = [(&#39;User-agent&#39;, &#39;Firefox&#39;)]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Open the page
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser.open(&#34;http://www.tobecheckedpage&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Select the form named login, e.g. in the HTML  
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser.select_form(name=&#34;login&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Find the form element named login and add myloginid to it
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser[&#34;login&#34;] = &#34;myloginid&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Find the form element named password and add mypassword to it
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>browser[&#34;password&#34;] = &#34;mypassword&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Click on the submit button
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>response = browser.submit()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># For all dropdownelements
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>for dropdownelement in dropdownelements:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	# For all dropdownelements2
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	for dropdownelement2 in dropdownelements2:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Open a page
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		page = browser.open(&#34;http://www.tobecheckedpage/page&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Get the response to console
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		print page.read()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Find element by name, e.g. in the HTML 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		browser.select_form(name=&#34;code&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Find input element option and add dropdownelement as value
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		browser.form[ &#39;options&#39; ] = dropdownelement
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Find input element keywords and add dropdownelement2 as value
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		browser.form[ &#39;keywords&#39; ] = dropdownelement2
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Submit the form
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		browser.submit()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Call recursive checker - as form has been sent, we have the results of the query
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		checklinks(browser, country, job)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># The recursive query to chech multi pages of search results; check the main part of the code first
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>def checklinks(browser, dropdownelements, dropdownelements2):
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	# Initialize a second browser with the same properties that the first has
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	browser2 = browser
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	# Get all the links on the search query page
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	for link in browser.links():
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# For all links do:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Filter the links that has RegExp in their href
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    siteMatch = re.compile( &#39;/RegExp&#39; ).search( link.url )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# If link contains RegExp
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	    if siteMatch:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Then open the link
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		resp = browser2.follow_link( link )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# And store its content
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		content = resp.get_data()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# Do data mining in the content of the detail page resulting from the query result page
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	# An other for cycle checking all the links on the result page (again)	
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	for link in browser.links():
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		#Check if the link has the text &#39;Next &gt;&#39;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		siteMatch = re.compile( &#39;Next &gt;&#39; ).search( link.text )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		# If it has
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		if siteMatch:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			# Then follow the link (go to next page of the results)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			resp = browser.follow_link( link )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			# Call recursive checker - as form has been sent, we have the results of the query
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			checklinks(browser, country, job)</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># Import Python Mechanize Browser Automation Library</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">mechanize</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Import regular Expressions</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">re</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">collections</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Dropdown values for the forms</span>
+</span></span><span style="display:flex;"><span>dropdownelements <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;Selection1&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;Selection2&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>dropdownelements2 <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;Selection10&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;Selection20&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Initialize the browser</span>
+</span></span><span style="display:flex;"><span>browser <span style="color:#0550ae">=</span> mechanize<span style="color:#0550ae">.</span>Browser<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#0550ae">.</span>set_handle_robots<span style="color:#1f2328">(</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Simulate Firefox</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#0550ae">.</span>addheaders <span style="color:#0550ae">=</span> <span style="color:#1f2328">[(</span><span style="color:#0a3069">&#39;User-agent&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;Firefox&#39;</span><span style="color:#1f2328">)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Open the page</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#0550ae">.</span>open<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;http://www.tobecheckedpage&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Select the form named login, e.g. in the HTML &lt;input name=&#34;login&#34; type=&#34;text&#34; /&gt;</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#0550ae">.</span>select_form<span style="color:#1f2328">(</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;login&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the form element named login and add myloginid to it</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;login&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;myloginid&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Find the form element named password and add mypassword to it</span>
+</span></span><span style="display:flex;"><span>browser<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;password&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;mypassword&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Click on the submit button</span>
+</span></span><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> browser<span style="color:#0550ae">.</span>submit<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># For all dropdownelements</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> dropdownelement <span style="color:#0550ae">in</span> dropdownelements<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># For all dropdownelements2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> dropdownelement2 <span style="color:#0550ae">in</span> dropdownelements2<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Open a page</span>
+</span></span><span style="display:flex;"><span>        page <span style="color:#0550ae">=</span> browser<span style="color:#0550ae">.</span>open<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;http://www.tobecheckedpage/page&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Get the response to console</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span> page<span style="color:#0550ae">.</span>read<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Find element by name, e.g. in the HTML &lt;form name=&#34;code&#34;&gt;</span>
+</span></span><span style="display:flex;"><span>        browser<span style="color:#0550ae">.</span>select_form<span style="color:#1f2328">(</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;code&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Find input element option and add dropdownelement as value</span>
+</span></span><span style="display:flex;"><span>        browser<span style="color:#0550ae">.</span>form<span style="color:#1f2328">[</span> <span style="color:#0a3069">&#39;options&#39;</span> <span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> dropdownelement
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Find input element keywords and add dropdownelement2 as value</span>
+</span></span><span style="display:flex;"><span>        browser<span style="color:#0550ae">.</span>form<span style="color:#1f2328">[</span> <span style="color:#0a3069">&#39;keywords&#39;</span> <span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> dropdownelement2
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Submit the form</span>
+</span></span><span style="display:flex;"><span>        browser<span style="color:#0550ae">.</span>submit<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Call recursive checker - as form has been sent, we have the results of the query</span>
+</span></span><span style="display:flex;"><span>        checklinks<span style="color:#1f2328">(</span>browser<span style="color:#1f2328">,</span> country<span style="color:#1f2328">,</span> job<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># The recursive query to chech multi pages of search results; check the main part of the code first</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">checklinks</span><span style="color:#1f2328">(</span>browser<span style="color:#1f2328">,</span> dropdownelements<span style="color:#1f2328">,</span> dropdownelements2<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Initialize a second browser with the same properties that the first has</span>
+</span></span><span style="display:flex;"><span>    browser2 <span style="color:#0550ae">=</span> browser
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Get all the links on the search query page</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> link <span style="color:#0550ae">in</span> browser<span style="color:#0550ae">.</span>links<span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># For all links do:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Filter the links that has RegExp in their href</span>
+</span></span><span style="display:flex;"><span>        siteMatch <span style="color:#0550ae">=</span> re<span style="color:#0550ae">.</span>compile<span style="color:#1f2328">(</span> <span style="color:#0a3069">&#39;/RegExp&#39;</span> <span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>search<span style="color:#1f2328">(</span> link<span style="color:#0550ae">.</span>url <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># If link contains RegExp</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> siteMatch<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Then open the link</span>
+</span></span><span style="display:flex;"><span>            resp <span style="color:#0550ae">=</span> browser2<span style="color:#0550ae">.</span>follow_link<span style="color:#1f2328">(</span> link <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># And store its content</span>
+</span></span><span style="display:flex;"><span>            content <span style="color:#0550ae">=</span> resp<span style="color:#0550ae">.</span>get_data<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Do data mining in the content of the detail page resulting from the query result page</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># An other for cycle checking all the links on the result page (again)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> link <span style="color:#0550ae">in</span> browser<span style="color:#0550ae">.</span>links<span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">#Check if the link has the text &#39;Next &gt;&#39;</span>
+</span></span><span style="display:flex;"><span>        siteMatch <span style="color:#0550ae">=</span> re<span style="color:#0550ae">.</span>compile<span style="color:#1f2328">(</span> <span style="color:#0a3069">&#39;Next &gt;&#39;</span> <span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>search<span style="color:#1f2328">(</span> link<span style="color:#0550ae">.</span>text <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># If it has</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> siteMatch<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Then follow the link (go to next page of the results)</span>
+</span></span><span style="display:flex;"><span>            resp <span style="color:#0550ae">=</span> browser<span style="color:#0550ae">.</span>follow_link<span style="color:#1f2328">(</span> link <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Call recursive checker - as form has been sent, we have the results of the query</span>
+</span></span><span style="display:flex;"><span>            checklinks<span style="color:#1f2328">(</span>browser<span style="color:#1f2328">,</span> country<span style="color:#1f2328">,</span> job<span style="color:#1f2328">)</span></span></span></code></pre></div>
     </article>
 
     

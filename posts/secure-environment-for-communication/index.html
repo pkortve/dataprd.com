@@ -105,7 +105,7 @@
     
 
     <article class="entry clr">
-      <p>Data governance procedures includes the management of communication assets (e-mail, instant messaging, phone calls), which are considered as business secrets. While small enterprises should make calculations on using the cloud as the price benefit might worth the negative impact on data management and ownership, a medium/large sized company is suggested to use own solutions with own security and data backup policies. Hereby - <em>in brief</em> - I present an <em>exemplary cost-effective,</em> secure setup for small to medium enterprises own infrastructure based on encrypted communication and messaging storage with data security and backup in mind. <em>This is a high-level overview: data governance practices, backup policies, disaster recovery, update procedures, security testing, physical security, etc. are to be defined</em>. <img src="/images/uploads/2014/08/MidSecure.png" alt="Middle sized company secure network"> Linux based servers: CentOS or Ubuntu Office 1: ~100-200 users</p>
+      <p>Data governance procedures include the management of communication assets (e-mail, instant messaging, phone calls), which are considered as business secrets. While small enterprises should make calculations on using the cloud as the price benefit might be worth the negative impact on data management and ownership, a medium/large sized company is suggested to use own solutions with own security and data backup policies. Hereby - <em>in brief</em> - I present an <em>exemplary cost-effective,</em> secure setup for small to medium enterprises own infrastructure based on encrypted communication and messaging storage with data security and backup in mind. <em>This is a high-level overview: data governance practices, backup policies, disaster recovery, update procedures, security testing, physical security, etc. are to be defined</em>. <img src="/images/uploads/2014/08/MidSecure.png" alt="Middle sized company secure network"> Linux based servers: CentOS or Ubuntu Office 1: ~100-200 users</p>
 <pre><code>* Server 1 (Medium) 
   * VPN connection (OpenVPN) 
     * VPN tunnel for Office2
@@ -122,12 +122,12 @@
       * IMAPs
     * Alternative: Zimbra collaboration suite with calendar and file sharing capability
   * Instant messaging 
-    * XAMPP
+    * XMPP
   * VoIP 
-    * Elastics bundle
+    * Elastix bundle
     * Harder alternative: Asterisk
   * File server 
-    * Owncloud with Dropbox-like services, CalDav and CarDav calendar and contact sync and web interface 
+    * Owncloud with Dropbox-like services, CalDAV and CardDAV calendar and contact sync and web interface 
       * Alternative: Samba for network file system
       * Alternative: Zimbra collaboration suite with calendar and file sharing capability
     * RSync of all data on VPN to Office2 NAS every night
@@ -157,7 +157,7 @@
 </li>
 <li>Mobile workers
 <ul>
-<li>Access e-mail <em>only</em> without VPN (CalDav and CarDav can be configured too by firewall HTTP allow and HTTPd .htaccess tweaks)</li>
+<li>Access e-mail <em>only</em> without VPN (CalDAV and CardDAV can be configured too by firewall HTTP allow and HTTPd .htaccess tweaks)</li>
 <li>Access file share, VoIP and Instant messaging, Office1 internal network with VPN</li>
 </ul>
 </li>

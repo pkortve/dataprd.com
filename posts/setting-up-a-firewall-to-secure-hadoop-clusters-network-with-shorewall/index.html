@@ -108,7 +108,7 @@
       <p><a href="http://shorewall.net/">Shorewall</a> is a tool to configure Linux inbuilt IPTables in an easy and understandable way. Assume we have a basic setup: <em>Lan | Firewall with Proxy server | Internet</em> <img src="/images/uploads/2014/08/Shorewall_Proxy.png" alt="Network_Config"> A secure setup is to:</p>
 <ul>
 <li>ACCEPT HTTP(80) and HTTPS(443) from LAN to NET</li>
-<li>ACCEPT special services port&rsquo;s from specific LAN to NET (like e-banking)</li>
+<li>ACCEPT special services ports from specific LAN to NET (like e-banking)</li>
 <li>ACCEPT only the needed FW services from LAN to FW - SSH(22) and MAIL(25,443,993,&hellip;) to FW (if mail server is on FW)</li>
 <li>ACCEPT only the needed FW services from NET to FW - SSH(22) with IP restriction (and SSH key) and MAIL(25,443,993,&hellip;) to FW (if mail server is on FW)
 <ul>
@@ -119,7 +119,7 @@
 <li>REJECT any incoming connection (other than above) to LAN or FW</li>
 </ul>
 <p>Shorewall configuration - with some additional examples on the syntax and rules:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># File: zones
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># File: zones
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span># http://www.shorewall.net/manpages/shorewall-zones.html
 </span></span><span style="display:flex;"><span>

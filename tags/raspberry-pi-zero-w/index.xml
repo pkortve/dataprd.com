@@ -14,11 +14,11 @@
 		
 			<atom:link href="https://dataprd.com/tags/raspberry-pi-zero-w/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi</title>
+				<title>Air quality monitoring IoT – Arduino &amp; sensors connected to a Raspberry Pi</title>
 				<link>https://dataprd.com/posts/arduino-raspberry-air-quality-iot/</link>
 				<pubDate>Sat, 26 Aug 2017 16:42:00 +0000</pubDate>
 				<guid>https://dataprd.com/posts/arduino-raspberry-air-quality-iot/</guid>
-				<description>&lt;p&gt;I was very interested in monitoring the surrounding air&amp;rsquo;s quality, so I built a box that monitors Particle Matters (PM), gas concentrations, temperature and humidity. The historical data is persisted and accessible via the network ? translating to a typical IOT use case. The box built is based on Arduino with its sensors and a RaspberryPi. Arduino is a great platform for electronics prototyping with a convenient development IDE ? it allows to connect sensors to the board and share the data via multiple interfaces (such as serial port, attached SD card, network, etc.). The networking and data persistence are solved via a Raspberry Pi Zero W, providing SD-card based data plotting, having a host and guest Wifi network for data access and data sharing with cloud providers.&lt;/p&gt;</description>
+				<description>&lt;p&gt;I was very interested in monitoring the surrounding air&amp;rsquo;s quality, so I built a box that monitors Particulate Matter (PM), gas concentrations, temperature and humidity. The historical data is persisted and accessible via the network – translating to a typical IoT use case. The box built is based on Arduino with its sensors and a RaspberryPi. Arduino is a great platform for electronics prototyping with a convenient development IDE – it allows to connect sensors to the board and share the data via multiple interfaces (such as serial port, attached SD card, network, etc.). The networking and data persistence are solved via a Raspberry Pi Zero W, providing SD-card based data plotting, having a host and guest Wifi network for data access and data sharing with cloud providers.&lt;/p&gt;</description>
 			</item>
 	</channel>
 </rss>
