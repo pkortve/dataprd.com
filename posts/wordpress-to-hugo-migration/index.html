@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages | Dataprd.Com</title>
+  <meta name="description" content="Why I retired the PHP and MySQL stack behind this blog, how the SQL dump was converted into Markdown, and what the GitHub Pages setup actually looks like." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>June 3, 2026</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-security/">Data security</a>
+        </li>
+        
+        <li><i class="fa fa-book"></i>8 min read</li>
+      </ul>
+    </header>
+
+    
+    <div class="post-hero">
+      <img src="/images/posts/wordpress-to-hugo-migration.png" alt="" width="880" height="200">
+    </div>
+    
+
+    
+    <aside class="post-tldr">
+      <p class="post-tldr-title">In short</p>
+      <ul><li>A blog that almost never changes was running PHP, MySQL and a dozen plugins, each with its own security history.</li><li>Hugo builds the whole site into flat files in under a second; GitHub Pages serves them over HTTPS for free.</li><li>A Python script read the MySQL dump directly and wrote Markdown, keeping every original slug so no link broke.</li><li>The price is comments, built-in search, scheduled posts and an admin UI. For a blog like this one, worth it.</li></ul>
+    </aside>
+    
+
+    
+    <details class="post-toc" open>
+      <summary>Contents</summary>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-case-against-staying">The case against staying</a>
+      <ul>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#speed">Speed</a></li>
+        <li><a href="#maintenance">Maintenance</a></li>
+      </ul>
+    </li>
+    <li><a href="#what-hugo-is">What Hugo is</a></li>
+    <li><a href="#converting-the-old-content">Converting the old content</a></li>
+    <li><a href="#hosting-on-github-pages">Hosting on GitHub Pages</a></li>
+    <li><a href="#dns">DNS</a></li>
+    <li><a href="#what-i-gave-up">What I gave up</a></li>
+    <li><a href="#would-i-do-it-again">Would I do it again</a></li>
+  </ul>
+</nav>
+    </details>
+    
+
+    <article class="entry clr longform">
+      <p>The WordPress setup behind this blog kept causing trouble: security issues, breaches, and a constant stream of updates for core, theme and plugins. For a site of articles that almost never change, that was too much upkeep and too much risk.</p>
+<p>So I moved it to <a href="https://gohugo.io/">Hugo</a> and now serve it as flat files from GitHub Pages, for free. This post covers why, how the SQL dump became Markdown, and the deployment setup.</p>
+<h2 id="the-case-against-staying">The case against staying<a class="heading-anchor" href="#the-case-against-staying" aria-label="Link to this section">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th></th>
+					<th>WordPress</th>
+					<th>Hugo on GitHub Pages</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Server-side code</td>
+					<td>PHP, MySQL, core, theme, plugins</td>
+					<td>None</td>
+			</tr>
+			<tr>
+					<td>Login page</td>
+					<td><code>wp-login.php</code>, attacked around the clock</td>
+					<td>None</td>
+			</tr>
+			<tr>
+					<td>Serving a page</td>
+					<td>Queries and templates, hidden behind a cache plugin</td>
+					<td>A file from a CDN edge</td>
+			</tr>
+			<tr>
+					<td>Upkeep</td>
+					<td>Core, plugin and theme updates, backups, PHP and MySQL versions</td>
+					<td>Update one binary now and then</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="security">Security<a class="heading-anchor" href="#security" aria-label="Link to this section">#</a></h3>
+<p>WordPress runs a large share of the web, which makes it a permanent target. Bots do not care that this is a low-traffic blog about data engineering. They scan everything.</p>
+<p>The core gets regular security patches, and missing one is enough. Plugins are the bigger problem: each is a separate codebase maintained by someone you have never met, capable of introducing SQL injection, XSS, remote code execution or an authentication bypass. Plugins with millions of installs have been exploited in the wild more than once. Themes carry the same risk, since they execute PHP on the server. On top of that, <code>wp-login.php</code> gets hammered around the clock by credential stuffing bots, and even when a lockout plugin blocks them they still generate load and bloat the logs.</p>
+<p>A static site has no server-side code at all. No login page, no database, no PHP interpreter. The attack surface shrinks to the web server (GitHub&rsquo;s problem now) and DNS. That is a very different sort of night&rsquo;s sleep.</p>
+<h3 id="speed">Speed<a class="heading-anchor" href="#speed" aria-label="Link to this section">#</a></h3>
+<p>WordPress builds every page on every request: connect to MySQL, query posts and meta and taxonomies and options, run the theme templates, assemble HTML, return it. Caching plugins hide most of that, but a cache is another moving part, and caches break in interesting ways, usually right after you change something.</p>
+<p>With Hugo the HTML already exists before the request arrives. A CDN edge node hands over a file. There is no clever part to go wrong.</p>
+<h3 id="maintenance">Maintenance<a class="heading-anchor" href="#maintenance" aria-label="Link to this section">#</a></h3>
+<p>The honest tally of what keeping a WordPress install healthy costs: core, plugin and theme updates; database backups plus the occasional cleanup when <code>wp_options</code> quietly grows autoloaded junk; watching for injected scripts and modified files; keeping PHP and MySQL versions current on the host. None of that produces a single sentence of writing.</p>
+<p>The Hugo equivalent is updating a binary every few months and editing text files.</p>
+<h2 id="what-hugo-is">What Hugo is<a class="heading-anchor" href="#what-hugo-is" aria-label="Link to this section">#</a></h2>
+<p>Hugo is an open source static site generator written in Go. It reads a directory of Markdown files, a theme made of HTML templates, and a config file, and writes out a finished website of HTML, CSS and JavaScript.</p>
+<p>The things that matter in practice:</p>
+<ul>
+<li>Builds are fast. This site has 33 posts and roughly 85 migrated images, and a full build finishes in well under a second, which means the local preview updates as fast as I can alt-tab to the browser.</li>
+<li>The output has no runtime. Any HTTP server or CDN will do, and there is nothing to keep patched.</li>
+<li>Content is Markdown with YAML frontmatter, so posts are diffable, greppable and easy to script against.</li>
+<li>Templates use Go&rsquo;s <code>html/template</code>, with partials, taxonomies and shortcodes when you need them.</li>
+<li>Categories and tags are first class, so listing pages appear on their own.</li>
+<li>Code blocks are highlighted at build time by Chroma, so there is no syntax highlighting JavaScript to ship.</li>
+</ul>
+<p>A minimal site is about this big:</p>
+<div class="code-block"><div class="code-label">A minimal Hugo site</div>
+  <div class="highlight" title="A minimal Hugo site"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>my-site/
+</span></span><span style="display:flex;"><span>  hugo.toml           # site config
+</span></span><span style="display:flex;"><span>  content/
+</span></span><span style="display:flex;"><span>    posts/
+</span></span><span style="display:flex;"><span>      my-first-post.md
+</span></span><span style="display:flex;"><span>  themes/
+</span></span><span style="display:flex;"><span>    minimal/
+</span></span><span style="display:flex;"><span>      layouts/
+</span></span><span style="display:flex;"><span>        _default/
+</span></span><span style="display:flex;"><span>          baseof.html
+</span></span><span style="display:flex;"><span>          single.html
+</span></span><span style="display:flex;"><span>          list.html
+</span></span><span style="display:flex;"><span>  static/
+</span></span><span style="display:flex;"><span>    images/</span></span></code></pre></div>
+</div><p><code>hugo server</code> starts a live-reloading dev server. <code>hugo</code> writes the finished site into <code>public/</code>.</p>
+<h2 id="converting-the-old-content">Converting the old content<a class="heading-anchor" href="#converting-the-old-content" aria-label="Link to this section">#</a></h2>
+<p>The WordPress export was a MySQL dump, so the converter was a Python script that read the dump directly rather than going through the XML exporter. Roughly what it did:</p>
+<ol>
+<li>Pull every row from <code>wp_posts</code> where <code>post_status = 'publish'</code> and <code>post_type = 'post'</code>.</li>
+<li>Turn the stored HTML into Markdown. Code blocks needed special handling, since the old SyntaxHighlighter plugin encoded the language in a <code>brush:</code> class, and the code itself was HTML-escaped inside the post body.</li>
+<li>Build the frontmatter from the post row plus its taxonomy relations: title, date, slug, categories, tags.</li>
+<li>Copy every image referenced under the WordPress uploads path into <code>static/images/uploads/</code> and rewrite the URLs to local paths.</li>
+<li>Rewrite links between posts from the old permalink format to Hugo&rsquo;s <code>/posts/slug/</code>.</li>
+</ol>
+<p>Then the parts that were not in the plan.</p>
+<p><strong>Encoding.</strong> The dump was Windows-1252 pretending to be UTF-8 in places, a classic latin1 versus utf8mb4 mismatch from an old MySQL install. Apostrophes and dashes came through as mojibake. Reading with <code>cp1252</code> and running a substitution table over the result fixed almost all of it, and I hand-checked the rest.</p>
+<p><strong>Shortcodes.</strong> Old WordPress shortcodes such as galleries have no meaning outside WordPress. There were only a handful, so I converted them by hand rather than teaching the script about them.</p>
+<p><strong>Attachments.</strong> Zip files, sample datasets and a few interactive HTML demos lived in <code>wp-content/uploads/</code> and a separate <code>media/</code> folder. Those were copied into <code>static/</code> and kept their paths, which is the whole trick to not breaking old links.</p>
+<aside class="callout callout-tip">
+  <p class="callout-title"><i class="fa fa-lightbulb-o"></i>Plan the URLs before you start</p>
+  <p>Keeping the same permalink structure means every existing inbound link and every search result still lands somewhere. Hugo lets you set the slug per post in frontmatter, so the migration script wrote the original slug into every file and nothing moved. If you do have to change a URL, <code>aliases</code> in frontmatter generates a redirect page for the old address.</p>
+</aside><h2 id="hosting-on-github-pages">Hosting on GitHub Pages<a class="heading-anchor" href="#hosting-on-github-pages" aria-label="Link to this section">#</a></h2>
+<p><a href="https://pages.github.com/">GitHub Pages</a> serves static sites straight from a repository, with HTTPS and a CDN, at no cost.</p>
+<p><span class="entry-figure"><img src="/images/posts/hugo-deploy-pipeline.png" alt="Markdown to CDN in one push" width="880" height="250" loading="lazy" decoding="async"><span class="entry-caption">From git push to a live page: GitHub Actions builds the site and publishes it to the Pages CDN.</span></span></p>
+<p>The repository holds the source: content, theme, config. A GitHub Actions workflow builds it on every push to <code>main</code> and publishes the result. The current workflow uses the official Pages actions rather than pushing to a <code>gh-pages</code> branch:</p>
+<div class="code-block"><div class="code-label">.github/workflows/deploy.yml</div>
+  <div class="highlight" title=".github/workflows/deploy.yml"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Deploy to GitHub Pages<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">on</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">push</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">branches</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">[</span>main]<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">workflow_dispatch</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">permissions</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">contents</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>read<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">pages</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>write<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">id-token</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>write<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">concurrency</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">group</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>pages<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cancel-in-progress</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#cf222e">false</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">jobs</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">build</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">runs-on</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>ubuntu-latest<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">steps</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">uses</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>actions/checkout@v4<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">with</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">          </span><span style="color:#0550ae">submodules</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#cf222e">true</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Setup Hugo<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">uses</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>peaceiris/actions-hugo@v3<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">with</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">          </span><span style="color:#0550ae">hugo-version</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>latest<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">          </span><span style="color:#0550ae">extended</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#cf222e">true</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Build<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">run</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>hugo --minify<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Upload artifact<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">uses</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>actions/upload-pages-artifact@v3<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">with</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">          </span><span style="color:#0550ae">path</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>./public<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">deploy</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">needs</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>build<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">runs-on</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>ubuntu-latest<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">environment</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>github-pages<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>${{ steps.deployment.outputs.page_url }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">steps</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Deploy to GitHub Pages<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">id</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>deployment<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0550ae">uses</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>actions/deploy-pages@v4</span></span></code></pre></div>
+</div><p>Writing a post is now <code>git commit</code>, <code>git push</code>, and about half a minute of waiting.</p>
+<p>Two things to know.</p>
+<aside class="callout callout-warning">
+  <p class="callout-title"><i class="fa fa-exclamation-triangle"></i>Keep <code>CNAME</code> in <code>static/</code></p>
+  <p>Do not let the Pages UI create it in the repository root. A build that does not emit <code>CNAME</code> will drop your custom domain on the next deploy. Mine lives at <code>static/CNAME</code> and contains one line.</p>
+</aside><aside class="callout callout-note">
+  <p class="callout-title"><i class="fa fa-info-circle"></i><code>hugo-version: latest</code> can surprise you</p>
+  <p>Use it only if you are willing to be surprised occasionally. Pinning a version is the safer choice for a site you touch rarely.</p>
+</aside><h2 id="dns">DNS<a class="heading-anchor" href="#dns" aria-label="Link to this section">#</a></h2>
+<p>Two record types point a custom domain at Pages: four A records for the apex domain, and a CNAME for <code>www</code>.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Type</th>
+					<th>Name</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>A</td>
+					<td><code>@</code></td>
+					<td><code>185.199.108.153</code></td>
+			</tr>
+			<tr>
+					<td>A</td>
+					<td><code>@</code></td>
+					<td><code>185.199.109.153</code></td>
+			</tr>
+			<tr>
+					<td>A</td>
+					<td><code>@</code></td>
+					<td><code>185.199.110.153</code></td>
+			</tr>
+			<tr>
+					<td>A</td>
+					<td><code>@</code></td>
+					<td><code>185.199.111.153</code></td>
+			</tr>
+			<tr>
+					<td>CNAME</td>
+					<td><code>www</code></td>
+					<td><code>&lt;username&gt;.github.io</code></td>
+			</tr>
+	</tbody>
+</table>
+<p>Then set the custom domain in the repository&rsquo;s Pages settings. GitHub requests a Let&rsquo;s Encrypt certificate, which usually takes a few minutes, after which you can turn on Enforce HTTPS.</p>
+<aside class="callout callout-tip">
+  <p class="callout-title"><i class="fa fa-lightbulb-o"></i>No certificate after an hour?</p>
+  <p>It is almost always DNS that has not propagated yet, or an AAAA record left over from the old host.</p>
+</aside><h2 id="what-i-gave-up">What I gave up<a class="heading-anchor" href="#what-i-gave-up" aria-label="Link to this section">#</a></h2>
+<p>It is a fair trade, but it is a trade.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Feature</th>
+					<th>WordPress</th>
+					<th>Now</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Comments</td>
+					<td>Built in</td>
+					<td>None, and an email address</td>
+			</tr>
+			<tr>
+					<td>Search</td>
+					<td>Database query</td>
+					<td>Client-side JSON index</td>
+			</tr>
+			<tr>
+					<td>Scheduled posts</td>
+					<td>Built in</td>
+					<td>A daily scheduled rebuild</td>
+			</tr>
+			<tr>
+					<td>Admin interface</td>
+					<td><code>wp-admin</code></td>
+					<td>Markdown and <code>git push</code></td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>Comments</strong> are gone. WordPress had them built in; a static site does not. The options are a third-party embed (which reintroduces exactly the tracking and JavaScript I was trying to shed), a self-hosted comment server (a running service again, so back to square one), or nothing. I went with nothing and an email address.</p>
+<p><strong>Search</strong> had to be replaced. There is no database to query, so the choices are a client-side index built at compile time or an external service. For a site this size a small JSON index is enough.</p>
+<p><strong>Scheduled publishing</strong> is not free either. Hugo will happily leave a future-dated post out of the build, but something has to trigger a rebuild on the day. A scheduled workflow run once a day handles it.</p>
+<p>And there is <strong>no admin interface</strong>. Publishing means writing Markdown and pushing to git. For me that is the point. If you are handing the site to someone who does not use git, it is a real cost, and a headless CMS with a build hook is the sensible middle ground.</p>
+<h2 id="would-i-do-it-again">Would I do it again<a class="heading-anchor" href="#would-i-do-it-again" aria-label="Link to this section">#</a></h2>
+<p>Yes, though I would be honest about who it suits. A brochure site, documentation, or a blog like this one is close to the ideal case. Anything with user accounts, e-commerce, or non-technical editors publishing daily is a different conversation.</p>
+<p>What I notice most is not the speed, though pages do appear immediately. It is that the site has stopped generating work. There is no update queue, no patch cycle, nothing that requires my attention because someone in another timezone found a bug in a plugin. It just sits there being read, which is all I ever wanted from it.</p>
+
+    </article>
+
+    
+    <aside class="post-related">
+      <p class="post-related-title">Related reading</p>
+      <div class="post-related-grid">
+      
+        <a class="post-related-card" href="/posts/personal-dashboard-glance/">
+          <img src="/images/posts/personal-dashboard-glance-card.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Building a Self-Hosted Personal Dashboard with Glance</strong>
+            <span>One YAML file, a handful of PHP proxies and a NAS: weather, air quality, calendars, news and uptime …</span>
+          </span>
+        </a>
+      
+        <a class="post-related-card" href="/posts/set-up-owncloud-for-personal-data-management-and-android-sync/">
+          <img src="/images/posts/set-up-owncloud-for-personal-data-management-and-android-sync.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Set up Owncloud for personal data management and Android sync</strong>
+            
+          </span>
+        </a>
+      
+      </div>
+    </aside>
+    
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/hugo/">hugo</a><a href="/tags/wordpress/">wordpress</a><a href="/tags/github-pages/">github pages</a><a href="/tags/static-site/">static site</a><a href="/tags/web-hosting/">web hosting</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/llm-price-list-extraction/">&larr; Turning Natural Language Pricing into Structured Data for Automated Pricing</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/personal-dashboard-glance/">Building a Self-Hosted Personal Dashboard with Glance &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

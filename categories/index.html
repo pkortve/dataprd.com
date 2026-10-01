@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -86,6 +90,21 @@
     <ul class="taxonomy-list">
       
       <li>
+        <a href="https://dataprd.com/categories/data-analytics-tools/">Data Analytics Tools</a>
+        <span class="tax-count">(Data analytics tools)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/categories/data-security/">Data Security</a>
+        <span class="tax-count">(Data security)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/categories/electronics/">Electronics</a>
+        <span class="tax-count">(Electronics)</span>
+      </li>
+      
+      <li>
         <a href="https://dataprd.com/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
         <span class="tax-count">(Cluster based data analytics tutorials)</span>
       </li>
@@ -98,16 +117,6 @@
       <li>
         <a href="https://dataprd.com/categories/data-governance/">Data Governance</a>
         <span class="tax-count">(Data governance)</span>
-      </li>
-      
-      <li>
-        <a href="https://dataprd.com/categories/data-security/">Data Security</a>
-        <span class="tax-count">(Data security)</span>
-      </li>
-      
-      <li>
-        <a href="https://dataprd.com/categories/data-analytics-tools/">Data Analytics Tools</a>
-        <span class="tax-count">(Data analytics tools)</span>
       </li>
       
     </ul>
@@ -131,6 +140,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

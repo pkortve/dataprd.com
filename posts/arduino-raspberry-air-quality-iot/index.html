@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>I was very interested in monitoring the surrounding air&rsquo;s quality, so I built a box that monitors Particle Matters (PM), gas concentrations, temperature and humidity. The historical data is persisted and accessible via the network ? translating to a typical IOT use case. The box built is based on Arduino with its sensors and a RaspberryPi. Arduino is a great platform for electronics prototyping with a convenient development IDE ? it allows to connect sensors to the board and share the data via multiple interfaces (such as serial port, attached SD card, network, etc.). The networking and data persistence are solved via a Raspberry Pi Zero W, providing SD-card based data plotting, having a host and guest Wifi network for data access and data sharing with cloud providers.</p>
@@ -323,8 +334,8 @@
 <p>A cheap, photo voltaic dust sensor, seems to be working quite well. It has a heater and an infrared emitter, the beam is facing against the sensor. The heat circulates the air within its sensor area and the reflection created by the dust, hitting the sensor is output as the value - the higher the dust, the higher the amount of light reflection and reading will be. I added the spec sheet&rsquo;s curve to Excel and got a polynomial equation on how the sensor readings can translate to <em>?</em> g/m3 - although not PM2.5 or PM10 but PM detected by the sensor.</p>
 <blockquote>
 <p><em>PM ?g/m3 concentration =? (2.5383 * sensorReading^2) + (85.392 * sensorReading) - 5.8319;</em></p>
-</blockquote>
-<h4 id="dsm-501a-sensor-readings">DSM 501A sensor readings</h4>
+
+</blockquote><h4 id="dsm-501a-sensor-readings">DSM 501A sensor readings</h4>
 <ul>
 <li>Filtered air near an air purifier reads at around 30 <em>?</em> g / m3</li>
 <li>Smoke of a match lighted under the sensor could bump it up to 1200 <em>?</em> g / m3</li>
@@ -345,7 +356,7 @@
 </ul>
 <h3 id="lcm1602-lcd">LCM1602 LCD</h3>
 <p>LCM1602 is a backlit, 2 row * 16 character LCD module ? the backlight can be controlled by the code. The compatibility with the LiquidCrystal_I2C library makes it quite easy to use, available at <a href="https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library">https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library</a> Basically, we have to wipe and read the display in a loop and on specific conditions we can turn the backlight on or off. Further reading on the LCD setup - <a href="/files/2017/08/LC1602.pdf">Download saved PDF from blog</a> - <a href="https://magnusglad.wordpress.com/tag/lcm1602/">https://magnusglad.wordpress.com/tag/lcm1602/</a></p>
-<h2></h2>
+<h2 id=""></h2>
 <p><img src="/images/uploads/2017/08/LCD-1024x269.jpg" alt=""> LCM1602 LCD showing on 2 lines: Line1: Dust ratio | Dist concentration | MQ135 output | Alert (if any) Line2: Temperature in C | Humidity % | Wind direction | Ait quality grade (1-5, 5 is the best) <img src="/images/uploads/2017/08/LCD2-1024x269.jpg" alt=""> LCM1602 LCD showing air quality data (described above)</p>
 <h2 id="raspberry-code--data-persistence">Raspberry code &amp; data persistence</h2>
 <p>The Rasbperry Pi Zero W is a 10 $ ARM compatible computer running Linux (<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian distro</a> in my case) from a MicroSD card. It has 2 USB slots, built-in Wifi capable of being a host and a guest at the same time, Bluetooth, HDMI, and many digital ports that I considered not to use because of the limited voltage options that Raspberry provides ? Arduino is much more flexible from this perspective. Now, with lot more hardware and circuit planning, building, soldering, this project could have been done only with the Raspberry, but I chose the plug and play components in order to leverage the pros of both platforms, sparing lots and lots of development time.</p>
@@ -363,8 +374,7 @@
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#57606a">#!/bin/sh -e
 </span></span></span><span style="display:flex;"><span><span style="color:#57606a">#</span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a"># rc.local</span>
-</span></span><span style="display:flex;"><span>/usr/bin/python /air/air.py <span style="color:#1f2328">&amp;</span> &gt; /air/output.log
-</span></span></code></pre></div><p>Described in - Download saved PDF from blog? - <a href="https://www.raspberrypi.org/documentation/linux/usage/rc-local.md">https://www.raspberrypi.org/documentation/linux/usage/rc-local.md</a></p>
+</span></span><span style="display:flex;"><span>/usr/bin/python /air/air.py <span style="color:#1f2328">&amp;</span> &gt; /air/output.log</span></span></code></pre></div><p>Described in - Download saved PDF from blog? - <a href="https://www.raspberrypi.org/documentation/linux/usage/rc-local.md">https://www.raspberrypi.org/documentation/linux/usage/rc-local.md</a></p>
 <h3 id="how-to-configure-the-raspberry-pi-to-be-a-wifi-host-and-a-guest-at-the-same-time-via-raspbians-network-settings">How to configure the Raspberry Pi to be a Wifi host and a guest at the same time? Via Raspbian&rsquo;s network settings</h3>
 <p>The purpose is that when there is a known network for the Raspberry, it would connect to it, so SSH to host raspberrypi.local or router DHCP-based IP of the Raspberry would be possible. Also it would download weather information from the internet and share to its database file with every reading of the Arduino. The purpose of the host network is the headless setup possibility, so without a keyboard, mouse, monitor hooked to the non-conventional ports of the Raspberry, SSH based configuration is made possible The following guide was used on the configuration - <a href="/files/2017/08/Autostart_a_Script_Raspberry.pdf"> Download saved PDF from blog</a> - <a href="http://imti.co/post/145442415333/raspberry-pi-3-wifi-station-ap">http://imti.co/post/145442415333/raspberry-pi-3-wifi-station-ap</a></p>
 <h3 id="how-to-get-ip-based-location-data-with-python-on-the-raspberrys-side">How to get IP based location data with Python? (On the Raspberry&rsquo;s side)</h3>
@@ -372,14 +382,12 @@
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://ip-api.com/json&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude from IP-API</span>
 </span></span><span style="display:flex;"><span>data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>lat <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lat&#39;</span><span style="color:#1f2328">]</span>
-</span></span><span style="display:flex;"><span>lon <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lon&#39;</span><span style="color:#1f2328">]</span>
-</span></span></code></pre></div><h3 id="how-to-get-weather-including-wind-data-with-python-on-the-raspberrys-side">How to get weather, including wind data with Python? (On the Raspberry&rsquo;s side)</h3>
+</span></span><span style="display:flex;"><span>lon <span style="color:#0550ae">=</span> data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;lon&#39;</span><span style="color:#1f2328">]</span></span></span></code></pre></div><h3 id="how-to-get-weather-including-wind-data-with-python-on-the-raspberrys-side">How to get weather, including wind data with Python? (On the Raspberry&rsquo;s side)</h3>
 <p>The Openweathermap API at <a href="http://api.openweathermap.org">http://api.openweathermap.org</a> can respond with detailed weather data based on a latitude and longitude (see automation based on IP above). The code snippet in Python is very compact to acquire detailed weather data.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> urlopen<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;http://api.openweathermap.org/data/2.5/weather?lat=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lat<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;lon=&#39;</span><span style="color:#0550ae">+</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>lon<span style="color:#1f2328">)</span><span style="color:#0550ae">+</span><span style="color:#0a3069">&#39;&amp;appid={YOURAPIKEY}&#39;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># Get latitude and longitude based wind data</span>
 </span></span><span style="display:flex;"><span>data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>load<span style="color:#1f2328">(</span>response<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>windDeg <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;deg&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>windSpeed <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;speed&#39;</span><span style="color:#1f2328">)</span>
-</span></span></code></pre></div><h2 id="next-steps">Next steps</h2>
+</span></span><span style="display:flex;"><span>windSpeed <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;wind&#39;</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;speed&#39;</span><span style="color:#1f2328">)</span></span></span></code></pre></div><h2 id="next-steps">Next steps</h2>
 <p>There are a lot of improvement opportunities, e.g.</p>
 <ul>
 <li>Uploading the data to a RaspberryPi-based PostgreSQL database</li>
@@ -576,8 +584,7 @@
 </span></span><span style="display:flex;"><span>    // add it to the wind:
 </span></span><span style="display:flex;"><span>     wind += inChar;
 </span></span><span style="display:flex;"><span>    // if the incoming character is a newline, set a flag so the main loop can react
-</span></span><span style="display:flex;"><span>    if (inChar == &#39;
-</span></span></code></pre></div><h3></h3>
+</span></span><span style="display:flex;"><span>    if (inChar == &#39;</span></span></code></pre></div><h3 id=""></h3>
 <h3 id="raspberry--getting-location-and-weather-data-reading-serial-sensor-data-from-arduino-writing-wind-data-for-arduino">Raspberry ? getting location and weather data, reading serial sensor data from Arduino, writing wind data for Arduino</h3>
 <p>Using Python 2.7 with Pip</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span>import time
@@ -638,30 +645,33 @@
 </span></span><span style="display:flex;"><span>        string <span style="color:#0550ae">+=</span> ser<span style="color:#0550ae">.</span>readline<span style="color:#1f2328">()</span> <span style="color:#57606a"># Read a complete (/n separated) line from the Arduino, waits here, while the line arrives (every 30 seconds from the Arduino)</span>
 </span></span><span style="display:flex;"><span>        count<span style="color:#0550ae">+=</span><span style="color:#0550ae">1</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>count <span style="color:#0550ae">==</span> <span style="color:#0550ae">9</span><span style="color:#1f2328">):</span>
-</span></span><span style="display:flex;"><span>                ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;</span>
-</span></span></code></pre></div><h1></h1>
+</span></span><span style="display:flex;"><span>                ser<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;</span></span></span></code></pre></div><h1 id=""></h1>
 <h1 id="further-references--alternatives">Further references / alternatives</h1>
 <p>I hereby list the most valuable pages I came across in terms of alternative platforms or helping understand data readings of the sensors.</p>
 <ul>
-<li>Grove sensor-based projects
+<li>
+<p>Grove sensor-based projects</p>
 <ul>
 <li>Grove I - Air quality sensor with the easy wiring Grove platform and sensors - <a href="http://www.instructables.com/id/Room-Air-Analyzer/">http://www.instructables.com/id/Room-Air-Analyzer/</a></li>
 <li>Grove II - Air quality sensor with the easy wiring Grove platform and sensors ? <a href="http://www.instructables.com/id/Air-Quality-Test-Box/">http://www.instructables.com/id/Air-Quality-Test-Box/</a></li>
 <li>Grove III - Air quality sensor with the easy wiring Grove platform and sensors ? <a href="http://lelabtechno.com/analyseur%20air.html">http://lelabtechno.com/analyseur%20air.html</a></li>
 </ul>
 </li>
-<li>Other projects
+<li>
+<p>Other projects</p>
 <ul>
 <li>Speck, networked air quality monitor, using the DMS501A dust sensor - <a href="https://www.specksensor.com/support/tech-specs">https://www.specksensor.com/support/tech-specs</a></li>
 </ul>
 </li>
-<li>Shinyei PPD42NS dust sensor
+<li>
+<p>Shinyei PPD42NS dust sensor</p>
 <ul>
 <li>Tweaking the sensitivity of an alternative, Shinyei PPD42NS dust sensor and connecting it to the network via a Raspberry Pi - <a href="https://indiaairquality.com/2014/12/14/building-pickle-jr-the-low-cost-networked-pm2-5-monitor-part-2/">https://indiaairquality.com/2014/12/14/building-pickle-jr-the-low-cost-networked-pm2-5-monitor-part-2/</a></li>
 <li>Dust readings of an alternative, Shinyei PPD42NS dust sensor - <a href="http://irq5.io/2013/07/24/testing-the-shinyei-ppd42ns/">http://irq5.io/2013/07/24/testing-the-shinyei-ppd42ns/</a></li>
 </ul>
 </li>
-<li>Air quality background information
+<li>
+<p>Air quality background information</p>
 <ul>
 <li>AQI / Air quality index - <a href="https://en.wikipedia.org/wiki/Air_quality_index">https://en.wikipedia.org/wiki/Air_quality_index</a></li>
 <li>Background on Particle Pollution Designations GuidanceParticle Pollution Designations -? <a href="https://www.epa.gov/particle-pollution-designations/particle-pollution-designations-guidance-and-data">https://www.epa.gov/particle-pollution-designations/particle-pollution-designations-guidance-and-data</a></li>
@@ -670,17 +680,20 @@
 <li>PM10 trends of the US - <a href="https://www.epa.gov/air-trends/particulate-matter-pm10-trends">https://www.epa.gov/air-trends/particulate-matter-pm10-trends</a></li>
 </ul>
 </li>
-<li>Gas sensors
+<li>
+<p>Gas sensors</p>
 <ul>
 <li>MQ135 readings - <a href="http://davidegironi.blogspot.it/2014/01/cheap-co2-meter-using-mq135-sensor-with.html">http://davidegironi.blogspot.it/2014/01/cheap-co2-meter-using-mq135-sensor-with.html</a></li>
 <li>A detailed list of gas sensors available here: <a href="https://playground.arduino.cc/Main/MQGasSensors">https://playground.arduino.cc/Main/MQGasSensors</a></li>
 <li>An Arduino library for the MQ135 - not to used in this project - is available here? - <a href="https://hackaday.io/project/3475-sniffing-trinket/log/12363-mq135-arduino-library">https://hackaday.io/project/3475-sniffing-trinket/log/12363-mq135-arduino-library</a></li>
 </ul>
 </li>
+<li></li>
 </ul>
-<p>*</p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -689,6 +702,10 @@
     
 
     <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/eink-weather-dashboard/">&larr; A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32</a>
+      </div>
       
       
       <div class="single-nav-right col span_12">
@@ -717,6 +734,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

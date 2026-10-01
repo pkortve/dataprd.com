@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-19">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 1/9</h2>
@@ -126,6 +137,8 @@
 <p><strong>7. Visualize, communicate</strong> — You have the information you wanted but without the colors and flavors, it is worth nothing — even worse if nobody can get aware of its existence. So do not underestimate this part: create an attractive, search engine friendly report or a scientific publication that is easy to comprehend, to gain some attention for your work efforts. I&rsquo;ve used some interactive web-based charts as HTML5 provides a portable and SEO friendly format for data visualization.</p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -166,6 +179,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

@@ -1,8 +1,103 @@
-
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://dataprd.com/categories/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/categories/data-analytics-tools/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/data-extraction/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/json/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/llm/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/openrouter/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/php/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/posts/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/pricing/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/posts/llm-price-list-extraction/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/categories/data-security/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/github-pages/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/hugo/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/posts/wordpress-to-hugo-migration/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/static-site/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/web-hosting/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/wordpress/</loc>
+    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/posts/personal-dashboard-glance/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/dashboard/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/glance/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/home-automation/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/privacy/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/self-hosted/</loc>
+    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/posts/eink-weather-dashboard/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/e-ink/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/categories/electronics/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/esp32/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/iot/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/python/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dataprd.com/tags/waveshare/</loc>
+    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://dataprd.com/tags/air-quality/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
@@ -15,13 +110,7 @@
     <loc>https://dataprd.com/tags/big-data-analytics/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
-    <loc>https://dataprd.com/categories/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
     <loc>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/tags/dataset/</loc>
@@ -42,9 +131,6 @@
     <loc>https://dataprd.com/tags/internet-of-things/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
-    <loc>https://dataprd.com/tags/iot/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
     <loc>https://dataprd.com/tags/lcm1602/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
@@ -60,9 +146,6 @@
     <loc>https://dataprd.com/tags/pm2.5/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
-    <loc>https://dataprd.com/posts/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
     <loc>https://dataprd.com/tags/ppd42ns/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
@@ -73,9 +156,6 @@
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/tags/sensors/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/tags/visualizing/</loc>
@@ -141,9 +221,6 @@
     <loc>https://dataprd.com/tags/data-lake/</loc>
     <lastmod>2017-08-25T16:11:15+00:00</lastmod>
   </url><url>
-    <loc>https://dataprd.com/categories/data-security/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
     <loc>https://dataprd.com/tags/data-security/</loc>
     <lastmod>2017-08-25T16:11:15+00:00</lastmod>
   </url><url>
@@ -157,9 +234,6 @@
     <lastmod>2017-01-09T21:13:16+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/posts/configure-apache-kylin-with-odbc-to-wowk-with-ms-powerbi/</loc>
-    <lastmod>2017-01-09T21:13:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/categories/data-analytics-tools/</loc>
     <lastmod>2017-01-09T21:13:16+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/tags/interactive-visualization/</loc>
@@ -295,9 +369,6 @@
     <lastmod>2014-03-13T13:13:23+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/posts/data-security-on-android/</loc>
-    <lastmod>2014-03-13T13:13:23+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/privacy/</loc>
     <lastmod>2014-03-13T13:13:23+00:00</lastmod>
   </url><url>
     <loc>https://dataprd.com/tags/asterisk/</loc>

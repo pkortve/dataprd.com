@@ -10,9 +10,156 @@
 		
 		
 		
-			<lastBuildDate>Sat, 26 Aug 2017 16:42:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 15 Aug 2026 09:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="https://dataprd.com/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Data Extraction</title>
+				<link>https://dataprd.com/tags/data-extraction/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/data-extraction/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Json</title>
+				<link>https://dataprd.com/tags/json/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/json/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Llm</title>
+				<link>https://dataprd.com/tags/llm/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/llm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Openrouter</title>
+				<link>https://dataprd.com/tags/openrouter/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/openrouter/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Php</title>
+				<link>https://dataprd.com/tags/php/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/php/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Pricing</title>
+				<link>https://dataprd.com/tags/pricing/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/pricing/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Github Pages</title>
+				<link>https://dataprd.com/tags/github-pages/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/github-pages/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Hugo</title>
+				<link>https://dataprd.com/tags/hugo/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/hugo/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Static Site</title>
+				<link>https://dataprd.com/tags/static-site/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/static-site/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Web Hosting</title>
+				<link>https://dataprd.com/tags/web-hosting/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/web-hosting/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Wordpress</title>
+				<link>https://dataprd.com/tags/wordpress/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/wordpress/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Dashboard</title>
+				<link>https://dataprd.com/tags/dashboard/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/dashboard/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Glance</title>
+				<link>https://dataprd.com/tags/glance/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/glance/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Home Automation</title>
+				<link>https://dataprd.com/tags/home-automation/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/home-automation/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Privacy</title>
+				<link>https://dataprd.com/tags/privacy/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/privacy/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Self-Hosted</title>
+				<link>https://dataprd.com/tags/self-hosted/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/self-hosted/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>E-Ink</title>
+				<link>https://dataprd.com/tags/e-ink/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/e-ink/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Esp32</title>
+				<link>https://dataprd.com/tags/esp32/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/esp32/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Iot</title>
+				<link>https://dataprd.com/tags/iot/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/iot/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Python</title>
+				<link>https://dataprd.com/tags/python/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/python/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Waveshare</title>
+				<link>https://dataprd.com/tags/waveshare/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/tags/waveshare/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Air Quality</title>
 				<link>https://dataprd.com/tags/air-quality/</link>
@@ -74,13 +221,6 @@
 				<link>https://dataprd.com/tags/internet-of-things/</link>
 				<pubDate>Sat, 26 Aug 2017 16:42:00 +0000</pubDate>
 				<guid>https://dataprd.com/tags/internet-of-things/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Iot</title>
-				<link>https://dataprd.com/tags/iot/</link>
-				<pubDate>Sat, 26 Aug 2017 16:42:00 +0000</pubDate>
-				<guid>https://dataprd.com/tags/iot/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -452,13 +592,6 @@
 				<link>https://dataprd.com/tags/android/</link>
 				<pubDate>Thu, 13 Mar 2014 13:13:23 +0000</pubDate>
 				<guid>https://dataprd.com/tags/android/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Privacy</title>
-				<link>https://dataprd.com/tags/privacy/</link>
-				<pubDate>Thu, 13 Mar 2014 13:13:23 +0000</pubDate>
-				<guid>https://dataprd.com/tags/privacy/</guid>
 				<description></description>
 			</item>
 			<item>

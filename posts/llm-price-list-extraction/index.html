@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Turning Natural Language Pricing into Structured Data for Automated Pricing | Dataprd.Com</title>
+  <meta name="description" content="A travel booking back office where the model reads a paragraph of seasonal prices and returns JSON: the schema, the failure modes, the OpenRouter setup, and what a run actually costs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Turning Natural Language Pricing into Structured Data for Automated Pricing</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>August 15, 2026</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-analytics-tools/">Data analytics tools</a>
+        </li>
+        
+        <li><i class="fa fa-book"></i>18 min read</li>
+      </ul>
+    </header>
+
+    
+    <div class="post-hero">
+      <img src="/images/posts/ai-pricing-extraction.png" alt="" width="880" height="200">
+    </div>
+    
+
+    
+    <aside class="post-tldr">
+      <p class="post-tldr-title">In short</p>
+      <ul><li>The model only <strong>extracts</strong>: prose in, JSON out. A deterministic engine does every calculation a customer sees.</li><li>The prompt is a specification of about four hundred lines. Every ambiguity left in it is a decision the model makes afresh on each run.</li><li>Treat the JSON as broken until proven otherwise: strip fences, normalise punctuation, repair truncation, validate, then show a person a table.</li><li>A full property costs from about a cent to about thirty-five cents in tokens. Review time, not tokens, is the number to optimise.</li></ul>
+    </aside>
+    
+
+    
+    <details class="post-toc" open>
+      <summary>Contents</summary>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-job-is-extraction-not-arithmetic">The job is extraction, not arithmetic</a></li>
+    <li><a href="#the-output-shape">The output shape</a></li>
+    <li><a href="#calling-it">Calling it</a>
+      <ul>
+        <li><a href="#long-calls-and-session-locks">Long calls and session locks</a></li>
+      </ul>
+    </li>
+    <li><a href="#what-goes-wrong-with-the-json">What goes wrong with the JSON</a></li>
+    <li><a href="#validate-everything-the-model-returns">Validate everything the model returns</a></li>
+    <li><a href="#one-call-per-year">One call per year</a></li>
+    <li><a href="#which-model">Which model</a></li>
+    <li><a href="#what-it-costs">What it costs</a></li>
+    <li><a href="#what-i-would-tell-someone-building-this">What I would tell someone building this</a></li>
+  </ul>
+</nav>
+    </details>
+    
+
+    <article class="entry clr longform">
+      <p>Every accommodation booking system eventually runs into the same wall. Owners describe their prices in prose, and software needs rows in a table.</p>
+<p>What arrives looks like this, give or take a language. The colours show which sentence becomes which kind of row:</p>
+<div class="owner-text">
+<div class="owner-text-label">Owner's text</div>
+<div class="owner-line"><span class="hl hl-season">High season from 15 June to 22 August, 35,000 per night for up to 6 guests, extra person 5,000 per night.</span></div>
+<div class="owner-line"><span class="hl hl-season">Cleaning 15,000, free from 7 nights.</span></div>
+<div class="owner-line"><span class="hl hl-holiday">Christmas package 24 to 28 December, 4 nights 180,000.</span></div>
+<div class="owner-line"><span class="hl hl-pet">Dogs 2,000 per night, maximum two, up to 15 kg.</span></div>
+<div class="owner-line"><span class="hl hl-discount">Booking of 7 nights gets 1 night free.</span></div>
+<div class="owner-line"><span class="hl hl-rule">Saturday to Saturday in high season.</span></div>
+</div>
+<table>
+	<thead>
+			<tr>
+					<th>Row</th>
+					<th>Captures</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><span class="tag tag-season">season</span></td>
+					<td>Date range, nightly rate, guests included, extra guest fee, cleaning fee and when it is waived</td>
+			</tr>
+			<tr>
+					<td><span class="tag tag-holiday">holiday</span></td>
+					<td>Fixed night count and a package total</td>
+			</tr>
+			<tr>
+					<td><span class="tag tag-pet">pet fee</span></td>
+					<td>Per-animal rate, maximum animals, maximum weight</td>
+			</tr>
+			<tr>
+					<td><span class="tag tag-discount">discount</span></td>
+					<td>Type <code>night_bonus</code>: 7 nights required, 1 night free</td>
+			</tr>
+			<tr>
+					<td><span class="tag tag-rule">rule</span></td>
+					<td>Arrival and departure day, minimum stay</td>
+			</tr>
+	</tbody>
+</table>
+<p>Six sentences become five rows, with every ambiguity resolved on the way. The model returns this:</p>
+<div class="code-block"><div class="code-label">Model output (example)</div>
+  <div class="highlight" title="Model output (example)"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;property&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">&#34;pricing_year&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2026</span> <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;seasons&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;season_name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;High season&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;days_of_week&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;1,2,3,4,5,6,7&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;start_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-06-15&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;end_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-08-22&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;base_price_per_night&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">35000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;base_guests_included&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">6</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;extra_guest_per_night&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;cleaning_fee&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">15000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;cleaning_fee_waived_at_nights&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">7</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;priority&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;notes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">null</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;holidays&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;holiday_name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Christmas package&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;start_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-12-24&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;end_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-12-28&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;fixed_nights&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">4</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;package_total_price&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">180000</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;pet_fees&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;fee_per_animal_per_night&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;is_one_time_fee&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;max_animals&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;max_weight_kg&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">15</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;discounts&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;discount_type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;night_bonus&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;days_of_week&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;1,2,3,4,5,6,7&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;min_nights_required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">7</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;bonus_nights&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;rules&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;rule_type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;specific_days&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;start_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-06-15&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;end_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2026-08-22&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;min_nights&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">7</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;arrival_day&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">6</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;departure_day&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>Note the two date conventions: the season&rsquo;s <code>end_date</code> is its last night, while the holiday&rsquo;s <code>end_date</code> is the departure day, so four nights from 24 December end on the 28th. Weekdays are ISO numbers, so Saturday is 6. Fields that do not apply are left out here.</p>
+<p>Someone has to do that translation. For years it was a person, at maybe twenty minutes per property per year, which is fine for five properties and miserable for a hundred. This post is about handing that job to a language model, and about the parts nobody mentions: what the JSON does when the model has a bad day, how to pick a model, and what a run actually costs.</p>
+<p><span class="entry-figure"><img src="/images/posts/ai-extraction-pipeline.png" alt="From a paragraph of prices to rows in a table" width="880" height="430" loading="lazy" decoding="async"><span class="entry-caption">The five stages between an owner&rsquo;s paragraph and a saved price row. Only stage three involves a model.</span></span></p>
+<h2 id="the-job-is-extraction-not-arithmetic">The job is extraction, not arithmetic<a class="heading-anchor" href="#the-job-is-extraction-not-arithmetic" aria-label="Link to this section">#</a></h2>
+<p>The single most important design decision came first, and it is the one I would argue for hardest.</p>
+<aside class="callout callout-important">
+  <p class="callout-title"><i class="fa fa-exclamation-circle"></i>The one rule</p>
+  <p>The model never calculates a price a guest pays.</p>
+</aside><p>It reads text and emits structured data. A deterministic pricing engine, written in ordinary code and covered by ordinary tests, takes those rows and computes what a stay costs. If the engine is wrong, it is wrong the same way every time and a test can pin it down. If a model does the arithmetic, it is wrong occasionally, differently each run, and confidently.</p>
+<p>There is a second, smaller use of the model in the same system: an operator preparing a quote can ask for a plain-language breakdown of a specific booking, and the model returns two or three notes about what to watch for plus a one-line calculation. That is a draft for a human who is about to write an email. The number the customer is charged still comes from the engine. The distinction sounds pedantic until the first time a model quietly adds a deposit into a total.</p>
+<h2 id="the-output-shape">The output shape<a class="heading-anchor" href="#the-output-shape" aria-label="Link to this section">#</a></h2>
+<p>The whole approach rests on the model producing exactly one JSON object and nothing else. The prompt opens with that requirement and does not soften it:</p>
+<blockquote>
+<p>Output ONLY a single valid JSON object. No markdown fences, no prose, no explanation, no leading or trailing text.</p>
+
+</blockquote><p>The schema is spelled out field by field, with types and nullability, because a model that has to guess whether a missing cleaning fee is <code>0</code> or <code>null</code> will guess differently on Tuesday than it did on Monday:</p>
+<div class="code-block"><div class="code-label">Output schema (abridged)</div>
+  <div class="highlight" title="Output schema (abridged)"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;property&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;string from input&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;pricing_year&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2026</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;max_capacity&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">10</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;units_available&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;free_child_age_limit&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;seasons&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;season_name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;unique name&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;days_of_week&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;1,2,3,4,5,6,7&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;start_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;YYYY-MM-DD&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;end_date&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;YYYY-MM-DD&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;base_price_per_night&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">35000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;base_guests_included&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">6</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;extra_guest_per_night&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;cleaning_fee&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">15000</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;cleaning_fee_waived_at_nights&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">7</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;priority&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;notes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">null</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;holidays&#34;</span><span style="color:#1f2328">:</span>  <span style="color:#1f2328">[],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;pet_fees&#34;</span><span style="color:#1f2328">:</span>  <span style="color:#1f2328">[],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;discounts&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;rules&#34;</span><span style="color:#1f2328">:</span>     <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>The other four arrays are specified the same way, one object shape each.</p>
+<p>Around the schema sits about four hundred lines of rules, and they are the actual product. A few of the ones that were learned the hard way:</p>
+<p><strong>State every convention explicitly, especially inconsistent ones.</strong> A season&rsquo;s <code>end_date</code> is the last night it covers. A holiday package&rsquo;s <code>end_date</code> is the departure day, so a four-night package starting 30 December ends on 3 January. That inconsistency is inherited from the database schema and cannot be wished away, so the prompt says it twice, with a worked example, and the validator checks it afterwards.</p>
+<p><strong>Give the number formats no room.</strong> Prices are integer units of currency with no separators. The prompt lists the shapes that appear in real text (<code>35.000 Ft</code>, <code>35 000 Ft</code>, <code>35e Ft</code>, <code>35 ezer Ft</code>) and states that they all mean 35000. Without that, thousands separators come back as decimal points roughly one time in ten, and 35,000 quietly becomes 35.</p>
+<p><strong>Handle the range case with a rule, not with judgement.</strong> &ldquo;30,000 to 35,000 per night&rdquo; is a real thing owners write. The instruction is to take the lower bound and record the range in a note. Any rule will do as long as it is fixed; what you cannot have is the model picking a different end of the range depending on how the sentence was phrased.</p>
+<p><strong>Say what not to extract.</strong> Deposits, cancellation policies, check-in times, payment terms, house rules and marketing copy are all in the source text and none of them are pricing. Listing them explicitly removed a whole class of invented rows.</p>
+<p><strong>Name the things downstream code depends on.</strong> The engine matches high season with a SQL <code>LIKE</code> on a specific word. So the prompt says: if there is a main season, its name must contain that exact substring, and here are acceptable and unacceptable examples. This is ugly and it is honest. The alternative is an extraction that looks perfect and silently fails to link holiday prices.</p>
+<p><strong>Skip what the schema cannot represent.</strong> Early bird discounts, last minute deals, group size discounts and loyalty rates all appear in real price lists, and none of them fit the discount table. The prompt names them and says to omit them. Before that, the model helpfully invented fields to hold them, and the importer dropped those rows without telling anyone.</p>
+<p>Then a self-check section at the end lists the invariants: every cross-reference resolves, season names are unique, dates are ten characters and inside the right year, enums are from the allowed set. Asking for a check before emitting is not a guarantee, but it measurably reduces the number of objects that fail validation on arrival.</p>
+<h2 id="calling-it">Calling it<a class="heading-anchor" href="#calling-it" aria-label="Link to this section">#</a></h2>
+<p>The call itself is about thirty lines and has no framework in it:</p>
+<div class="code-block"><div class="code-label">The whole API client</div>
+  <div class="highlight" title="The whole API client"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#cf222e">function</span> <span style="color:#6639ba">callOpenRouterAPI</span><span style="color:#1f2328">(</span><span style="color:#1f2328">string</span> <span style="color:#953800">$prompt</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">string</span> <span style="color:#953800">$model</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                           <span style="color:#1f2328">int</span> <span style="color:#953800">$maxTokens</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">1024</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">int</span> <span style="color:#953800">$timeout</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">120</span><span style="color:#1f2328">)</span><span style="color:#0550ae">:</span> <span style="color:#1f2328">string</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$body</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">json_encode</span><span style="color:#1f2328">([</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;model&#39;</span>      <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$model</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;max_tokens&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$maxTokens</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;stream&#39;</span>     <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;messages&#39;</span>   <span style="color:#0550ae">=&gt;</span> <span style="color:#1f2328">[[</span><span style="color:#0a3069">&#39;role&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;user&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;content&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$prompt</span><span style="color:#1f2328">]],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$ch</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">curl_init</span><span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">curl_setopt_array</span><span style="color:#1f2328">(</span><span style="color:#953800">$ch</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_URL</span>            <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;https://openrouter.ai/api/v1/chat/completions&#39;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_RETURNTRANSFER</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_POST</span>           <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_POSTFIELDS</span>     <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$body</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_HTTPHEADER</span>     <span style="color:#0550ae">=&gt;</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#39;Content-Type: application/json&#39;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#39;Authorization: Bearer &#39;</span> <span style="color:#0550ae">.</span> <span style="color:#1f2328">OPENROUTER_API_KEY</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">CURLOPT_TIMEOUT</span>        <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$timeout</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$response</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">curl_exec</span><span style="color:#1f2328">(</span><span style="color:#953800">$ch</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$httpCode</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">curl_getinfo</span><span style="color:#1f2328">(</span><span style="color:#953800">$ch</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">CURLINFO_HTTP_CODE</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">curl_close</span><span style="color:#1f2328">(</span><span style="color:#953800">$ch</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// error handling omitted
+</span></span></span><span style="display:flex;"><span>    <span style="color:#953800">$data</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">json_decode</span><span style="color:#1f2328">(</span><span style="color:#953800">$response</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#953800">$data</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;choices&#39;</span><span style="color:#1f2328">][</span><span style="color:#0550ae">0</span><span style="color:#1f2328">][</span><span style="color:#0a3069">&#39;message&#39;</span><span style="color:#1f2328">][</span><span style="color:#0a3069">&#39;content&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p><a href="https://openrouter.ai">OpenRouter</a> is a single OpenAI-compatible endpoint in front of most commercial and open-weight models. You send a model identifier as a string and it routes the request. That is the entire value proposition, and for this kind of work it is worth a lot, because it turns &ldquo;which model should we use&rdquo; from an architecture question into a config value:</p>
+<div class="code-block"><div class="code-label">.env</div>
+  <div class="highlight" title=".env"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#1f2328">OPENROUTER_MODEL_PRICING</span><span style="color:#0550ae">=</span><span style="color:#0a3069">anthropic/claude-sonnet-4-6</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">OPENROUTER_MODEL_BOOKING</span><span style="color:#0550ae">=</span><span style="color:#0a3069">deepseek/deepseek-v4-pro</span></span></span></code></pre></div>
+</div><p>Two separate settings, because the two jobs have different requirements. The extraction job produces long structured output against a complex schema. The quote helper produces three sentences. There is no reason to pay frontier prices for the second one.</p>
+<p>Changing either is an edit to an environment file and a page reload. No redeploy, no code change, no SDK swap. When a new model appears, evaluating it on real data is a two-minute experiment, and that has changed how often I bother to check.</p>
+<p>Two practical notes about the API itself. The request is not streamed, because there is nothing to show progressively; the caller wants a complete object or an error. And the timeout is 600 seconds for extraction, which sounds absurd until you watch a reasoning model take four minutes on a property with fifteen seasons and three holiday packages.</p>
+<h3 id="long-calls-and-session-locks">Long calls and session locks<a class="heading-anchor" href="#long-calls-and-session-locks" aria-label="Link to this section">#</a></h3>
+<p>An unglamorous bug worth mentioning, because it will bite anyone doing this in PHP.</p>
+<p>The extraction endpoint sits behind session-based authentication. PHP&rsquo;s <code>session_start()</code> holds an exclusive lock on the session file for the whole request. So a four-minute AI call meant that every other request from the same logged-in user, in any other tab, queued behind it. The dashboard appeared to hang, and each waiting request pinned a worker of its own.</p>
+<p>The fix is one line, placed after the auth and CSRF checks and before the AI call:</p>
+<div class="code-block"><div class="code-label">PHP</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">session_status</span><span style="color:#1f2328">()</span> <span style="color:#0550ae">===</span> <span style="color:#1f2328">PHP_SESSION_ACTIVE</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">session_write_close</span><span style="color:#1f2328">();</span></span></span></code></pre></div>
+</div><aside class="callout callout-tip">
+  <p class="callout-title"><i class="fa fa-lightbulb-o"></i>Tip</p>
+  <p>Session data stays readable in memory; only the lock is released. This is a general property of long-running requests, not an AI thing, but AI is what made a two-second endpoint into a four-minute one.</p>
+</aside><h2 id="what-goes-wrong-with-the-json">What goes wrong with the JSON<a class="heading-anchor" href="#what-goes-wrong-with-the-json" aria-label="Link to this section">#</a></h2>
+<p>&ldquo;Output only JSON&rdquo; is an instruction, not a type system. Over a few thousand runs the failures sort into four groups.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Failure</th>
+					<th>What arrives</th>
+					<th>Fix</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Markdown fences</td>
+					<td>The object inside a code fence, maybe with a sentence before it</td>
+					<td>Take the first <code>{</code> to the last <code>}</code></td>
+			</tr>
+			<tr>
+					<td>Typographic punctuation</td>
+					<td>Curly quotes, trailing commas</td>
+					<td>Normalise before parsing</td>
+			</tr>
+			<tr>
+					<td>Reasoning tags</td>
+					<td><code>&lt;thinking&gt;</code> blocks ahead of the answer</td>
+					<td>Strip them before parsing</td>
+			</tr>
+			<tr>
+					<td>Truncation</td>
+					<td>Valid JSON that stops mid-object</td>
+					<td>Raise the limit, then close open containers</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>Markdown fences.</strong> The single most common one. The object arrives wrapped in a fenced code block, sometimes with a language tag, sometimes with a friendly sentence before it. Extracting from the first <code>{</code> to the last <code>}</code> handles nearly all of it.</p>
+<p><strong>Typographic punctuation.</strong> Some models emit curly quotes inside JSON, particularly when the surrounding text is not English. A three-line normaliser deals with it, along with trailing commas before a closing brace:</p>
+<div class="code-block"><div class="code-label">Punctuation normaliser</div>
+  <div class="highlight" title="Punctuation normaliser"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#cf222e">function</span> <span style="color:#6639ba">cleanupAiJsonString</span><span style="color:#1f2328">(</span><span style="color:#1f2328">string</span> <span style="color:#953800">$s</span><span style="color:#1f2328">)</span><span style="color:#0550ae">:</span> <span style="color:#1f2328">string</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$s</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">str_replace</span><span style="color:#1f2328">([</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x9C</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x9D</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x9E</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">],</span> <span style="color:#0a3069">&#39;&#34;&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$s</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$s</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">str_replace</span><span style="color:#1f2328">([</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x98</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x99</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\xE2\x80\x9A</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">],</span> <span style="color:#0a3069">&#34;&#39;&#34;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$s</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$s</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">preg_replace</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;/,(\s*[\]}])/&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;$1&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$s</span><span style="color:#1f2328">);</span>   <span style="color:#57606a">// trailing commas
+</span></span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#953800">$s</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p><strong>Reasoning tags.</strong> Models with visible chain-of-thought sometimes wrap it in <code>&lt;thinking&gt;</code> or <code>&lt;reasoning&gt;</code> blocks and put the answer after. Stripping those blocks before parsing is a two-line regex and turns a failed run into a good one.</p>
+<p><strong>Truncation.</strong> The interesting one. A long property runs out of output tokens mid-object, and you get perfectly valid JSON for the first eighty percent followed by nothing.</p>
+<p>The first response was to raise the limit, from 8192 to 24000 tokens. That was correct and mostly sufficient, and it costs nothing extra because you are billed for tokens generated, not tokens allowed. But &ldquo;mostly&rdquo; is not &ldquo;always&rdquo;, so there is also a repair step, and its design matters more than it looks.</p>
+<p>The naive repair is to trim back to the last point where braces balance. That is wrong here, and wrong in an expensive way: a truncated object never balances at depth zero, so trimming back leaves you with an inner array, and the top-level property block that carries capacity and tax settings is gone. The importer then writes a property record full of defaults.</p>
+<p>So instead the repair walks the string, tracks the open containers, and appends the closing brackets the text still owes:</p>
+<div class="code-block"><div class="code-label">Truncation repair</div>
+  <div class="highlight" title="Truncation repair"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#cf222e">function</span> <span style="color:#6639ba">closeOpenJsonContainers</span><span style="color:#1f2328">(</span><span style="color:#1f2328">string</span> <span style="color:#953800">$json</span><span style="color:#1f2328">)</span><span style="color:#0550ae">:</span> <span style="color:#0550ae">?</span><span style="color:#1f2328">string</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$stack</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">[];</span> <span style="color:#953800">$inString</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span> <span style="color:#953800">$escape</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> <span style="color:#1f2328">(</span><span style="color:#953800">$i</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#953800">$n</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">strlen</span><span style="color:#1f2328">(</span><span style="color:#953800">$json</span><span style="color:#1f2328">);</span> <span style="color:#953800">$i</span> <span style="color:#0550ae">&lt;</span> <span style="color:#953800">$n</span><span style="color:#1f2328">;</span> <span style="color:#953800">$i</span><span style="color:#0550ae">++</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#953800">$ch</span> <span style="color:#0550ae">=</span> <span style="color:#953800">$json</span><span style="color:#1f2328">[</span><span style="color:#953800">$i</span><span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$escape</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#953800">$escape</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$inString</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;\\&#39;</span><span style="color:#1f2328">)</span> <span style="color:#953800">$escape</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">elseif</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;&#34;&#39;</span><span style="color:#1f2328">)</span> <span style="color:#953800">$inString</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;&#34;&#39;</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#953800">$inString</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;{&#39;</span><span style="color:#1f2328">)</span> <span style="color:#953800">$stack</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;}&#39;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">elseif</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;[&#39;</span><span style="color:#1f2328">)</span> <span style="color:#953800">$stack</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;]&#39;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">elseif</span> <span style="color:#1f2328">(</span><span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;}&#39;</span> <span style="color:#0550ae">||</span> <span style="color:#953800">$ch</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;]&#39;</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">array_pop</span><span style="color:#1f2328">(</span><span style="color:#953800">$stack</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$inString</span> <span style="color:#0550ae">||</span> <span style="color:#cf222e">empty</span><span style="color:#1f2328">(</span><span style="color:#953800">$stack</span><span style="color:#1f2328">))</span> <span style="color:#cf222e">return</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#1f2328">rtrim</span><span style="color:#1f2328">(</span><span style="color:#1f2328">rtrim</span><span style="color:#1f2328">(</span><span style="color:#953800">$json</span><span style="color:#1f2328">),</span> <span style="color:#0a3069">&#39;,&#39;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">.</span> <span style="color:#1f2328">implode</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">array_reverse</span><span style="color:#1f2328">(</span><span style="color:#953800">$stack</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>If the result still does not parse, because the cut landed on a dangling key or a half-written value, the loop drops the last element and tries again.</p>
+<aside class="callout callout-warning">
+  <p class="callout-title"><i class="fa fa-exclamation-triangle"></i>A plausible wrong price is worse than a broken one</p>
+  <p>One subtlety in there took an embarrassingly long time to find. Before any of this, the last token has to go if it is a bare number or literal, because half of <code>180000</code> is <code>1800</code>, and <code>1800</code> closes cleanly, parses cleanly, validates cleanly, and imports as a real nightly rate. A malformed price is loud. A plausible wrong price is not.</p>
+</aside><p>The whole repair path is maybe 120 lines and it is the least interesting code in the feature. It is also the reason the feature can be trusted, because it converts a class of silent corruption into either a correct import or a visible failure.</p>
+<h2 id="validate-everything-the-model-returns">Validate everything the model returns<a class="heading-anchor" href="#validate-everything-the-model-returns" aria-label="Link to this section">#</a></h2>
+<p>After parsing comes a normalisation pass that treats the JSON as hostile input, which it is: it comes from a stochastic process over text an owner typed.</p>
+<p>Rows are dropped when they cannot possibly work: a season without a valid date range or with a base price of zero, a discount with a type not in the enum, a rule whose dates are reversed. Values are clamped: percentages above 100, negative fees, weekday lists containing an 8. Cross-references are resolved and cleared when they dangle, so a holiday linked to a season that does not exist loses the link instead of silently linking to nothing.</p>
+<p>Some errors get repaired rather than dropped, where the intent is unmistakable. A discount with <code>start_date</code> after <code>end_date</code> is nearly always a transposition, and dropping it turns a date-limited promotion into an always-on one, which is worse than fixing it:</p>
+<div class="code-block"><div class="code-label">PHP</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span><span style="color:#cf222e">empty</span><span style="color:#1f2328">(</span><span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;start_date&#39;</span><span style="color:#1f2328">])</span> <span style="color:#0550ae">&amp;&amp;</span> <span style="color:#0550ae">!</span><span style="color:#cf222e">empty</span><span style="color:#1f2328">(</span><span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;end_date&#39;</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&amp;&amp;</span> <span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;end_date&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">&lt;</span> <span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;start_date&#39;</span><span style="color:#1f2328">])</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">[</span><span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;start_date&#39;</span><span style="color:#1f2328">],</span> <span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;end_date&#39;</span><span style="color:#1f2328">]]</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;end_date&#39;</span><span style="color:#1f2328">],</span> <span style="color:#953800">$d</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;start_date&#39;</span><span style="color:#1f2328">]];</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>Then the last and most important gate: nothing is written until a person looks at it. The parsed result is rendered as a table of seasons, holidays, discounts and rules, in the operator&rsquo;s language, next to the original text. They approve the import or they do not. Rows an operator has previously locked by hand are never overwritten, so the import can only add around them.</p>
+<aside class="callout callout-note">
+  <p class="callout-title"><i class="fa fa-info-circle"></i>Note</p>
+  <p>That review step is what makes the whole thing acceptable. The model is not trusted; it is fast. A wrong extraction costs a click, not a season of wrong prices.</p>
+</aside><h2 id="one-call-per-year">One call per year<a class="heading-anchor" href="#one-call-per-year" aria-label="Link to this section">#</a></h2>
+<p>Price lists cover several years, often in one page with headings. Sending all of it in one request produced two reliable problems: dates from the wrong year, and truncation.</p>
+<p>Splitting the text on headings that contain a four-digit year and sending one request per section fixed both. Each call sees one year, is told which year it is looking at, and returns a smaller object. Results are merged, then deduplicated on natural keys, because the same holiday sometimes appears in two sections.</p>
+<p>The interesting part is that this made the results better rather than merely smaller. A prompt that says &ldquo;the input is one year, use this year for every date&rdquo; removes an entire category of reasoning the model was doing badly. It is the same lesson as splitting a large function: less context, fewer ways to be wrong.</p>
+<h2 id="which-model">Which model<a class="heading-anchor" href="#which-model" aria-label="Link to this section">#</a></h2>
+<p>I have run this task across several tiers, and the differences show up in specific places rather than as a general quality score.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Tier</th>
+					<th>Strength</th>
+					<th>Watch out for</th>
+					<th>Use it for extraction?</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Frontier commercial</td>
+					<td>Complex schemas right first time</td>
+					<td>Price, latency</td>
+					<td>Yes, when quality is everything</td>
+			</tr>
+			<tr>
+					<td>Mid-tier commercial</td>
+					<td>The common case, cleanly</td>
+					<td>Awkward edge rules</td>
+					<td>Yes, for simple properties</td>
+			</tr>
+			<tr>
+					<td>Large open-weight</td>
+					<td>Cheap, fast, good on clear text</td>
+					<td>Needs the full safety net</td>
+					<td>Yes, the current choice</td>
+			</tr>
+			<tr>
+					<td>Reasoning-heavy</td>
+					<td>Little, for this task</td>
+					<td>Token count, latency, tags</td>
+					<td>No</td>
+			</tr>
+			<tr>
+					<td>Small and cheap</td>
+					<td>Short summaries</td>
+					<td>Plausible wrong values</td>
+					<td>No</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>Frontier commercial models</strong> get complex schemas right the first time. Nested conditional rules, the two conflicting end-date conventions, holidays that inherit a season&rsquo;s price: they follow all of it, and the repair path rarely fires. They are also the most expensive per token and often the slowest, particularly if they reason before answering.</p>
+<p><strong>Mid-tier commercial models</strong> handle the common case perfectly well. Simple properties with three seasons and a cleaning fee come back clean. The failures cluster around the awkward parts: the weekday and weekend split into two rows, the priority field on nested seasons, and the exact substring the engine matches on. For many use cases this is the right trade, at roughly half the price or less.</p>
+<p><strong>Large open-weight models</strong> have become genuinely competitive for this task, which is the main reason the config currently points at one. They are an order of magnitude cheaper, they are fast, and on a clear price list the output is indistinguishable from the expensive option. They need more of the safety net: markdown fences more often, truncation more often, and instructions taken more literally, which cuts both ways. An instruction like &ldquo;use null when unknown&rdquo; is followed exactly; an instruction that relies on inference is followed less reliably.</p>
+<p><strong>Reasoning-heavy models</strong> were the surprise, and not a pleasant one. On a task like this the reasoning does not help much, because the work is transcription against a fixed schema rather than deduction. What it does is multiply the output tokens by several times and the latency by more. It also produced the <code>&lt;thinking&gt;</code> tag mess that needed handling. My conclusion, held loosely, is that extraction wants a model that follows instructions precisely, not one that thinks hard.</p>
+<p><strong>Small and cheap models</strong> are not usable for the extraction, and the failure mode is instructive: the JSON is syntactically fine, the field names are right, and the values are wrong in ways that look plausible. That is the worst possible outcome, far worse than a parse error. They are perfectly good for the short quote-summary job.</p>
+<p>Two practical points. Prompts are not fully portable between families, and a prompt tuned for one model will lose a few percent on another, though a very explicit prompt with worked examples travels better than a terse one. And OpenRouter lets you evaluate all of this by changing a string, which is the only reason I have opinions about five models instead of one.</p>
+<h2 id="what-it-costs">What it costs<a class="heading-anchor" href="#what-it-costs" aria-label="Link to this section">#</a></h2>
+<p>The unit economics are the part people usually get wrong in both directions.</p>
+<p>Here is the arithmetic for one property. The prompt is around 5,000 tokens, most of it the fixed schema and rules. The property&rsquo;s price text adds 500 to 2,000 tokens. Output is 1,000 to 4,000 tokens of JSON. A property covering three years is three of those calls, so call it 25,000 input tokens and 9,000 output tokens for a complete property.</p>
+<p>List prices, per million tokens, at the time of writing, and what they come to for that one property:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Tier</th>
+					<th>Input</th>
+					<th>Output</th>
+					<th>One property</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Frontier commercial</td>
+					<td>$5 and up</td>
+					<td>$25 and up</td>
+					<td>about $0.35 and up</td>
+			</tr>
+			<tr>
+					<td>Mid-tier commercial</td>
+					<td>around $3</td>
+					<td>around $15</td>
+					<td>about $0.20</td>
+			</tr>
+			<tr>
+					<td>Small commercial</td>
+					<td>around $1</td>
+					<td>around $5</td>
+					<td>about $0.07</td>
+			</tr>
+			<tr>
+					<td>Large open-weight</td>
+					<td>cents to low dollars</td>
+					<td>cents to low dollars</td>
+					<td>about $0.01</td>
+			</tr>
+	</tbody>
+</table>
+<p>Prices move, providers differ, and OpenRouter shows the current number on each model&rsquo;s page, so treat that table as a shape rather than a quote. Leaving out the small models, which are not usable for this job anyway, a full property extraction runs from roughly a cent on an open-weight model, through about twenty cents mid-tier, to thirty-five cents or more at the top.</p>
+<p>A hundred properties, once a year, is somewhere between one dollar and thirty-five. The manual alternative is twenty minutes of a person&rsquo;s attention per property, which is thirty-three hours.</p>
+<p>That comparison is so lopsided that the cost question stops being about money. The real costs are elsewhere:</p>
+<p><strong>Latency.</strong> Four minutes for a multi-year property is a genuine UX problem, and the honest fix is not a faster model. It is a job queue, a progress indicator, and not blocking anything else while it runs.</p>
+<p><strong>Review time.</strong> A person still reads every result. If that takes five minutes instead of twenty, the feature has paid for itself many times over. If a cheap model&rsquo;s error rate pushes it back toward fifteen, the saving on tokens was an illusion. This is the number to optimise, and it is why I would rather pay four times more per token than lose the operator&rsquo;s trust.</p>
+<p><strong>The engineering around it.</strong> Repair, validation, per-year splitting, the review UI, the locked-row logic. Call it 1,500 lines. That is the actual price of the feature, and it is a one-time cost that no choice of model reduces.</p>
+<h2 id="what-i-would-tell-someone-building-this">What I would tell someone building this<a class="heading-anchor" href="#what-i-would-tell-someone-building-this" aria-label="Link to this section">#</a></h2>
+<ol>
+<li><strong>Write the prompt like a specification, not like a request.</strong> Every ambiguity you leave is a decision the model makes freshly on each run.</li>
+<li><strong>Never let the model do the arithmetic that produces a number a customer sees.</strong> Extraction into a deterministic engine gives you the model&rsquo;s flexibility with the engine&rsquo;s reliability.</li>
+<li><strong>Assume the JSON is broken and handle it in layers:</strong> extract the object from surrounding text, normalise the punctuation, repair truncation, validate every field, then show a human a table. Each layer converts a silent failure into either a correct result or a visible one.</li>
+<li><strong>Use OpenRouter and keep the model name in configuration.</strong> One OpenAI-compatible endpoint lets you try many models on real data, and switching or migrating to a new one is a config change, not a code change.</li>
+<li><strong>Keep a person on the last step for anything that touches money.</strong> Not because the model is bad, but because a review that takes a minute makes the difference between a feature people use and a feature people quietly stop trusting.</li>
+</ol>
+
+    </article>
+
+    
+    <aside class="post-related">
+      <p class="post-related-title">Related reading</p>
+      <div class="post-related-grid">
+      
+        <a class="post-related-card" href="/posts/data-mining-web-selenium-tutorial/">
+          <img src="/images/posts/data-mining-web-selenium-tutorial.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Data mining from webpages with Selenium Python WebDriver Browser Automation - a Big data tutorial</strong>
+            
+          </span>
+        </a>
+      
+        <a class="post-related-card" href="/posts/wordpress-to-hugo-migration/">
+          <img src="/images/posts/wordpress-to-hugo-migration-card.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages</strong>
+            <span>Why I retired the PHP and MySQL stack behind this blog, how the SQL dump was converted into …</span>
+          </span>
+        </a>
+      
+      </div>
+    </aside>
+    
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/llm/">llm</a><a href="/tags/openrouter/">openrouter</a><a href="/tags/json/">json</a><a href="/tags/data-extraction/">data extraction</a><a href="/tags/php/">php</a><a href="/tags/pricing/">pricing</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/wordpress-to-hugo-migration/">Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

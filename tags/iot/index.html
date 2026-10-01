@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -84,6 +88,20 @@
       <h1 class="page-header-title archive-title">Iot</h1>
     </header>
     <div id="infinite-wrap" class="grid clr">
+      
+      <article class="loop-entry clr">
+        <a href="/posts/eink-weather-dashboard/" class="loop-entry-img-link">
+          
+          <img src="/images/posts/eink-weather-dashboard-card.png" alt="Iot" loading="lazy">
+          
+        </a>
+        <div class="loop-entry-details">
+          <header><h2><a href="/posts/eink-weather-dashboard/">A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32</a></h2></header>
+          <div class="loop-entry-excerpt">
+            <p>A Waveshare three-colour panel, an ESP32 in deep sleep, and a Python renderer that turns …</p>
+          </div>
+        </div>
+      </article>
       
       <article class="loop-entry clr">
         <a href="/posts/arduino-raspberry-air-quality-iot/" class="loop-entry-img-link">
@@ -121,6 +139,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

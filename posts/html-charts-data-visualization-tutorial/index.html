@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-89">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 8/9</h2>
@@ -102,8 +113,7 @@
 <li>Flot</li>
 </ul>
 <p>I&rsquo;ve chosen <a href="http://www.flotcharts.org/flot/examples/series-toggle/index.html" title="Flot's interactive chart">Flot&rsquo;s interactive chart</a> with switchable diagrams and came to an idea that it would be nice to also have trend lines for the charts and used it as an <a href="http://www.flotcharts.org/flot/examples/series-toggle/index.html" title="Flot's interactive chart">example</a>. Both tools use propriety data sets, instead of manipulating their example parsers, I&rsquo;ve chosen to alter my data to comply with the provided examples. After altering the files with SED, so as above, I have came to a problem — Hadoop is a parallel system, all processes are analyzing portions of the dataset, resulting dataset is unordered and if it is complex, it can&rsquo;t be ordered with big. So I had data like:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Weather station, (1950, 55), (1940, 50), (1960, 67)
-</span></span></code></pre></div><p>Unordered key-value pairs, which was not a problem for the map tutorial but is a problem for Flot as it plots the graph iterating through the dataset. The dataset have to be ordered by the keys, resembling decades in the above example. I&rsquo;ve dropped SED and chosen to create a Python script to make replacements in the datasets and also to order the key-value pairs for Flot to have it properly shown. <em><strong>Pythonsort.txt</strong></em> , the input file is the resulting file from the last SED command, aka <em><strong>rain_new3.csv</strong></em></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Weather station, (1950, 55), (1940, 50), (1960, 67)</span></span></code></pre></div><p>Unordered key-value pairs, which was not a problem for the map tutorial but is a problem for Flot as it plots the graph iterating through the dataset. The dataset have to be ordered by the keys, resembling decades in the above example. I&rsquo;ve dropped SED and chosen to create a Python script to make replacements in the datasets and also to order the key-value pairs for Flot to have it properly shown. <em><strong>Pythonsort.txt</strong></em> , the input file is the resulting file from the last SED command, aka <em><strong>rain_new3.csv</strong></em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>import collections
 </span></span><span style="display:flex;"><span>with open (&#34;pythonsort.txt&#34;, &#34;r&#34;) as myfile:
 </span></span><span style="display:flex;"><span>    # For each line
@@ -172,10 +182,11 @@
 </span></span><span style="display:flex;"><span>			    string+=(&#34;[%s, %s], &#34; % (key, A+B*key))
 </span></span><span style="display:flex;"><span>			string+=&#39;]},&#39;
 </span></span><span style="display:flex;"><span>			string = string.replace(&#39;, ]},&#39;, &#39;]},&#39;)
-</span></span><span style="display:flex;"><span>			print string
-</span></span></code></pre></div><p>Be cautious about the opening and closure marks of the dataset ( []{} ), those have to be set manually. I have made some minor cross-browser compatible modifications on the CSS to have many series shown in columns, below the diagram. After adding the resulting dataset to Flot&rsquo;s minimally modified example, toggling of PRCP charts for each weather stations and toggling their trend line became possible. <strong>Download the example Flot diagram and Python script: <a href="/media/Flot_Diagram.zip" title="Flot interactiv chart">Flot_Diagram.zip</a></strong></p>
+</span></span><span style="display:flex;"><span>			print string</span></span></code></pre></div><p>Be cautious about the opening and closure marks of the dataset ( []{} ), those have to be set manually. I have made some minor cross-browser compatible modifications on the CSS to have many series shown in columns, below the diagram. After adding the resulting dataset to Flot&rsquo;s minimally modified example, toggling of PRCP charts for each weather stations and toggling their trend line became possible. <strong>Download the example Flot diagram and Python script: <a href="/media/Flot_Diagram.zip" title="Flot interactiv chart">Flot_Diagram.zip</a></strong></p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -216,6 +227,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,12 +94,19 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
 
+    
+
+    
+
+    
+
     <article class="entry clr">
       <p>I often read web articles on the Kindle e-reader for less eye strain. In order to achieve that, I use the <a href="https://www.amazon.com/gp/sendtokindle">Send to Kindle</a> browser extension, maintained by Amazon. In the past few years many of Kindle publishing services just came and go, so the official Send to Kindle was always the most stable one to use. However, one important feature is not supported, sending articles from mobile or tablet - by just sending the URL to an email address, not an article&rsquo;s content attached, processable by the @free.kindle.com email addresses. Here, my script is presented, which could run on any machines using Python to check an email box with unread emails containing URLs and send the articles&rsquo; content to the Kindle e-reader.</p>
-<h1></h1>
+<h1 id=""></h1>
 <h1 id="approaches">Approaches</h1>
 <ul>
 <li>I&rsquo;ve experimented with a few, supposedly more elegant approaches
@@ -110,7 +121,7 @@
 </li>
 </ul>
 <p>So I decided to leverage the most stable parser for the purpose, the Amazon extension that I use day by day on a manual basis.</p>
-<h1></h1>
+<h1 id=""></h1>
 <h1 id="send-to-kindle-via-web-browser-automation---specification">Send to Kindle via web browser automation - Specification</h1>
 <ul>
 <li>Read a Gmail account&rsquo;s specific folder for unread emails
@@ -123,7 +134,7 @@
 <li>Use the Send to Kindle extension to send the article content to the Kindle</li>
 <li>Mark the messages processed as read</li>
 </ul>
-<h1></h1>
+<h1 id=""></h1>
 <h1 id="prerequisites">Prerequisites</h1>
 <ul>
 <li>Windows or Linux</li>
@@ -141,7 +152,7 @@
 </ul>
 </li>
 </ul>
-<h1></h1>
+<h1 id=""></h1>
 <h1 id="script">Script</h1>
 <p>Richly commented Python 2.7 code, reading and processing emails</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gmail_uname = &#39;&#39; #without @gmail.com
@@ -312,9 +323,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    driver.quit()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    
-</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span>    </span></span></code></pre></div>
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -355,6 +367,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

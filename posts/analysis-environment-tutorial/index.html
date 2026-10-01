@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-39">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 3/9</h2>
@@ -108,6 +119,8 @@
 <p>Linux is more suitable and easy to handle for development tasks like the above. I have installed Python and Kartograph: as the weather stations are geographically distributed, I would like to make some graphs based on a map. The open-source Kartograph GIS framework provided me an easy to use alternative for map creation and web-based visualization. It is more or less well documented and have some nice tutorials. Download it and install using <a href="http://kartograph.org/docs/kartograph.py/install-ubuntu.html" title="Kartograph Ubuntu Install Guide">this guide</a>. I have used a virtual machine to run Hortonwork&rsquo;s Hadoop ? it is a pre-configure environment with a handy web-based UI. Pre-installed are Hadoop, Pig, Hive: all the goodies needed for an analysis ? open-source and free, sparing you a lot of hassle by eliminating the need for a lengthy sysadmin session on Hadoop. Installed <a href="https://help.ubuntu.com/community/VirtualBox/Installation" title="Virtualbox Ubuntu">Virtualbox </a>on Ubuntu. Downloaded <a href="http://hortonworks.com/products/hortonworks-sandbox/" title="Hortonworks Sandbox">Hortonworks Hadoop 2 Sandbox bundle</a> for Virtualbox. The analysis was done using a single virtual Hadoop machine. <a href="http://hortonworks.com/products/hortonworks-sandbox/" title="Hortonworks Sandbox">Hortonworks Hadoop</a> is a bundle of open-source tools: Hadoop itself and multiple extras: query languages that are translated to map-reduce jobs, monitoring and job scheduling tools and a great web-based UI to integrate it all called Hue.[/symple_toggle]</p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -148,6 +161,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

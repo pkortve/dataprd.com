@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -84,6 +88,111 @@
       <h1 class="page-header-title">Tags</h1>
     </header>
     <ul class="taxonomy-list">
+      
+      <li>
+        <a href="https://dataprd.com/tags/data-extraction/">Data Extraction</a>
+        <span class="tax-count">(data extraction)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/json/">Json</a>
+        <span class="tax-count">(json)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/llm/">Llm</a>
+        <span class="tax-count">(llm)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/openrouter/">Openrouter</a>
+        <span class="tax-count">(openrouter)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/php/">Php</a>
+        <span class="tax-count">(php)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/pricing/">Pricing</a>
+        <span class="tax-count">(pricing)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/github-pages/">Github Pages</a>
+        <span class="tax-count">(github pages)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/hugo/">Hugo</a>
+        <span class="tax-count">(hugo)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/static-site/">Static Site</a>
+        <span class="tax-count">(static site)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/web-hosting/">Web Hosting</a>
+        <span class="tax-count">(web hosting)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/wordpress/">Wordpress</a>
+        <span class="tax-count">(wordpress)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/dashboard/">Dashboard</a>
+        <span class="tax-count">(dashboard)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/glance/">Glance</a>
+        <span class="tax-count">(glance)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/home-automation/">Home Automation</a>
+        <span class="tax-count">(home automation)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/privacy/">Privacy</a>
+        <span class="tax-count">(privacy)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/self-hosted/">Self-Hosted</a>
+        <span class="tax-count">(self-hosted)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/e-ink/">E-Ink</a>
+        <span class="tax-count">(e-ink)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/esp32/">Esp32</a>
+        <span class="tax-count">(esp32)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/iot/">Iot</a>
+        <span class="tax-count">(iot)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/python/">Python</a>
+        <span class="tax-count">(python)</span>
+      </li>
+      
+      <li>
+        <a href="https://dataprd.com/tags/waveshare/">Waveshare</a>
+        <span class="tax-count">(waveshare)</span>
+      </li>
       
       <li>
         <a href="https://dataprd.com/tags/air-quality/">Air Quality</a>
@@ -128,11 +237,6 @@
       <li>
         <a href="https://dataprd.com/tags/internet-of-things/">Internet of Things</a>
         <span class="tax-count">(internet of things)</span>
-      </li>
-      
-      <li>
-        <a href="https://dataprd.com/tags/iot/">Iot</a>
-        <span class="tax-count">(iot)</span>
       </li>
       
       <li>
@@ -401,11 +505,6 @@
       </li>
       
       <li>
-        <a href="https://dataprd.com/tags/privacy/">Privacy</a>
-        <span class="tax-count">(privacy)</span>
-      </li>
-      
-      <li>
         <a href="https://dataprd.com/tags/asterisk/">Asterisk</a>
         <span class="tax-count">(asterisk)</span>
       </li>
@@ -576,6 +675,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

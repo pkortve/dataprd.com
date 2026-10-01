@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/data-security/">Data security</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>Data governance procedures includes the management of communication assets (e-mail, instant messaging, phone calls), which are considered as business secrets. While small enterprises should make calculations on using the cloud as the price benefit might worth the negative impact on data management and ownership, a medium/large sized company is suggested to use own solutions with own security and data backup policies. Hereby - <em>in brief</em> - I present an <em>exemplary cost-effective,</em> secure setup for small to medium enterprises own infrastructure based on encrypted communication and messaging storage with data security and backup in mind. <em>This is a high-level overview: data governance practices, backup policies, disaster recovery, update procedures, security testing, physical security, etc. are to be defined</em>. <img src="/images/uploads/2014/08/MidSecure.png" alt="Middle sized company secure network"> Linux based servers: CentOS or Ubuntu Office 1: ~100-200 users</p>
@@ -155,6 +166,8 @@
     </article>
 
     
+
+    
     <div class="post-tags clr">
       <a href="/tags/linux/">linux</a><a href="/tags/shorewall/">shorewall</a><a href="/tags/firewall/">firewall</a><a href="/tags/caldav/">caldav</a><a href="/tags/cardav/">cardav</a><a href="/tags/data-security/">data security</a><a href="/tags/communication/">communication</a><a href="/tags/postfix/">postfix</a><a href="/tags/zimbra/">zimbra</a><a href="/tags/ldap/">ldap</a><a href="/tags/ssh/">ssh</a><a href="/tags/nagios/">nagios</a><a href="/tags/owncloud/">owncloud</a><a href="/tags/asterisk/">asterisk</a><a href="/tags/elastics/">elastics</a><a href="/tags/openvpon/">openvpon</a><a href="/tags/dhcpd/">dhcpd</a><a href="/tags/bind/">bind</a><a href="/tags/xampp/">xampp</a><a href="/tags/smtps/">smtps</a><a href="/tags/imaps/">imaps</a>
     </div>
@@ -193,6 +206,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

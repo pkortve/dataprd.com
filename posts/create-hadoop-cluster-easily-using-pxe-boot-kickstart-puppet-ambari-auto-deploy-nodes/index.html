@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>This tutorial is to showcase unattended and automatic install of multiple <strong>CentOS 6.5 x86_64 Hadoop nodes</strong> pre-configured with <strong>Ambari-agents</strong> and an <strong>Ambari-server</strong> host. After configuring automatic install of bare metal (No OS pre-installed) nodes, deploying a Hadoop cluster will be a matter of clicks. The setup uses:</p>
@@ -127,8 +138,7 @@
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install dnsmasq
-</span></span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install dnsmasq</span></span></code></pre></div><ul>
 <li>
 <pre><code>* _/etc/dnsmasq.conf_
 </code></pre>
@@ -167,8 +177,7 @@
 </span></span><span style="display:flex;"><span>tftp<span style="color:#0550ae">-</span>root<span style="color:#0550ae">=/</span><span style="color:#cf222e">var</span><span style="color:#0550ae">/</span>lib<span style="color:#0550ae">/</span>tftpboot
 </span></span><span style="display:flex;"><span>dhcp<span style="color:#0550ae">-</span>boot<span style="color:#0550ae">=</span>pxelinux<span style="color:#0550ae">.</span><span style="color:#0550ae">0</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a">#Reserved IPs+MAC addresses will get added here by our custom script</span>
-</span></span></code></pre></div><ul>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#Reserved IPs+MAC addresses will get added here by our custom script</span></span></span></code></pre></div><ul>
 <li><strong>TFTP PXE boot files at</strong> <em>/var/lib/tftpboot</em> downloadable with the package above, containing
 <ul>
 <li>Linux image</li>
@@ -275,12 +284,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>sync
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>end
-</span></span></code></pre></div><ul>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">%</span>end</span></span></code></pre></div><ul>
 <li><strong>Install Apache</strong></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install httpd
-</span></span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install httpd</span></span></code></pre></div><ul>
 <li>
 <pre><code>* Move Kickstart default file to _/var/www/html/kickstart_
 </code></pre>
@@ -296,8 +303,7 @@
 <p><strong>Install NFS</strong></p>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install nfs-utils nfs-utils-lib
-</span></span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install nfs-utils nfs-utils-lib</span></span></code></pre></div><ul>
 <li>
 <pre><code>* Edit _/etc/exports_ and point it to your NFS shared folder 
 </code></pre>
@@ -352,8 +358,7 @@
 </span></span><span style="display:flex;"><span>    # Establish ordering
 </span></span><span style="display:flex;"><span>    Class[&#39;interfering_services&#39;] -&gt; Class[&#39;ntp&#39;] -&gt; Class[&#39;etchosts&#39;] -&gt; Class[&#39;ambari_agent&#39;]
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><ul>
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><ul>
 <li><strong>IPtables configuration</strong> for Internet sharing, DHCP, TFTP, DNS
 <ul>
 <li>Edit <em>/etc/sysctl.conf</em> add <em>net.ipv4.ip_forward = 1</em> for allowing Net interface MASQ to Loc (internet connection sharing from internet network interface to local - needed for getting Ambari Repos)</li>
@@ -384,8 +389,7 @@
 </span></span><span style="display:flex;"><span>iptables -A INPUT -i p4p1 -s 192.168.0.0/24 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>service iptables save 
-</span></span><span style="display:flex;"><span>service iptables restart 
-</span></span></code></pre></div><ul>
+</span></span><span style="display:flex;"><span>service iptables restart </span></span></code></pre></div><ul>
 <li>
 <p><strong>Custom script to add a new host</strong></p>
 </li>
@@ -471,8 +475,7 @@
 </span></span><span style="display:flex;"><span>service dnsmasq restart
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span><span style="color:#0550ae">=$</span><span style="color:#1f2328">((</span><span style="color:#cf222e">var</span><span style="color:#0550ae">+</span><span style="color:#0550ae">1</span><span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>printf <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span> <span style="color:#0550ae">&gt;</span> counter<span style="color:#0550ae">.</span>txt
-</span></span></code></pre></div><h2 id="clients">Clients</h2>
+</span></span><span style="display:flex;"><span>printf <span style="color:#0550ae">$</span><span style="color:#cf222e">var</span> <span style="color:#0550ae">&gt;</span> counter<span style="color:#0550ae">.</span>txt</span></span></code></pre></div><h2 id="clients">Clients</h2>
 <p>Clients automatically installs on boot from network interface if their MAC address have been added to the system by using the above script. Select Boot media: PXE boot when starting the machine.</p>
 <h2 id="provisioning">Provisioning</h2>
 <ul>
@@ -490,16 +493,14 @@
 <li>Edit <em>/etc/puppet/environments/ambari_dev/manifest/one.pp</em> in case default hostnames need to be changed</li>
 <li>Run to configure Ambari repository</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>puppet apply /etc/puppet/environments/ambari_dev/manifest/one.pp
-</span></span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>puppet apply /etc/puppet/environments/ambari_dev/manifest/one.pp</span></span></code></pre></div><ul>
 <li>
 <pre><code>* Setup and start Ambari
 </code></pre>
 </li>
 </ul>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>ambari-server setup
-</span></span><span style="display:flex;"><span>ambari-server start
-</span></span></code></pre></div><ul>
+</span></span><span style="display:flex;"><span>ambari-server start</span></span></code></pre></div><ul>
 <li>
 <pre><code>*       * Point your browser to http://bigdata1.hdp:8080
 </code></pre>
@@ -668,6 +669,8 @@
     </article>
 
     
+
+    
     <div class="post-tags clr">
       <a href="/tags/hadoop/">hadoop</a><a href="/tags/tutorial/">tutorial</a><a href="/tags/puppet/">puppet</a><a href="/tags/ambari/">ambari</a>
     </div>
@@ -706,6 +709,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

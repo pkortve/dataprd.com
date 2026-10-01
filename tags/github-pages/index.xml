@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Github Pages on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/github-pages/</link>
+		<description>Recent content in Github Pages on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 03 Jun 2026 14:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/github-pages/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages</title>
+				<link>https://dataprd.com/posts/wordpress-to-hugo-migration/</link>
+				<pubDate>Wed, 03 Jun 2026 14:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/posts/wordpress-to-hugo-migration/</guid>
+				<description>&lt;p&gt;The WordPress setup behind this blog kept causing trouble: security issues, breaches, and a constant stream of updates for core, theme and plugins. For a site of articles that almost never change, that was too much upkeep and too much risk.&lt;/p&gt;&#xA;&lt;p&gt;So I moved it to &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; and now serve it as flat files from GitHub Pages, for free. This post covers why, how the SQL dump became Markdown, and the deployment setup.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

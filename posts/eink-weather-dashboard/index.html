@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32 | Dataprd.Com</title>
+  <meta name="description" content="A Waveshare three-colour panel, an ESP32 in deep sleep, and a Python renderer that turns three JSON feeds into a 96 KB bitmap every two hours." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>June 3, 2026</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/electronics/">Electronics</a>
+        </li>
+        
+        <li><i class="fa fa-book"></i>10 min read</li>
+      </ul>
+    </header>
+
+    
+    <div class="post-hero">
+      <img src="/images/posts/eink-weather-dashboard.png" alt="" width="880" height="200">
+    </div>
+    
+
+    
+    <aside class="post-tldr">
+      <p class="post-tldr-title">In short</p>
+      <ul><li>An 800×480 black, white and red e-ink panel on the shelf shows weather, air quality and the next eight calendar events.</li><li>A Python renderer on the NAS draws the screen with Pillow and packs it into a 96,000-byte two-plane bitmap.</li><li>The ESP32 wakes every two hours, downloads the file, refreshes the panel and goes back to deep sleep.</li><li>Layout changes never touch the firmware: the renderer and the device share nothing but a byte layout.</li></ul>
+    </aside>
+    
+
+    
+    <details class="post-toc" open>
+      <summary>Contents</summary>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#reading-the-screen">Reading the screen</a></li>
+    <li><a href="#the-panel">The panel</a></li>
+    <li><a href="#wiring">Wiring</a></li>
+    <li><a href="#where-the-data-comes-from">Where the data comes from</a></li>
+    <li><a href="#the-bitmap-format">The bitmap format</a></li>
+    <li><a href="#the-renderer">The renderer</a>
+      <ul>
+        <li><a href="#fonts-and-dpi">Fonts and DPI</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-calendar-problem">The calendar problem</a></li>
+    <li><a href="#power">Power</a></li>
+  </ul>
+</nav>
+    </details>
+    
+
+    <article class="entry clr longform">
+      <p>A dedicated weather and calendar display for the wall: a Waveshare 7.5&quot; three-colour e-ink panel driven by an ESP32. It holds its image with no power, has no backlight, and reads the same PHP proxies as the <a href="/posts/personal-dashboard-glance/">Glance dashboard</a>. It refreshes every two hours.</p>
+<p><span class="entry-figure"><img src="/images/posts/eink-dashboard-render.png" alt="The rendered dashboard: weather and air quality on the left, upcoming events on the right" width="800" height="480" loading="lazy" decoding="async"><span class="entry-caption">Renderer output before it is packed into a bitmap. The real panel shows Hungarian; labels here are translated and the calendar entries are placeholders.</span></span></p>
+<h2 id="reading-the-screen">Reading the screen<a class="heading-anchor" href="#reading-the-screen" aria-label="Link to this section">#</a></h2>
+<p>The 800 by 480 panel is split in two.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Region</th>
+					<th>Width</th>
+					<th>Contents</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Weather</td>
+					<td>480 px</td>
+					<td>Current conditions, UV and rain, 12 hourly cards, 3-day forecast, air quality, update timestamp</td>
+			</tr>
+			<tr>
+					<td>Calendar</td>
+					<td>318 px</td>
+					<td>Up to eight upcoming events</td>
+			</tr>
+	</tbody>
+</table>
+<p>Red marks a value that needs attention. Everything else is black on white:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Value</th>
+					<th>Turns red when</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>UV index</td>
+					<td>above 5</td>
+			</tr>
+			<tr>
+					<td>Rainfall</td>
+					<td>above 5 mm</td>
+			</tr>
+			<tr>
+					<td>Temperature</td>
+					<td>above 25 °C</td>
+			</tr>
+			<tr>
+					<td>Air quality</td>
+					<td>the category is poor or worse</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="the-panel">The panel<a class="heading-anchor" href="#the-panel" aria-label="Link to this section">#</a></h2>
+<p>The screen is a <strong>Waveshare 7.5&quot; (B) V2</strong>.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Property</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Resolution</td>
+					<td>800 x 480 pixels</td>
+			</tr>
+			<tr>
+					<td>Colour planes</td>
+					<td>Black / white / red</td>
+			</tr>
+			<tr>
+					<td>Interface</td>
+					<td>SPI</td>
+			</tr>
+			<tr>
+					<td>Refresh time</td>
+					<td>around 15 seconds, full refresh</td>
+			</tr>
+			<tr>
+					<td>Power when idle</td>
+					<td>effectively zero, image held without power</td>
+			</tr>
+			<tr>
+					<td>Driver IC</td>
+					<td>UC8179</td>
+			</tr>
+	</tbody>
+</table>
+<aside class="callout callout-warning">
+  <p class="callout-title"><i class="fa fa-exclamation-triangle"></i>Before you buy a three-colour panel</p>
+  <p>A full refresh takes about 15 seconds and flashes through black, white and red. There is no partial refresh, so every change repaints the whole screen. Fine every two hours, unusable for anything interactive.</p>
+</aside><p>The driver is the <a href="https://github.com/ZinggJM/GxEPD2">GxEPD2</a> Arduino library, specifically the <code>GxEPD2_750c_Z08</code> class. The page buffer size is the interesting parameter:</p>
+<div class="code-block"><div class="code-label">C&#43;&#43;</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>GxEPD2_3C<span style="color:#0550ae">&lt;</span>GxEPD2_750c_Z08<span style="color:#1f2328">,</span> GxEPD2_750c_Z08<span style="color:#0550ae">::</span>HEIGHT <span style="color:#0550ae">/</span> <span style="color:#0550ae">8</span><span style="color:#0550ae">&gt;</span> display<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>  GxEPD2_750c_Z08<span style="color:#1f2328">(</span>EPD_CS<span style="color:#1f2328">,</span> EPD_DC<span style="color:#1f2328">,</span> EPD_RST<span style="color:#1f2328">,</span> EPD_BUSY<span style="color:#1f2328">));</span></span></span></code></pre></div>
+</div><p><code>HEIGHT / 8</code> keeps one eighth of the frame in RAM at a time and sends it in pages: about 12 KB instead of 96 KB. Both bitmap planes are already held in RAM, and paging costs nothing since the image arrives as a finished byte stream.</p>
+<h2 id="wiring">Wiring<a class="heading-anchor" href="#wiring" aria-label="Link to this section">#</a></h2>
+<p>A plain ESP32 dev board talking SPI. The Waveshare ESP32 driver board fixes the pinout:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Signal</th>
+					<th>ESP32 GPIO</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>CS (chip select)</td>
+					<td>15</td>
+			</tr>
+			<tr>
+					<td>DC (data/command)</td>
+					<td>27</td>
+			</tr>
+			<tr>
+					<td>RST (reset)</td>
+					<td>26</td>
+			</tr>
+			<tr>
+					<td>BUSY</td>
+					<td>25</td>
+			</tr>
+			<tr>
+					<td>CLK (SPI clock)</td>
+					<td>13</td>
+			</tr>
+			<tr>
+					<td>MOSI (SPI data)</td>
+					<td>14</td>
+			</tr>
+	</tbody>
+</table>
+<p>Start SPI before the display driver. MISO is -1 because the panel never talks back:</p>
+<div class="code-block"><div class="code-label">C&#43;&#43;</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>SPI<span style="color:#1f2328">.</span>begin<span style="color:#1f2328">(</span><span style="color:#0550ae">13</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">14</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">15</span><span style="color:#1f2328">);</span>  <span style="color:#57606a">// CLK, MISO (unused), MOSI, CS
+</span></span></span><span style="display:flex;"><span>display<span style="color:#1f2328">.</span>init<span style="color:#1f2328">(</span><span style="color:#0550ae">115200</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">true</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">10</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">false</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>display<span style="color:#1f2328">.</span>setRotation<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">);</span></span></span></code></pre></div>
+</div><p>Per-deployment settings:</p>
+<div class="code-block"><div class="code-label">Per-deployment settings</div>
+  <div class="highlight" title="Per-deployment settings"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#cf222e">const</span> <span style="color:#cf222e">char</span><span style="color:#0550ae">*</span> WIFI_SSID  <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;YOUR_WIFI_SSID&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">const</span> <span style="color:#cf222e">char</span><span style="color:#0550ae">*</span> WIFI_PASS  <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;YOUR_WIFI_PASSWORD&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">const</span> <span style="color:#cf222e">char</span><span style="color:#0550ae">*</span> BITMAP_URL <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;http://YOUR_SERVER_IP:8081/bitmap.bin&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#define SLEEP_SECONDS    7200    </span><span style="color:#57606a">// 2 hours between refreshes
+</span></span></span><span style="display:flex;"><span><span style="color:#57606a">#define WIFI_TIMEOUT_MS  20000   </span><span style="color:#57606a">// give up on WiFi after 20 s
+</span></span></span><span style="display:flex;"><span><span style="color:#57606a">#define HTTP_TIMEOUT_MS  30000   </span><span style="color:#57606a">// give up on the download after 30 s
+</span></span></span></code></pre></div>
+</div><h2 id="where-the-data-comes-from">Where the data comes from<a class="heading-anchor" href="#where-the-data-comes-from" aria-label="Link to this section">#</a></h2>
+<p>Three sources, all through PHP proxies shared with the browser dashboard:</p>
+<ul>
+<li><strong><a href="https://www.idokep.hu">Időkép</a></strong> via <code>idokep.php</code> for current conditions, UV, rainfall, the hourly strip and the forecast.</li>
+<li><strong><a href="https://aqicn.org">AQICN</a></strong> via <code>aqicn.php</code> for the air quality composite and the individual pollutants.</li>
+<li><strong>Google Calendar</strong> via <code>icsproxy.php</code>, which turns an ICS feed into a sorted list of upcoming events.</li>
+</ul>
+<div class="code-block"><div class="code-label">Data flow</div>
+  <div class="highlight" title="Data flow"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Glance PHP proxies (localhost:8081)
+</span></span><span style="display:flex;"><span>  ├── idokep.php    → weather JSON
+</span></span><span style="display:flex;"><span>  ├── aqicn.php     → air quality JSON
+</span></span><span style="display:flex;"><span>  └── icsproxy.php  → calendar JSON
+</span></span><span style="display:flex;"><span>         ↓
+</span></span><span style="display:flex;"><span>generate_bitmap.py  (runs on the NAS)
+</span></span><span style="display:flex;"><span>  → fetches all three sources
+</span></span><span style="display:flex;"><span>  → renders an 800x480 RGB image with Pillow
+</span></span><span style="display:flex;"><span>  → converts it to a 2-plane BWR bitmap
+</span></span><span style="display:flex;"><span>  → writes bitmap.bin (96 000 bytes)
+</span></span><span style="display:flex;"><span>         ↓
+</span></span><span style="display:flex;"><span>HTTP server (LAN, :8081)
+</span></span><span style="display:flex;"><span>  → serves bitmap.bin on GET
+</span></span><span style="display:flex;"><span>         ↓
+</span></span><span style="display:flex;"><span>ESP32 (wakes from deep sleep every 2 hours)
+</span></span><span style="display:flex;"><span>  → connects to WiFi
+</span></span><span style="display:flex;"><span>  → downloads bitmap.bin (96 KB)
+</span></span><span style="display:flex;"><span>  → renders to e-paper over SPI
+</span></span><span style="display:flex;"><span>  → radio off, panel off
+</span></span><span style="display:flex;"><span>  → back to deep sleep</span></span></code></pre></div>
+</div><aside class="callout callout-tip">
+  <p class="callout-title"><i class="fa fa-lightbulb-o"></i>Keep the layout out of the firmware</p>
+  <p>The renderer writes a file; the firmware fetches a file. They share only the byte layout, so the whole layout can be redesigned in Python on a laptop without reflashing the ESP32.</p>
+</aside><h2 id="the-bitmap-format">The bitmap format<a class="heading-anchor" href="#the-bitmap-format" aria-label="Link to this section">#</a></h2>
+<p>The panel wants two separate one-bit planes, and <code>bitmap.bin</code> is exactly 96 000 bytes: the black and white plane followed by the red plane.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Bytes</th>
+					<th>Plane</th>
+					<th>Bit = 1</th>
+					<th>Bit = 0</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>0 to 47 999</td>
+					<td>Black and white</td>
+					<td>white</td>
+					<td>black</td>
+			</tr>
+			<tr>
+					<td>48 000 to 95 999</td>
+					<td>Red</td>
+					<td>no red</td>
+					<td>red</td>
+			</tr>
+	</tbody>
+</table>
+<p>The firmware reads the first half into <code>bwBuf</code>, the second into <code>redBuf</code>, and hands both to <code>display.writeImage()</code>.</p>
+<aside class="callout callout-warning">
+  <p class="callout-title"><i class="fa fa-exclamation-triangle"></i>The red plane is inverted</p>
+  <p>Bit 0 means &ldquo;print red here&rdquo;, the opposite of &ldquo;a set bit is ink&rdquo;. Get it wrong and you render a red background with white text.</p>
+</aside><p>A pixel counts as red when R is above 200 and G and B are below 100. Red pixels become white in the BW plane and are marked in the red plane; everything else is thresholded to black or white:</p>
+<div class="code-block"><div class="code-label">generate_bitmap.py: plane conversion</div>
+  <div class="highlight" title="generate_bitmap.py: plane conversion"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">to_2plane</span><span style="color:#1f2328">(</span>img<span style="color:#1f2328">:</span> Image<span style="color:#0550ae">.</span>Image<span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">bytes</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    Returns 96 000 raw bytes: BW plane (48 000) followed by red plane (48 000).
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    Convention (GxEPD2_3C):
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      BW plane  : bit 1 = white, bit 0 = black
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      Red plane : bit 1 = no red, bit 0 = red pixel
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    r_ch<span style="color:#1f2328">,</span> g_ch<span style="color:#1f2328">,</span> b_ch <span style="color:#0550ae">=</span> img<span style="color:#0550ae">.</span>split<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># pixels where R &gt; 200 AND G &lt; 100 AND B &lt; 100 count as red</span>
+</span></span><span style="display:flex;"><span>    r_high <span style="color:#0550ae">=</span> r_ch<span style="color:#0550ae">.</span>point<span style="color:#1f2328">(</span><span style="color:#cf222e">lambda</span> v<span style="color:#1f2328">:</span> <span style="color:#0550ae">255</span> <span style="color:#cf222e">if</span> v <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">200</span> <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    g_low  <span style="color:#0550ae">=</span> g_ch<span style="color:#0550ae">.</span>point<span style="color:#1f2328">(</span><span style="color:#cf222e">lambda</span> v<span style="color:#1f2328">:</span> <span style="color:#0550ae">255</span> <span style="color:#cf222e">if</span> v <span style="color:#0550ae">&lt;</span> <span style="color:#0550ae">100</span> <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    b_low  <span style="color:#0550ae">=</span> b_ch<span style="color:#0550ae">.</span>point<span style="color:#1f2328">(</span><span style="color:#cf222e">lambda</span> v<span style="color:#1f2328">:</span> <span style="color:#0550ae">255</span> <span style="color:#cf222e">if</span> v <span style="color:#0550ae">&lt;</span> <span style="color:#0550ae">100</span> <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    red_mask <span style="color:#0550ae">=</span> ImageChops<span style="color:#0550ae">.</span>multiply<span style="color:#1f2328">(</span>ImageChops<span style="color:#0550ae">.</span>multiply<span style="color:#1f2328">(</span>r_high<span style="color:#1f2328">,</span> g_low<span style="color:#1f2328">),</span> b_low<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># BW plane: greyscale content, with red pixels replaced by white</span>
+</span></span><span style="display:flex;"><span>    grey     <span style="color:#0550ae">=</span> img<span style="color:#0550ae">.</span>convert<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;L&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    bw_plane <span style="color:#0550ae">=</span> Image<span style="color:#0550ae">.</span>composite<span style="color:#1f2328">(</span>Image<span style="color:#0550ae">.</span>new<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;L&#34;</span><span style="color:#1f2328">,</span> img<span style="color:#0550ae">.</span>size<span style="color:#1f2328">,</span> <span style="color:#0550ae">255</span><span style="color:#1f2328">),</span> grey<span style="color:#1f2328">,</span> red_mask<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># red plane: 255 where NOT red, 0 where red</span>
+</span></span><span style="display:flex;"><span>    red_plane <span style="color:#0550ae">=</span> ImageOps<span style="color:#0550ae">.</span>invert<span style="color:#1f2328">(</span>red_mask<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    bw_data  <span style="color:#0550ae">=</span> bw_plane<span style="color:#0550ae">.</span>convert<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;1&#34;</span><span style="color:#1f2328">,</span> dither<span style="color:#0550ae">=</span>Image<span style="color:#0550ae">.</span>NONE<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>tobytes<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    red_data <span style="color:#0550ae">=</span> red_plane<span style="color:#0550ae">.</span>convert<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;1&#34;</span><span style="color:#1f2328">,</span> dither<span style="color:#0550ae">=</span>Image<span style="color:#0550ae">.</span>NONE<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>tobytes<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> bw_data <span style="color:#0550ae">+</span> red_data</span></span></code></pre></div>
+</div><aside class="callout callout-tip">
+  <p class="callout-title"><i class="fa fa-lightbulb-o"></i>Tip</p>
+  <p><code>dither=Image.NONE</code> is deliberate. Pillow&rsquo;s default dithering ruins text, and this screen is all text.</p>
+</aside><h2 id="the-renderer">The renderer<a class="heading-anchor" href="#the-renderer" aria-label="Link to this section">#</a></h2>
+<p><code>generate_bitmap.py</code> fetches the three feeds, draws an 800 by 480 Pillow image and converts it:</p>
+<div class="code-block"><div class="code-label">generate_bitmap.py: settings</div>
+  <div class="highlight" title="generate_bitmap.py: settings"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>GLANCE_BASE  <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;http://YOUR_SERVER_IP:8081/glance&#34;</span>
+</span></span><span style="display:flex;"><span>OUT_BIN      <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>path<span style="color:#0550ae">.</span>join<span style="color:#1f2328">(</span>os<span style="color:#0550ae">.</span>path<span style="color:#0550ae">.</span>dirname<span style="color:#1f2328">(</span><span style="color:#953800">__file__</span><span style="color:#1f2328">),</span> <span style="color:#0a3069">&#34;bitmap.bin&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WEATHER_CITY <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Szeged&#34;</span>
+</span></span><span style="display:flex;"><span>WEATHER_LAT  <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;46.253&#34;</span>
+</span></span><span style="display:flex;"><span>WEATHER_LON  <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;20.149&#34;</span>
+</span></span><span style="display:flex;"><span>AQI_URL      <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;https://aqicn.org/city/.../&#34;</span>
+</span></span><span style="display:flex;"><span>CALENDAR_ICS <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;CALENDAR_ICS_URL&#34;</span><span style="color:#1f2328">]</span>   <span style="color:#57606a"># private feed, never hard-coded</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>W<span style="color:#1f2328">,</span> H        <span style="color:#0550ae">=</span> <span style="color:#0550ae">800</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">480</span>
+</span></span><span style="display:flex;"><span>WEATHER_W   <span style="color:#0550ae">=</span> <span style="color:#0550ae">480</span>                 <span style="color:#57606a"># 60 %</span>
+</span></span><span style="display:flex;"><span>CALENDAR_W  <span style="color:#0550ae">=</span> W <span style="color:#0550ae">-</span> WEATHER_W <span style="color:#0550ae">-</span> <span style="color:#0550ae">2</span>   <span style="color:#57606a"># 318 px</span></span></span></code></pre></div>
+</div><p>Each fetch is a thin GET against a proxy. One dead source must not stop the render:</p>
+<div class="code-block"><div class="code-label">Python</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">fetch_calendar</span><span style="color:#1f2328">(</span>limit<span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">8</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    r <span style="color:#0550ae">=</span> _sess<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">{</span>GLANCE_BASE<span style="color:#0a3069">}</span><span style="color:#0a3069">/icsproxy.php&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  params<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;url&#34;</span><span style="color:#1f2328">:</span> CALENDAR_ICS<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;tz&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Europe/Budapest&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                          <span style="color:#0a3069">&#34;days&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">60</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;limit&#34;</span><span style="color:#1f2328">:</span> limit<span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  timeout<span style="color:#0550ae">=</span><span style="color:#0550ae">15</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#0550ae">.</span>raise_for_status<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> r<span style="color:#0550ae">.</span>json<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">safe_fetch</span><span style="color:#1f2328">(</span>name<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> fn<span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> fn<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;  </span><span style="color:#0a3069">{</span>name<span style="color:#0a3069">}</span><span style="color:#0a3069"> fetch failed: </span><span style="color:#0a3069">{</span>e<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span> file<span style="color:#0550ae">=</span>sys<span style="color:#0550ae">.</span>stderr<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#1f2328">{}</span>   <span style="color:#57606a"># render continues with an empty panel</span></span></span></code></pre></div>
+</div><p>A missing air quality box is obvious and harmless. A crashed renderer would leave yesterday&rsquo;s screen looking current.</p>
+<h3 id="fonts-and-dpi">Fonts and DPI<a class="heading-anchor" href="#fonts-and-dpi" aria-label="Link to this section">#</a></h3>
+<p>Text uses Segoe UI on Windows or DejaVu Sans on Linux through <code>ImageFont.truetype</code>. Sizes are larger than on the browser dashboard: the panel is about 125 DPI and read from across a room. The loader tries a list of platform paths and caches each size and weight:</p>
+<div class="code-block"><div class="code-label">Python</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_FC<span style="color:#1f2328">:</span> <span style="color:#6639ba">dict</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">{}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">_font</span><span style="color:#1f2328">(</span>size<span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> bold<span style="color:#1f2328">:</span> <span style="color:#6639ba">bool</span> <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> ImageFont<span style="color:#0550ae">.</span>ImageFont<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    k <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>size<span style="color:#1f2328">,</span> bold<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> k <span style="color:#0550ae">in</span> _FC<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> _FC<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    REG  <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;C:/Windows/Fonts/segoeui.ttf&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;C:/Windows/Fonts/arial.ttf&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;/System/Library/Fonts/Helvetica.ttc&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    BOLD <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;C:/Windows/Fonts/segoeuib.ttf&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;C:/Windows/Fonts/arialbd.ttf&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> p <span style="color:#0550ae">in</span> <span style="color:#1f2328">(</span>BOLD <span style="color:#0550ae">+</span> REG <span style="color:#cf222e">if</span> bold <span style="color:#cf222e">else</span> REG<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            _FC<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> ImageFont<span style="color:#0550ae">.</span>truetype<span style="color:#1f2328">(</span>p<span style="color:#1f2328">,</span> size<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> _FC<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">except</span> <span style="color:#1f2328">(</span>IOError<span style="color:#1f2328">,</span> OSError<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">pass</span>
+</span></span><span style="display:flex;"><span>    _FC<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> ImageFont<span style="color:#0550ae">.</span>load_default<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> _FC<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span></span></span></code></pre></div>
+</div><p>Hungarian text needs Latin Extended-A. The fallback ends in <code>load_default()</code> rather than an exception, because a wrong-looking screen beats no screen.</p>
+<p>Weather icons come from the Időkép CDN (PNG first, otherwise SVG via <code>cairosvg</code> or <code>resvg-py</code>). The sun is the most common icon, so it is drawn in code. Rain and snow icons are composited in red:</p>
+<div class="code-block"><div class="code-label">Python</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">_draw_sun</span><span style="color:#1f2328">(</span>size<span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> Image<span style="color:#0550ae">.</span>Image<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">import</span> <span style="color:#24292e">math</span>
+</span></span><span style="display:flex;"><span>    img <span style="color:#0550ae">=</span> Image<span style="color:#0550ae">.</span>new<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;L&#34;</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">(</span>size<span style="color:#1f2328">,</span> size<span style="color:#1f2328">),</span> <span style="color:#0550ae">255</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    d   <span style="color:#0550ae">=</span> ImageDraw<span style="color:#0550ae">.</span>Draw<span style="color:#1f2328">(</span>img<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    cx <span style="color:#0550ae">=</span> cy <span style="color:#0550ae">=</span> size <span style="color:#0550ae">/</span> <span style="color:#0550ae">2</span>
+</span></span><span style="display:flex;"><span>    r_body <span style="color:#0550ae">=</span> size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.28</span>
+</span></span><span style="display:flex;"><span>    d<span style="color:#0550ae">.</span>ellipse<span style="color:#1f2328">([(</span>cx <span style="color:#0550ae">-</span> r_body<span style="color:#1f2328">,</span> cy <span style="color:#0550ae">-</span> r_body<span style="color:#1f2328">),</span> <span style="color:#1f2328">(</span>cx <span style="color:#0550ae">+</span> r_body<span style="color:#1f2328">,</span> cy <span style="color:#0550ae">+</span> r_body<span style="color:#1f2328">)],</span> fill<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">8</span><span style="color:#1f2328">):</span>                      <span style="color:#57606a"># 8 rays at 45 degree steps</span>
+</span></span><span style="display:flex;"><span>        a  <span style="color:#0550ae">=</span> math<span style="color:#0550ae">.</span>radians<span style="color:#1f2328">(</span>i <span style="color:#0550ae">*</span> <span style="color:#0550ae">45</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        x0 <span style="color:#0550ae">=</span> cx <span style="color:#0550ae">+</span> size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.36</span> <span style="color:#0550ae">*</span> math<span style="color:#0550ae">.</span>cos<span style="color:#1f2328">(</span>a<span style="color:#1f2328">);</span> y0 <span style="color:#0550ae">=</span> cy <span style="color:#0550ae">+</span> size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.36</span> <span style="color:#0550ae">*</span> math<span style="color:#0550ae">.</span>sin<span style="color:#1f2328">(</span>a<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        x1 <span style="color:#0550ae">=</span> cx <span style="color:#0550ae">+</span> size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.48</span> <span style="color:#0550ae">*</span> math<span style="color:#0550ae">.</span>cos<span style="color:#1f2328">(</span>a<span style="color:#1f2328">);</span> y1 <span style="color:#0550ae">=</span> cy <span style="color:#0550ae">+</span> size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.48</span> <span style="color:#0550ae">*</span> math<span style="color:#0550ae">.</span>sin<span style="color:#1f2328">(</span>a<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        d<span style="color:#0550ae">.</span>line<span style="color:#1f2328">([(</span>x0<span style="color:#1f2328">,</span> y0<span style="color:#1f2328">),</span> <span style="color:#1f2328">(</span>x1<span style="color:#1f2328">,</span> y1<span style="color:#1f2328">)],</span> fill<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> width<span style="color:#0550ae">=</span><span style="color:#6639ba">max</span><span style="color:#1f2328">(</span><span style="color:#0550ae">2</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">(</span>size <span style="color:#0550ae">*</span> <span style="color:#0550ae">0.07</span><span style="color:#1f2328">)))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> img</span></span></code></pre></div>
+</div><h2 id="the-calendar-problem">The calendar problem<a class="heading-anchor" href="#the-calendar-problem" aria-label="Link to this section">#</a></h2>
+<p><code>icsproxy.php</code> expands <code>RRULE</code> recurrences (daily, weekly, monthly, yearly, with <code>INTERVAL</code>, <code>COUNT</code>, <code>UNTIL</code>, <code>BYDAY</code> and <code>EXDATE</code>) into concrete dates inside the lookahead window.</p>
+<p>The subtle part is single-instance edits. Moving or deleting one occurrence of a recurring series does not rewrite the master event. Google Calendar emits a second <code>VEVENT</code> with the same <code>UID</code> and a <code>RECURRENCE-ID</code> pointing at the original slot. Ignore those and moved events show at their old time while cancelled ones stay. Three passes fix it:</p>
+<div class="code-block"><div class="code-label">icsproxy.php: overrides</div>
+  <div class="highlight" title="icsproxy.php: overrides"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#57606a">// Pass 1: split master events from per-instance overrides (RECURRENCE-ID).
+</span></span></span><span style="display:flex;"><span><span style="color:#953800">$masters</span>   <span style="color:#0550ae">=</span> <span style="color:#1f2328">[];</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$overrides</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">[];</span>   <span style="color:#57606a">// uid =&gt; [ recurrence-id timestamp =&gt; override event ]
+</span></span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#953800">$matches</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$block</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$event</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">parse_vevent</span><span style="color:#1f2328">(</span><span style="color:#953800">$block</span><span style="color:#1f2328">,</span> <span style="color:#953800">$tz</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span><span style="color:#953800">$event</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span><span style="color:#cf222e">empty</span><span style="color:#1f2328">(</span><span style="color:#953800">$event</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;recurrence_id&#39;</span><span style="color:#1f2328">]))</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#953800">$overrides</span><span style="color:#1f2328">[</span><span style="color:#953800">$event</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;uid&#39;</span><span style="color:#1f2328">]][</span><span style="color:#953800">$event</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;recurrence_id&#39;</span><span style="color:#1f2328">]</span><span style="color:#0550ae">-&gt;</span><span style="color:#1f2328">getTimestamp</span><span style="color:#1f2328">()]</span> <span style="color:#0550ae">=</span> <span style="color:#953800">$event</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span> <span style="color:#cf222e">else</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#953800">$masters</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#953800">$event</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Pass 2: expand masters, skipping occurrences an override replaces.
+</span></span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#953800">$masters</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$event</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">((</span><span style="color:#953800">$event</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;status&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;CANCELLED&#39;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span>   <span style="color:#57606a">// whole series deleted
+</span></span></span><span style="display:flex;"><span>    <span style="color:#953800">$evOverrides</span> <span style="color:#0550ae">=</span> <span style="color:#953800">$overrides</span><span style="color:#1f2328">[</span><span style="color:#953800">$event</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;uid&#39;</span><span style="color:#1f2328">]]</span> <span style="color:#0550ae">??</span> <span style="color:#1f2328">[];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">expand_occurrences</span><span style="color:#1f2328">(</span><span style="color:#953800">$event</span><span style="color:#1f2328">,</span> <span style="color:#953800">$now</span><span style="color:#1f2328">,</span> <span style="color:#953800">$horizon</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$occ</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">isset</span><span style="color:#1f2328">(</span><span style="color:#953800">$evOverrides</span><span style="color:#1f2328">[</span><span style="color:#953800">$occ</span><span style="color:#0550ae">-&gt;</span><span style="color:#1f2328">getTimestamp</span><span style="color:#1f2328">()]))</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span>   <span style="color:#57606a">// superseded
+</span></span></span><span style="display:flex;"><span>        <span style="color:#953800">$events</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">format_event</span><span style="color:#1f2328">(</span><span style="color:#953800">$occ</span><span style="color:#1f2328">,</span> <span style="color:#953800">$event</span><span style="color:#1f2328">,</span> <span style="color:#953800">$now</span><span style="color:#1f2328">,</span> <span style="color:#953800">$tz</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Pass 3: emit modified instances at their new time, drop cancelled ones.
+</span></span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#953800">$overrides</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$perUid</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#953800">$perUid</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$ovr</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">((</span><span style="color:#953800">$ovr</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;status&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;CANCELLED&#39;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span>   <span style="color:#57606a">// single instance deleted
+</span></span></span><span style="display:flex;"><span>        <span style="color:#953800">$start</span> <span style="color:#0550ae">=</span> <span style="color:#953800">$ovr</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;dtstart&#39;</span><span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#953800">$start</span> <span style="color:#0550ae">&lt;=</span> <span style="color:#953800">$horizon</span> <span style="color:#0550ae">&amp;&amp;</span> <span style="color:#953800">$start</span> <span style="color:#0550ae">&gt;=</span> <span style="color:#953800">$now</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#953800">$events</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">format_event</span><span style="color:#1f2328">(</span><span style="color:#953800">$start</span><span style="color:#1f2328">,</span> <span style="color:#953800">$ovr</span><span style="color:#1f2328">,</span> <span style="color:#953800">$now</span><span style="color:#1f2328">,</span> <span style="color:#953800">$tz</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>The renderer knows none of this. It receives a flat, sorted list and draws it.</p>
+<h2 id="power">Power<a class="heading-anchor" href="#power" aria-label="Link to this section">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th>State</th>
+					<th>Draw</th>
+					<th>Time</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Deep sleep</td>
+					<td>around 10 to 20 µA</td>
+					<td>the rest of the two hours</td>
+			</tr>
+			<tr>
+					<td>Awake: WiFi, download, refresh</td>
+					<td>roughly 120 mA</td>
+					<td>25 to 35 seconds</td>
+			</tr>
+	</tbody>
+</table>
+<p>At a two-hour interval the chip is awake about half a percent of the time. On USB the draw is irrelevant.</p>
+<p>Deep sleep restarts the chip from <code>setup()</code> on every wake, so the whole program is one linear sequence and <code>loop()</code> is empty:</p>
+<div class="code-block"><div class="code-label">The whole program</div>
+  <div class="highlight" title="The whole program"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#cf222e">void</span> <span style="color:#6639ba">setup</span><span style="color:#1f2328">()</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  Serial<span style="color:#1f2328">.</span>begin<span style="color:#1f2328">(</span><span style="color:#0550ae">115200</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  bwBuf  <span style="color:#0550ae">=</span> <span style="color:#cf222e">new</span> <span style="color:#cf222e">uint8_t</span><span style="color:#1f2328">[</span>PLANE_BYTES<span style="color:#1f2328">];</span>   <span style="color:#57606a">// 48 000 bytes each
+</span></span></span><span style="display:flex;"><span>  redBuf <span style="color:#0550ae">=</span> <span style="color:#cf222e">new</span> <span style="color:#cf222e">uint8_t</span><span style="color:#1f2328">[</span>PLANE_BYTES<span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  SPI<span style="color:#1f2328">.</span>begin<span style="color:#1f2328">(</span><span style="color:#0550ae">13</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">14</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">15</span><span style="color:#1f2328">);</span>           <span style="color:#57606a">// CLK, MISO (unused), MOSI, CS
+</span></span></span><span style="display:flex;"><span>  display<span style="color:#1f2328">.</span>init<span style="color:#1f2328">(</span><span style="color:#0550ae">115200</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">true</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">10</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">false</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  display<span style="color:#1f2328">.</span>setRotation<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span>connectWiFi<span style="color:#1f2328">())</span>   <span style="color:#1f2328">{</span> goToSleep<span style="color:#1f2328">();</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span>downloadBitmap<span style="color:#1f2328">()){</span> goToSleep<span style="color:#1f2328">();</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  WiFi<span style="color:#1f2328">.</span>disconnect<span style="color:#1f2328">(</span><span style="color:#6639ba">true</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  WiFi<span style="color:#1f2328">.</span>mode<span style="color:#1f2328">(</span>WIFI_OFF<span style="color:#1f2328">);</span>                 <span style="color:#57606a">// radio off before the slow SPI refresh
+</span></span></span><span style="display:flex;"><span>  renderBitmap<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>  goToSleep<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">void</span> <span style="color:#6639ba">loop</span><span style="color:#1f2328">()</span> <span style="color:#1f2328">{</span> <span style="color:#57606a">/* never reached, deep sleep restarts from setup() */</span> <span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>The radio goes off before the refresh: an idle WiFi connection held through 15 seconds of panel refresh is the biggest waste in the wake cycle.</p>
+<div class="code-block"><div class="code-label">C&#43;&#43;</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#cf222e">static</span> <span style="color:#cf222e">void</span> <span style="color:#6639ba">goToSleep</span><span style="color:#1f2328">()</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  WiFi<span style="color:#1f2328">.</span>disconnect<span style="color:#1f2328">(</span><span style="color:#6639ba">true</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  WiFi<span style="color:#1f2328">.</span>mode<span style="color:#1f2328">(</span>WIFI_OFF<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  display<span style="color:#1f2328">.</span>powerOff<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>  esp_sleep_enable_timer_wakeup<span style="color:#1f2328">((</span><span style="color:#cf222e">uint64_t</span><span style="color:#1f2328">)</span>SLEEP_SECONDS <span style="color:#0550ae">*</span> <span style="color:#0550ae">1000000ULL</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  esp_deep_sleep_start<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>Any failure (no WiFi in 20 seconds, a failed or incomplete download) goes straight back to sleep without touching the display, so the previous image stays up. The download streams into the two plane buffers in 512 byte chunks, with a deadline against a stalled connection and a byte count check that rejects a truncated file:</p>
+<div class="code-block"><div class="code-label">C&#43;&#43;</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>WiFiClient<span style="color:#0550ae">*</span> stream <span style="color:#0550ae">=</span> http<span style="color:#1f2328">.</span>getStreamPtr<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>size_t pos <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">uint8_t</span> chunk<span style="color:#1f2328">[</span><span style="color:#0550ae">512</span><span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">unsigned</span> <span style="color:#cf222e">long</span> deadline <span style="color:#0550ae">=</span> millis<span style="color:#1f2328">()</span> <span style="color:#0550ae">+</span> HTTP_TIMEOUT_MS<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">while</span> <span style="color:#1f2328">(</span>pos <span style="color:#0550ae">&lt;</span> <span style="color:#1f2328">(</span>size_t<span style="color:#1f2328">)</span>BITMAP_BYTES <span style="color:#0550ae">&amp;&amp;</span> millis<span style="color:#1f2328">()</span> <span style="color:#0550ae">&lt;</span> deadline<span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">int</span> avail <span style="color:#0550ae">=</span> stream<span style="color:#0550ae">-&gt;</span>available<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>avail <span style="color:#0550ae">&lt;=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span>stream<span style="color:#0550ae">-&gt;</span>connected<span style="color:#1f2328">())</span> <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span> delay<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">);</span> <span style="color:#cf222e">continue</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  size_t want <span style="color:#0550ae">=</span> min<span style="color:#1f2328">((</span>size_t<span style="color:#1f2328">)</span>avail<span style="color:#1f2328">,</span> min<span style="color:#1f2328">(</span><span style="color:#cf222e">sizeof</span><span style="color:#1f2328">(</span>chunk<span style="color:#1f2328">),</span> <span style="color:#1f2328">(</span>size_t<span style="color:#1f2328">)</span>BITMAP_BYTES <span style="color:#0550ae">-</span> pos<span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>  size_t got  <span style="color:#0550ae">=</span> stream<span style="color:#0550ae">-&gt;</span>readBytes<span style="color:#1f2328">(</span>chunk<span style="color:#1f2328">,</span> want<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">for</span> <span style="color:#1f2328">(</span>size_t i <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">;</span> i <span style="color:#0550ae">&lt;</span> got<span style="color:#1f2328">;</span> i<span style="color:#0550ae">++</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    size_t p <span style="color:#0550ae">=</span> pos <span style="color:#0550ae">+</span> i<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>p <span style="color:#0550ae">&lt;</span> <span style="color:#1f2328">(</span>size_t<span style="color:#1f2328">)</span>PLANE_BYTES<span style="color:#1f2328">)</span> bwBuf<span style="color:#1f2328">[</span>p<span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> chunk<span style="color:#1f2328">[</span>i<span style="color:#1f2328">];</span>      <span style="color:#57606a">// first 48 000 to BW
+</span></span></span><span style="display:flex;"><span>    <span style="color:#cf222e">else</span>                         redBuf<span style="color:#1f2328">[</span>p <span style="color:#0550ae">-</span> PLANE_BYTES<span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> chunk<span style="color:#1f2328">[</span>i<span style="color:#1f2328">];</span>  <span style="color:#57606a">// rest to red
+</span></span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  pos <span style="color:#0550ae">+=</span> got<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>pos <span style="color:#0550ae">!=</span> <span style="color:#1f2328">(</span>size_t<span style="color:#1f2328">)</span>BITMAP_BYTES<span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span> <span style="color:#6639ba">false</span><span style="color:#1f2328">;</span>   <span style="color:#57606a">// truncated, keep the old image
+</span></span></span></code></pre></div>
+</div><p>Without the length check, a partial download renders as part of the old screen above a band of noise.</p>
+
+    </article>
+
+    
+    <aside class="post-related">
+      <p class="post-related-title">Related reading</p>
+      <div class="post-related-grid">
+      
+        <a class="post-related-card" href="/posts/personal-dashboard-glance/">
+          <img src="/images/posts/personal-dashboard-glance-card.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Building a Self-Hosted Personal Dashboard with Glance</strong>
+            <span>One YAML file, a handful of PHP proxies and a NAS: weather, air quality, calendars, news and uptime …</span>
+          </span>
+        </a>
+      
+        <a class="post-related-card" href="/posts/arduino-raspberry-air-quality-iot/">
+          <img src="/images/posts/arduino-raspberry-air-quality-iot.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi</strong>
+            
+          </span>
+        </a>
+      
+      </div>
+    </aside>
+    
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/e-ink/">e-ink</a><a href="/tags/esp32/">esp32</a><a href="/tags/waveshare/">waveshare</a><a href="/tags/dashboard/">dashboard</a><a href="/tags/iot/">iot</a><a href="/tags/python/">python</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/personal-dashboard-glance/">&larr; Building a Self-Hosted Personal Dashboard with Glance</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/arduino-raspberry-air-quality-iot/">Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

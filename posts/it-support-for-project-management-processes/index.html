@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/project-knowledge-management/">Project &amp; knowledge management</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>I co-authored lecture notes on IT support for project management processes e-learning book.</p>
@@ -112,11 +123,11 @@
 <p>As <em>Byatt et. al.</em> described in <em>&ldquo;Which Came First — The Process Or The Tool?&rdquo;</em>:</p>
 <blockquote>
 <p>&ldquo;Whilst a tool can embody good processes, one can argue that it is the behaviours and actions of individuals that make the real difference — regardless of the tool or tools they use. Such behaviours are a result of understanding how to perform certain activities; this cannot be taught by a tool.&rdquo;</p>
-</blockquote>
-<blockquote>
+
+</blockquote><blockquote>
 <p>&ldquo;the process should determine how the tool needs to be used&rdquo;</p>
-</blockquote>
-<p>Therefore, IT support is significantly based on the applied processes. According to that, the course extensively discusses different kinds of project management processes and on this basis different kinds of project management software solutions are presented. With this knowledge the attendee will be able to define their processes and select the appropriate software support. The course focuses on the methodologies and their IT support and is not meant to provide a general overview on all project domains: costs, risks, finance, procurement management — multiple courses should cover those areas. It is assumed that all students of the course have previous project management experience and are aware of the areas of project management.</p>
+
+</blockquote><p>Therefore, IT support is significantly based on the applied processes. According to that, the course extensively discusses different kinds of project management processes and on this basis different kinds of project management software solutions are presented. With this knowledge the attendee will be able to define their processes and select the appropriate software support. The course focuses on the methodologies and their IT support and is not meant to provide a general overview on all project domains: costs, risks, finance, procurement management — multiple courses should cover those areas. It is assumed that all students of the course have previous project management experience and are aware of the areas of project management.</p>
 <p><strong>Assessed tools:</strong></p>
 <ul>
 <li>Redmine</li>
@@ -130,6 +141,8 @@
 <p><em><strong>Course available at: <a href="https://www.inf.u-szeged.hu/kurzusleirasok/PMTananyag/index.html">University of Szeged</a> — <a href="/files/PMTananyag.zip">Download ZIP</a></strong></em></p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -170,6 +183,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

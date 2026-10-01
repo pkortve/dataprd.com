@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Llm on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/llm/</link>
+		<description>Recent content in Llm on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Sat, 15 Aug 2026 09:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Turning Natural Language Pricing into Structured Data for Automated Pricing</title>
+				<link>https://dataprd.com/posts/llm-price-list-extraction/</link>
+				<pubDate>Sat, 15 Aug 2026 09:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/posts/llm-price-list-extraction/</guid>
+				<description>&lt;p&gt;Every accommodation booking system eventually runs into the same wall. Owners describe their prices in prose, and software needs rows in a table.&lt;/p&gt;&#xA;&lt;p&gt;What arrives looks like this, give or take a language. The colours show which sentence becomes which kind of row:&lt;/p&gt;&#xA;&lt;div class=&#34;owner-text&#34;&gt;&#xA;&lt;div class=&#34;owner-text-label&#34;&gt;Owner&#39;s text&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-season&#34;&gt;High season from 15 June to 22 August, 35,000 per night for up to 6 guests, extra person 5,000 per night.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-season&#34;&gt;Cleaning 15,000, free from 7 nights.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-holiday&#34;&gt;Christmas package 24 to 28 December, 4 nights 180,000.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-pet&#34;&gt;Dogs 2,000 per night, maximum two, up to 15 kg.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-discount&#34;&gt;Booking of 7 nights gets 1 night free.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;div class=&#34;owner-line&#34;&gt;&lt;span class=&#34;hl hl-rule&#34;&gt;Saturday to Saturday in high season.&lt;/span&gt;&lt;/div&gt;&#xA;&lt;/div&gt;&#xA;&lt;table&gt;&#xA;&#x9;&lt;thead&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Row&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;th&gt;Captures&lt;/th&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/thead&gt;&#xA;&#x9;&lt;tbody&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;span class=&#34;tag tag-season&#34;&gt;season&lt;/span&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Date range, nightly rate, guests included, extra guest fee, cleaning fee and when it is waived&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;span class=&#34;tag tag-holiday&#34;&gt;holiday&lt;/span&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Fixed night count and a package total&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;span class=&#34;tag tag-pet&#34;&gt;pet fee&lt;/span&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Per-animal rate, maximum animals, maximum weight&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;span class=&#34;tag tag-discount&#34;&gt;discount&lt;/span&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Type &lt;code&gt;night_bonus&lt;/code&gt;: 7 nights required, 1 night free&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&#x9;&#x9;&lt;tr&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;&lt;span class=&#34;tag tag-rule&#34;&gt;rule&lt;/span&gt;&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;td&gt;Arrival and departure day, minimum stay&lt;/td&gt;&#xA;&#x9;&#x9;&#x9;&lt;/tr&gt;&#xA;&#x9;&lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;Six sentences become five rows, with every ambiguity resolved on the way. The model returns this:&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

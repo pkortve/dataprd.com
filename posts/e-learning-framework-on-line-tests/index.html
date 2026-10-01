@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/project-knowledge-management/">Project &amp; knowledge management</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>I&rsquo;ve been involved in lecturing courses on <em>IT support of Project Management</em> and <em>Big Data</em> at institutions during the last years. As there have been many participants I&rsquo;ve been looking into solutions to facilitate the homework hand-in and evaluation process and the automated assessment of final tests. <em>The main idea was to support me and not me supporting the system - so an out-of-the-box working tool was preferred.</em> After some tries on automated test creation with <a href="https://www.limesurvey.org/en/" title="https://www.limesurvey.org/en/">Limesurvey</a> - which is a great tool for survey creation - I found <a href="https://moodle.org" title="https://moodle.org">Moodle</a> which supports not only lot easier test creation but the whole e-learning process. The tool is open-source, have a great documentation and great functionality - which of only a few pieces I use regularly. So to share news with a specified group, assign homeworks with deadlines and create automated, shuffled tests - the use-cases I need - it does all. Let&rsquo;s install on a Ubuntu 14.04 Server. In terminal:</p>
@@ -125,8 +136,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    GRANT SELECT<span style="color:#1f2328">,</span>INSERT<span style="color:#1f2328">,</span>UPDATE<span style="color:#1f2328">,</span>DELETE<span style="color:#1f2328">,</span>CREATE<span style="color:#1f2328">,</span>CREATE TEMPORARY TABLES<span style="color:#1f2328">,</span>DROP<span style="color:#1f2328">,</span>INDEX<span style="color:#1f2328">,</span>ALTER ON moodle<span style="color:#0550ae">.*</span> TO moodledude<span style="color:#f6f8fa;background-color:#82071e">@</span>localhost IDENTIFIED BY <span style="color:#0a3069">&#39;passwordformoodle&#39;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    quit<span style="color:#1f2328">;</span>
-</span></span></code></pre></div><p>Install Moodle from your browser http://host/moodle/ - choose MySQL database. The installation process is available with more details at: <a href="https://docs.moodle.org/23/en/Installing_Moodle">https://docs.moodle.org/23/en/Installing_Moodle</a> <strong>1. Create a course by using the left panel&rsquo;s &ldquo;Courses&rdquo; menu</strong> <img src="/images/uploads/2014/08/Course1.png" alt="Moodle1">   <img src="/images/uploads/2014/08/Course2.png" alt="Moodle2">   <strong>2. Create a Course Information Section - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Page&rdquo;</strong> <img src="/images/uploads/2014/08/Course5.png" alt="Moodle5">   <strong>3. Create a Section for Exams - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Quiz&rdquo;</strong> <img src="/images/uploads/2014/08/Course3.png" alt="Moodle3">   <img src="/images/uploads/2014/08/Course4.png" alt="Moodle4">   <strong>4. Add questions to the question Bank - left panel, below, click &ldquo;Question Bank&rdquo; - &ldquo;Import&rdquo; - use &ldquo;Gift&rdquo; Format</strong> <img src="/images/uploads/2014/08/Course6.png" alt="Moodle6">   The following example is to import questions into Moodle. <em>$CATEGORY</em> is to define which category to include to (important to select where to shuffle from). <em>1. question</em> : Single choice, B is correct <em>2. question</em> : Multiple choices, if B and C is selected 50%+50%=100% is given</p>
+</span></span><span style="display:flex;"><span>    quit<span style="color:#1f2328">;</span></span></span></code></pre></div><p>Install Moodle from your browser http://host/moodle/ - choose MySQL database. The installation process is available with more details at: <a href="https://docs.moodle.org/23/en/Installing_Moodle">https://docs.moodle.org/23/en/Installing_Moodle</a> <strong>1. Create a course by using the left panel&rsquo;s &ldquo;Courses&rdquo; menu</strong> <img src="/images/uploads/2014/08/Course1.png" alt="Moodle1">   <img src="/images/uploads/2014/08/Course2.png" alt="Moodle2">   <strong>2. Create a Course Information Section - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Page&rdquo;</strong> <img src="/images/uploads/2014/08/Course5.png" alt="Moodle5">   <strong>3. Create a Section for Exams - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Quiz&rdquo;</strong> <img src="/images/uploads/2014/08/Course3.png" alt="Moodle3">   <img src="/images/uploads/2014/08/Course4.png" alt="Moodle4">   <strong>4. Add questions to the question Bank - left panel, below, click &ldquo;Question Bank&rdquo; - &ldquo;Import&rdquo; - use &ldquo;Gift&rdquo; Format</strong> <img src="/images/uploads/2014/08/Course6.png" alt="Moodle6">   The following example is to import questions into Moodle. <em>$CATEGORY</em> is to define which category to include to (important to select where to shuffle from). <em>1. question</em> : Single choice, B is correct <em>2. question</em> : Multiple choices, if B and C is selected 50%+50%=100% is given</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-gdscript3" data-lang="gdscript3"><span style="display:flex;"><span><span style="color:#0550ae">$</span>CATEGORY<span style="color:#1f2328">:</span> Cluster_DevOp
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
@@ -155,10 +165,11 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#0550ae">~</span>A provisioning <span style="color:#cf222e">tool</span> <span style="color:#cf222e">for</span> Linux machines
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
-</span></span></code></pre></div><p><strong>5. Create an Exam shuffling questions from the &ldquo;Question Bank&rdquo; - by editing the created quiz</strong> <img src="/images/uploads/2014/08/Course7.png" alt="Moodle7">   <strong>6. Create a homework assignment with Deadlines - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Assignment&rdquo;</strong> <img src="/images/uploads/2014/08/Course8.png" alt="Moodle8">   <strong>+1 Modify grading scheme, administrative settings, add users in the right panel highlighted</strong> <img src="/images/uploads/2014/08/Course9.png" alt="Moodle9"></p>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div><p><strong>5. Create an Exam shuffling questions from the &ldquo;Question Bank&rdquo; - by editing the created quiz</strong> <img src="/images/uploads/2014/08/Course7.png" alt="Moodle7">   <strong>6. Create a homework assignment with Deadlines - Middle Panel, &ldquo;Add an activity or Resource&rdquo;, use &ldquo;Assignment&rdquo;</strong> <img src="/images/uploads/2014/08/Course8.png" alt="Moodle8">   <strong>+1 Modify grading scheme, administrative settings, add users in the right panel highlighted</strong> <img src="/images/uploads/2014/08/Course9.png" alt="Moodle9"></p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -199,6 +210,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

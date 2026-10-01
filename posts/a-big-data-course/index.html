@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a> / <a href="/categories/project-knowledge-management/">Project &amp; knowledge management</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>The published diagram is to detail a setup of a Big Data Course.</p>
@@ -112,6 +123,8 @@
 <p>A <a href="http://www.u-szeged.hu/tanrend?browse=kurzus&amp;kurzusId=1591460&amp;ciklusId=2014-2015-1#browse">derivative of the course</a> is held at the University of Szeged. <a href="/images/uploads/2014/08/Course.png"><img src="/images/uploads/2014/08/Course.png" alt="Big Data Course"></a></p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -152,6 +165,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <h2 id="tutorial-big-data-analysis-weather-changes-in-the-carpathian-basin-from-1900-to-2014---part-49">Tutorial big data analysis: Weather changes in the Carpathian-Basin from 1900 to 2014 - Part 4/9</h2>
@@ -218,15 +229,15 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>DUMP F1;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>*/
-</span></span></code></pre></div><p>Output file**<em>out_prcp</em> :**</p>
+</span></span><span style="display:flex;"><span>*/</span></span></code></pre></div><p>Output file**<em>out_prcp</em> :**</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>((ARAD RO,46.1331,21.35),{((1882,742)),((1883,680)),((1884,656)),((1885,656)),((1886,770)),((1887,718)),((1888,467)),((1889,893)),((1890,570)),
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>? ))})
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>((DEVA RO,45.8667,22.9),?
-</span></span></code></pre></div>
+</span></span><span style="display:flex;"><span>((DEVA RO,45.8667,22.9),?</span></span></code></pre></div>
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -267,6 +278,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

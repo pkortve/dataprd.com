@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/data-analytics-tools/">Data analytics tools</a> / <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p><strong>Apache Kylin</strong> is a data cube solution on top of Hadoop providing an ODBC interface for BI tools. OLAP cubes boosts performance for analytics via using a subset of data, enriched with pre-calculations on specific dimensions of interest. It enables loading dimensions from a Hive data source, therefore accelerating BI tool access via pre-calculating data and adding it to HBase. In our example we have a large dataset of flight information:</p>
@@ -113,7 +124,7 @@
 <li>A cube is pre-constructed, therefore provides access to a data snapshot. It should be re-built in case of updates and built differently in case of changes in dimensions or measures</li>
 <li>Kylin sometimes failed to build a cube or exited during the experiment</li>
 </ul>
-<h1></h1>
+<h1 id=""></h1>
 <h1 id="experiment---poc-with-kylin">Experiment - POC with Kylin</h1>
 <h2 id="platform">Platform</h2>
 <ul>
@@ -142,21 +153,19 @@
 <h3 id="hive">Hive</h3>
 <p><strong>AVG delay on specific months of a day</strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
-</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
-</span></span></code></pre></div><p><em><strong>82.31 sec</strong></em> <strong>AVG delay per carrier</strong></p>
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;</span></span></code></pre></div><p><em><strong>82.31 sec</strong></em> <strong>AVG delay per carrier</strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
-</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
-</span></span></code></pre></div><p><em><strong>142.73 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_14.jpg" alt=""> Hive query execution</p>
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;</span></span></code></pre></div><p><em><strong>142.73 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_14.jpg" alt=""> Hive query execution</p>
 <h3 id="kylin">Kylin</h3>
 <p><strong>AVG delay on specific months of a day</strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
-</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
-</span></span></code></pre></div><p><em><strong>0.18 sec</strong></em> <strong>AVG delay per carrier</strong></p>
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;</span></span></code></pre></div><p><em><strong>0.18 sec</strong></em> <strong>AVG delay per carrier</strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AVG delay on specific months of a day
-</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;
-</span></span></code></pre></div><p><em><strong>0.36 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_13.jpg" alt=""> Kylin query execution</p>
+</span></span><span style="display:flex;"><span>SELECT DAYOFWEEK, AVG(DEPDELAY) FROM ON_TIME_PERFORMANCE_2015_1 GROUP BY DAYOFWEEK;</span></span></code></pre></div><p><em><strong>0.36 sec</strong></em> <img src="/images/uploads/2017/01/Kylin_13.jpg" alt=""> Kylin query execution</p>
 
     </article>
+
+    
 
     
     <div class="post-tags clr">
@@ -197,6 +206,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

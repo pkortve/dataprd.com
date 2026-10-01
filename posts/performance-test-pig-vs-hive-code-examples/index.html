@@ -56,6 +56,10 @@
               <a href="/categories/data-governance/">Data Governance</a>
             </li>
             
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
             
             <li>
               <a href="/about/">About</a>
@@ -90,8 +94,15 @@
           <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster based data analytics tutorials</a>
         </li>
         
+        
       </ul>
     </header>
+
+    
+
+    
+
+    
 
     <article class="entry clr">
       <p>Performance testing high level Hadoop query languages with <strong>example scripts.</strong> Analysis of NOAA weather data: Western-European weather stations from 1980 to 2014, daily dataset of temperature (tmin and tmax) and precipitation data (prcp). Dataset is a structured table, non-existent measurement cells are filled with <em>-9999</em>. <strong>Example:</strong> STATION,STATION_NAME,DATE,PRCP,TMAX,TMIN GHCND:NLE00109300,STAVENISSE NL,19800101,53,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800102,21,-9999,-9999 GHCND:NLE00109300,STAVENISSE NL,19800103,133,-9999,-9999 &hellip; GHCND:NLE00109202,MARUM NL,20080602,0,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080603,36,-9999,-9999 GHCND:NLE00109202,MARUM NL,20080604,4,-9999,-9999 &hellip; Data size: <strong>1 Gb / 4 Gb / 8 Gb</strong> <a href="/files/2014/08/w_333_mb.csv.zip">(the same 333 Mb data file replicated 3 / 12 / 24 times)</a> HDFS block size: <strong>128 Mb</strong> Platform:</p>
@@ -153,8 +164,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>D1 = ORDER C1 by tmax;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>STORE D1 into &#39;/user/hdfs/Weather_Pig1.csv&#39; using PigStorage(&#39;,&#39;);
-</span></span></code></pre></div><p>__ <em>Hive script - A variant</em></p>
+</span></span><span style="display:flex;"><span>STORE D1 into &#39;/user/hdfs/Weather_Pig1.csv&#39; using PigStorage(&#39;,&#39;);</span></span></code></pre></div><p>__ <em>Hive script - A variant</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather1 (stationcode STRING, station STRING, datefield STRING, prcp DOUBLE, tmax DOUBLE, tmin DOUBLE) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>LOAD DATA INPATH &#39;/user/hdfs/Weather.csv&#39; OVERWRITE INTO TABLE weather1;
@@ -163,12 +173,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res1
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, datefield, tmax FROM weather1 WHERE tmax &lt;&gt; -9999 ORDER BY tmax DESC;
-</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded __</p>
+</span></span><span style="display:flex;"><span>SELECT station, datefield, tmax FROM weather1 WHERE tmax &lt;&gt; -9999 ORDER BY tmax DESC;</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded __</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res1
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, datefield, tmax FROM weather1 WHERE tmax &lt;&gt; -9999 ORDER BY tmax DESC;
-</span></span></code></pre></div><h3></h3>
+</span></span><span style="display:flex;"><span>SELECT station, datefield, tmax FROM weather1 WHERE tmax &lt;&gt; -9999 ORDER BY tmax DESC;</span></span></code></pre></div><h3 id=""></h3>
 <h3 id="task-2---example-pig-and-hive-scripts">Task 2 - example Pig and Hive scripts</h3>
 <p>Max temperatures per year per station <em>Table:(Distinct:Station, Year, MaxHighTemp)</em> <em>Pig script</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>A = LOAD &#39;/user/hdfs/Weather/Weather.csv&#39; using PigStorage(&#39;,&#39;);
@@ -181,8 +189,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>E1 = FOREACH D1 GENERATE group.station as station, (int) group.year, MAX(C1.tmax);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig2.csv&#39; using PigStorage(&#39;,&#39;);
-</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
+</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig2.csv&#39; using PigStorage(&#39;,&#39;);</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather2 (stationcode STRING, station STRING, datefield STRING, prcp DOUBLE, tmax DOUBLE, tmin DOUBLE) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>LOAD DATA INPATH &#39;/user/hdfs/Weather.csv&#39; OVERWRITE INTO TABLE weather2;
@@ -197,12 +204,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res2
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, datefield, MAX(tmax) FROM weather_temp2 GROUP BY station, datefield;
-</span></span></code></pre></div><p>__ <em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice</p>
+</span></span><span style="display:flex;"><span>SELECT station, datefield, MAX(tmax) FROM weather_temp2 GROUP BY station, datefield;</span></span></code></pre></div><p>__ <em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res2
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), MAX(tmax) FROM weather2WHERE tmax &lt;&gt; -9999 GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);
-</span></span></code></pre></div><h3 id="task-3---example-pig-and-hive-scripts">Task 3 - example Pig and Hive scripts</h3>
+</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), MAX(tmax) FROM weather2WHERE tmax &lt;&gt; -9999 GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);</span></span></code></pre></div><h3 id="task-3---example-pig-and-hive-scripts">Task 3 - example Pig and Hive scripts</h3>
 <p>Average temperatures per year per station <em>Table:(Distinct:Station, Year, AvgHighTemp)</em> <em>Pig script</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>A = LOAD &#39;/user/hdfs/Weather/Weather.csv&#39; using PigStorage(&#39;,&#39;);
 </span></span><span style="display:flex;"><span>
@@ -214,8 +219,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>E1 = FOREACH D1 GENERATE group.station as station, (int) group.year, AVG(C1.tmax);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig3.csv&#39; using PigStorage(&#39;,&#39;);
-</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
+</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig3.csv&#39; using PigStorage(&#39;,&#39;);</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather3 (stationcode STRING, station STRING, datefield STRING, prcp DOUBLE, tmax DOUBLE, tmin DOUBLE) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;;LOAD DATA INPATH &#39;/user/hdfs/Weather.csv&#39; OVERWRITE INTO TABLE weather3;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>CREATE TABLE weather_temp3 (station STRING, datefield INT, tavg INT);
@@ -228,14 +232,12 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res3
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, datefield, AVG(tavg) FROM weather_temp3 GROUP BY station, datefield;
-</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice</p>
+</span></span><span style="display:flex;"><span>SELECT station, datefield, AVG(tavg) FROM weather_temp3 GROUP BY station, datefield;</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE TABLE weather_res3 (station STRING, datefield INT, tavg INT);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res3
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), AVG(tmax) FROM weather3 WHERE tmax &lt;&gt; -9999 GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);
-</span></span></code></pre></div><h3 id="task-4---example-pig-and-hive-scripts">Task 4 - example Pig and Hive scripts</h3>
+</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), AVG(tmax) FROM weather3 WHERE tmax &lt;&gt; -9999 GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);</span></span></code></pre></div><h3 id="task-4---example-pig-and-hive-scripts">Task 4 - example Pig and Hive scripts</h3>
 <p>Max mean yearly temperature <em>Table:</em> <em>(Distinct:Station, MaxYear, MaxMeanTemp) MeanTemp: AVG((MaxTemp-MinTemp)/2)</em> <em>Pig script</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>A = LOAD &#39;/user/hdfs/Weather/Weather.csv&#39; using PigStorage(&#39;,&#39;);
 </span></span><span style="display:flex;"><span>
@@ -263,8 +265,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>};
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>STORE H1 into &#39;/user/hdfs/Weather_Pig4.csv&#39; using PigStorage(&#39;,&#39;);
-</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
+</span></span><span style="display:flex;"><span>STORE H1 into &#39;/user/hdfs/Weather_Pig4.csv&#39; using PigStorage(&#39;,&#39;);</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather4 (stationcode STRING, station STRING, datefield STRING, prcp DOUBLE, tmax DOUBLE, tmin DOUBLE) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;;LOAD DATA INPATH &#39;/user/hdfs/Weather.csv&#39; OVERWRITE INTO TABLE weather4;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather4_temp (station STRING, year INT, tmax DOUBLE, tmin DOUBLE);
@@ -283,8 +284,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res4
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT w.station, w.year, ww.maxMeanTemp FROM weather4_temp2 w JOIN weather4_temp3 ww ON w.meanTemp = ww.maxMeanTemp;
-</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice.</p>
+</span></span><span style="display:flex;"><span>SELECT w.station, w.year, ww.maxMeanTemp FROM weather4_temp2 w JOIN weather4_temp3 ww ON w.meanTemp = ww.maxMeanTemp;</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather4_temp (station STRING, year INT, maxMeanTemp DOUBLE);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather4_temp1 SELECT station, cast(SUBSTR(datefield,1,4) as INT), AVG((tmax-tmin)/2) FROM weather4 WHERE tmax &gt; -9999 and tmin &gt; -9999 GROUP BY station, cast(SUBSTR(datefield,1,4) as INT); 
@@ -297,8 +297,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res4
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT w.station, w.year, ww.maxMeanTemp FROM weather4_temp1 w JOIN weather4_temp2 ww ON w.meanTemp = ww.maxMeanTemp;
-</span></span></code></pre></div><h2 id="task-5---example-pig-and-hive-scripts">Task 5 - example Pig and Hive scripts</h2>
+</span></span><span style="display:flex;"><span>SELECT w.station, w.year, ww.maxMeanTemp FROM weather4_temp1 w JOIN weather4_temp2 ww ON w.meanTemp = ww.maxMeanTemp;</span></span></code></pre></div><h2 id="task-5---example-pig-and-hive-scripts">Task 5 - example Pig and Hive scripts</h2>
 <p>Average temperatures per year of station STAVENISSE Select one only weather station and average all time precipitation data. <em>Table:(STAVENISSE, Year, AvgHighTemp)</em>   <em>Pig script</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>A = LOAD &#39;/user/hdfs/weather/weather.csv&#39; using PigStorage(&#39;,&#39;);
 </span></span><span style="display:flex;"><span>
@@ -310,8 +309,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>E1 = FOREACH D1 GENERATE group as station, AVG(C1.tmax);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig5.csv&#39; using PigStorage(&#39;,&#39;);
-</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
+</span></span><span style="display:flex;"><span>STORE E1 into &#39;/user/hdfs/Weather_Pig5.csv&#39; using PigStorage(&#39;,&#39;);</span></span></code></pre></div><p><em>Hive script - A variant</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE EXTERNAL TABLE weather5 (stationcode STRING, station STRING, dateield STRING, prcp DOUBLE, tmax DOUBLE, tmin DOUBLE) ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>LOAD DATA INPATH &#39;/user/hdfs/Weather.csv&#39; OVERWRITE INTO TABLE weather5;
@@ -326,12 +324,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res5
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, datefield, AVG(tmax) FROM weather_temp5 GROUP BY station, datefield;
-</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice __</p>
+</span></span><span style="display:flex;"><span>SELECT station, datefield, AVG(tmax) FROM weather_temp5 GROUP BY station, datefield;</span></span></code></pre></div><p><em>Hive script - B variant</em> Data pre-loaded, leaving out temp table creation, running type casting twice __</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>INSERT OVERWRITE TABLE weather_res5
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), AVG(tmax) FROM weather5 WHERE tmax &lt;&gt; -9999 AND station LIKE &#39;%STAVENISSE%&#39; GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);
-</span></span></code></pre></div><h2 id="performance-assessment---results">Performance assessment - results</h2>
+</span></span><span style="display:flex;"><span>SELECT station, cast(SUBSTR(datefield,1,4) as INT), AVG(tmax) FROM weather5 WHERE tmax &lt;&gt; -9999 AND station LIKE &#39;%STAVENISSE%&#39; GROUP BY station, cast(SUBSTR(datefield,1,4) as INT);</span></span></code></pre></div><h2 id="performance-assessment---results">Performance assessment - results</h2>
 <table>
 	<thead>
 			<tr>
@@ -504,6 +500,8 @@
     </article>
 
     
+
+    
     <div class="post-tags clr">
       <a href="/tags/hadoop/">hadoop</a><a href="/tags/query/">query</a><a href="/tags/tutorial/">tutorial</a><a href="/tags/pig/">pig</a><a href="/tags/hive/">hive</a><a href="/tags/performance/">performance</a><a href="/tags/comparison/">comparison</a>
     </div>
@@ -542,6 +540,23 @@
       wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
     });
   }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
 })();
 </script>
 </body>

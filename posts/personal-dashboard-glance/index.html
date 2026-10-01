@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Building a Self-Hosted Personal Dashboard with Glance | Dataprd.Com</title>
+  <meta name="description" content="One YAML file, a handful of PHP proxies and a NAS: weather, air quality, calendars, news and uptime on a single screen, with no accounts and no tracking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body page">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content boxed" role="main">
+
+    <header class="post-header">
+      <h1 class="post-header-title">Building a Self-Hosted Personal Dashboard with Glance</h1>
+      <ul class="meta single-meta clr">
+        <li><i class="fa fa-clock-o"></i>June 3, 2026</li>
+        
+        <li><i class="fa fa-folder-open"></i>
+          <a href="/categories/data-security/">Data security</a>
+        </li>
+        
+        <li><i class="fa fa-book"></i>13 min read</li>
+      </ul>
+    </header>
+
+    
+    <div class="post-hero">
+      <img src="/images/posts/personal-dashboard-glance.png" alt="" width="880" height="200">
+    </div>
+    
+
+    
+    <aside class="post-tldr">
+      <p class="post-tldr-title">In short</p>
+      <ul><li>Five morning browser tabs replaced by one self-hosted screen: weather, air quality, calendars, news, Reddit, YouTube, markets and uptime.</li><li><a href="https://github.com/glanceapp/glance">Glance</a> is one binary and one YAML file. YAML anchors keep a 730-line config from doubling in size.</li><li>A thin PHP proxy layer handles what Glance cannot: scraping sites with no API, keeping private URLs out of the config, flattening awkward JSON.</li><li>Everything runs on a NAS on the LAN, with no accounts, no vendor and no analytics.</li></ul>
+    </aside>
+    
+
+    
+    <details class="post-toc" open>
+      <summary>Contents</summary>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-the-screen-shows">What the screen shows</a></li>
+    <li><a href="#how-it-fits-together">How it fits together</a></li>
+    <li><a href="#the-yaml">The YAML</a>
+      <ul>
+        <li><a href="#anchors-keep-it-from-doubling-in-size">Anchors keep it from doubling in size</a></li>
+        <li><a href="#layout">Layout</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-data-sources">The data sources</a>
+      <ul>
+        <li><a href="#weather-from-időkép">Weather from Időkép</a></li>
+        <li><a href="#air-quality-from-aqicn">Air quality from AQICN</a></li>
+        <li><a href="#calendars">Calendars</a></li>
+        <li><a href="#youtube">YouTube</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#reddit">Reddit</a></li>
+        <li><a href="#the-built-in-widgets">The built-in widgets</a></li>
+      </ul>
+    </li>
+    <li><a href="#restyling-a-dashboard-with-no-theming-hooks">Restyling a dashboard with no theming hooks</a>
+      <ul>
+        <li><a href="#launch-buttons-carefully">Launch buttons, carefully</a></li>
+      </ul>
+    </li>
+    <li><a href="#what-i-would-tell-someone-starting-this">What I would tell someone starting this</a></li>
+  </ul>
+</nav>
+    </details>
+    
+
+    <article class="entry clr longform">
+      <p>I used to start the day by going through the same handful of browser tabs: weather, calendar, news, markets, YouTube. I wanted all of it on one screen instead.</p>
+<p><a href="https://github.com/glanceapp/glance">Glance</a> is an open source, self-hosted dashboard. It ships as a single binary with no database, and the whole page (widgets, data sources, refresh intervals, layout) is declared in one YAML file, <code>glance.yml</code>.</p>
+<p>My config has grown to about 730 lines, plus roughly 2,000 lines of PHP in the proxy layer that feeds the parts Glance cannot fetch on its own. This post covers what is on the screen, where the data comes from, and why the PHP layer exists at all.</p>
+<h2 id="what-the-screen-shows">What the screen shows<a class="heading-anchor" href="#what-the-screen-shows" aria-label="Link to this section">#</a></h2>
+<p>Three columns, one page, no scrolling on a desktop monitor.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Column</th>
+					<th>Width</th>
+					<th>What it holds</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Left</td>
+					<td>Narrow</td>
+					<td>Local conditions and status</td>
+			</tr>
+			<tr>
+					<td>Middle</td>
+					<td>Wide</td>
+					<td>Reading material</td>
+			</tr>
+			<tr>
+					<td>Right</td>
+					<td>Narrow</td>
+					<td>Personal</td>
+			</tr>
+	</tbody>
+</table>
+<p>The <strong>left column</strong> is local conditions and status: current temperature, sky description and any weather front warning; UV index and rainfall for the last 24 hours and last 7 days; an hourly temperature strip for the next 12 hours; a three-day forecast; air quality with the composite index and the individual pollutants; a few market tickers; uptime checks on the sites I run; quick-launch buttons; and a button that restarts Glance when a source has gone stale.</p>
+<p>The <strong>middle column</strong> is reading material. News and car sites in two tabbed groups, top posts from fourteen subreddits, and the Hacker News front page.</p>
+<p>The <strong>right column</strong> is personal: two Google Calendar feeds showing the next eight events each, and recent videos from a list of YouTube channels.</p>
+<h2 id="how-it-fits-together">How it fits together<a class="heading-anchor" href="#how-it-fits-together" aria-label="Link to this section">#</a></h2>
+<p>Glance runs on a NAS on the LAN at port 8080. A small Apache and PHP instance on <code>localhost:8081</code> serves the proxy scripts that Glance calls through its <code>custom-api</code> widget type.</p>
+<p><span class="entry-figure"><img src="/images/posts/glance-architecture.png" alt="Glance and the PHP proxy layer" width="880" height="470" loading="lazy" decoding="async"><span class="entry-caption">Glance calls a small PHP layer on the same box, which talks to the outside world.</span></span></p>
+<p>The proxy layer exists because the sources fall into three awkward categories:</p>
+<ul>
+<li><strong>No API at all</strong>, so the data has to be scraped out of HTML.</li>
+<li><strong>A token or a private URL</strong> that has no business sitting in a config file I might paste into a blog post.</li>
+<li><strong>A shape Glance&rsquo;s template engine cannot use directly</strong>, so something has to flatten it first.</li>
+</ul>
+<table>
+	<thead>
+			<tr>
+					<th>Proxy</th>
+					<th>Source</th>
+					<th>Why it exists</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>idokep.php</code></td>
+					<td>Időkép weather</td>
+					<td>No API, scraped</td>
+			</tr>
+			<tr>
+					<td><code>aqicn.php</code></td>
+					<td>AQICN air quality</td>
+					<td>City page scraped</td>
+			</tr>
+			<tr>
+					<td><code>icsproxy.php</code></td>
+					<td>Google Calendar</td>
+					<td>Private URL, and ICS needs real parsing</td>
+			</tr>
+			<tr>
+					<td><code>youtube.php</code></td>
+					<td>YouTube channel feeds</td>
+					<td>Fetches every channel feed in parallel</td>
+			</tr>
+			<tr>
+					<td><code>topnews.php</code></td>
+					<td>News and car sites</td>
+					<td>One scraper per site</td>
+			</tr>
+			<tr>
+					<td><code>reddit.php</code></td>
+					<td>Reddit</td>
+					<td>The JSON endpoint respects the time period</td>
+			</tr>
+			<tr>
+					<td><code>launch.php</code></td>
+					<td>Local machine</td>
+					<td>Opens a browser window on the dashboard host</td>
+			</tr>
+	</tbody>
+</table>
+<p>Anything Glance can do natively, it does natively. There is no proxy for market data or uptime checks, because the built-in widgets already handle them.</p>
+<h2 id="the-yaml">The YAML<a class="heading-anchor" href="#the-yaml" aria-label="Link to this section">#</a></h2>
+<p>The file opens with the bind address and a small theme block, which is all the colour customisation Glance offers out of the box. Everything else visual is done later with injected CSS.</p>
+<div class="code-block"><div class="code-label">glance.yml</div>
+  <div class="highlight" title="glance.yml"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">server</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">host</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">0.0.0.0</span><span style="color:#fff">      </span><span style="color:#57606a"># bind on the LAN; use 127.0.0.1 to keep it local-only</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">port</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">8080</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">theme</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">background-color</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">240</span><span style="color:#fff"> </span><span style="color:#0550ae">8</span><span style="color:#fff"> </span><span style="color:#0550ae">9</span><span style="color:#fff">        </span><span style="color:#57606a"># HSL</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">primary-color</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">43</span><span style="color:#fff"> </span><span style="color:#0550ae">50</span><span style="color:#fff"> </span><span style="color:#0550ae">70</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">contrast-multiplier</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">1.1</span></span></span></code></pre></div>
+</div><h3 id="anchors-keep-it-from-doubling-in-size">Anchors keep it from doubling in size<a class="heading-anchor" href="#anchors-keep-it-from-doubling-in-size" aria-label="Link to this section">#</a></h3>
+<p>Glance parses standard YAML, which means anchors and aliases work. Proxy URLs and reusable widget templates get declared once under <code>vars:</code> and referenced with <code>*anchor_name</code>. Without this, eight nearly identical news widgets would each carry their own copy of a forty-line template, and a change to the markup would mean eight edits and at least one mistake.</p>
+<div class="code-block"><div class="code-label">glance.yml: shared URLs</div>
+  <div class="highlight" title="glance.yml: shared URLs"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">vars</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">ICAL_PROXY</span><span style="color:#1f2328">:</span><span style="color:#fff">    </span><span style="color:#57606a">&amp;ical_proxy</span><span style="color:#fff">    </span><span style="color:#0a3069">&#34;http://localhost:8081/glance/icsproxy.php&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">TOPNEWS_BASE</span><span style="color:#1f2328">:</span><span style="color:#fff">  </span><span style="color:#57606a">&amp;topnews_base</span><span style="color:#fff">  </span><span style="color:#0a3069">&#34;http://localhost:8081/glance/topnews.php&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">AQICN_PROXY</span><span style="color:#1f2328">:</span><span style="color:#fff">   </span><span style="color:#57606a">&amp;aqicn_proxy</span><span style="color:#fff">   </span><span style="color:#0a3069">&#34;http://localhost:8081/glance/aqicn.php&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">IDOKEP_PROXY</span><span style="color:#1f2328">:</span><span style="color:#fff">  </span><span style="color:#57606a">&amp;idokep_proxy</span><span style="color:#fff">  </span><span style="color:#0a3069">&#34;http://localhost:8081/glance/idokep.php&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">REDDIT_PROXY</span><span style="color:#1f2328">:</span><span style="color:#fff">  </span><span style="color:#57606a">&amp;reddit_proxy</span><span style="color:#fff">  </span><span style="color:#0a3069">&#34;http://localhost:8081/glance/reddit.php&#34;</span></span></span></code></pre></div>
+</div><p>A <code>custom-api</code> widget renders the proxy&rsquo;s JSON with Go templates. The calendar template handles the error case, the empty case and the data case, then iterates the events:</p>
+<div class="code-block"><div class="code-label">glance.yml: calendar template</div>
+  <div class="highlight" title="glance.yml: calendar template"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">CAL_TPL</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">&amp;cal_tpl</span><span style="color:#fff"> </span><span style="color:#1f2328">|</span><span style="color:#0a3069">
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    {{ if .JSON.Exists &#34;error&#34; }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      &lt;p class=&#34;color-negative&#34;&gt;ICS proxy error: {{ .JSON.String &#34;error&#34; }}&lt;/p&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    {{ else if eq (.JSON.Int &#34;count&#34;) 0 }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      &lt;p class=&#34;color-paragraph&#34;&gt;No upcoming events.&lt;/p&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    {{ else }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      &lt;ul class=&#34;list list-gap-4 collapsible-container cal-list&#34; data-collapse-after=&#34;5&#34;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      {{ range .JSON.Array &#34;events&#34; }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        &lt;li class=&#34;cal-entry&#34; style=&#34;padding: 2px 4px 4px;&#34;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">          &lt;a class=&#34;size-h4 color-primary-if-not-visited block text-truncate&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">             title=&#34;{{ .String &#34;summary&#34; }}&#34;&gt;{{ .String &#34;summary&#34; }}&lt;/a&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">          &lt;ul class=&#34;list-horizontal-text text-compact&#34;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            &lt;li class=&#34;color-highlight&#34;&gt;{{ .String &#34;when&#34; }}&lt;/li&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            {{ if ne (.String &#34;location&#34;) &#34;&#34; }}&lt;li class=&#34;text-truncate&#34;&gt;{{ .String &#34;location&#34; }}&lt;/li&gt;{{ end }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">          &lt;/ul&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        &lt;/li&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      {{ end }}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      &lt;/ul&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    {{ end }}</span></span></span></code></pre></div>
+</div><p>Handling the error branch inside the template is worth the three extra lines. A proxy that fails silently leaves an empty box on the screen and you keep trusting stale data for a week without noticing.</p>
+<p>With the templates factored out, adding a news source is four lines:</p>
+<div class="code-block"><div class="code-label">glance.yml: one news widget</div>
+  <div class="highlight" title="glance.yml: one news widget"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>custom-api<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#34;Telex &gt;&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>30m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*topnews_base</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">parameters</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>{<span style="color:#fff"> </span><span style="color:#0550ae">site</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">telex, limit</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">5</span><span style="color:#fff"> </span>}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">template</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*news_tpl</span></span></span></code></pre></div>
+</div><h3 id="layout">Layout<a class="heading-anchor" href="#layout" aria-label="Link to this section">#</a></h3>
+<div class="code-block"><div class="code-label">glance.yml: layout</div>
+  <div class="highlight" title="glance.yml: layout"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">pages</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Home<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">columns</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">size</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>small   <span style="color:#fff"> </span><span style="color:#57606a"># weather, AQI, markets, uptime</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">size</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>full    <span style="color:#fff"> </span><span style="color:#57606a"># news groups, Reddit, HN</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span>- <span style="color:#0550ae">size</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>small   <span style="color:#fff"> </span><span style="color:#57606a"># calendars, YouTube</span></span></span></code></pre></div>
+</div><h2 id="the-data-sources">The data sources<a class="heading-anchor" href="#the-data-sources" aria-label="Link to this section">#</a></h2>
+<h3 id="weather-from-időkép">Weather from Időkép<a class="heading-anchor" href="#weather-from-id%c5%91k%c3%a9p" aria-label="Link to this section">#</a></h3>
+<p><a href="https://www.idokep.hu">Időkép</a> is the most widely used weather service in Hungary. International weather APIs interpolate from grid models, which is fine for a continent and mediocre for a valley. Időkép runs a dense network of local stations and its own model tuned for the Carpathian Basin, and it publishes things the generic APIs skip: precipitation radar with real resolution, UV index, and weather front warnings, which matter more than you would think if anyone in the house gets headaches when the pressure drops.</p>
+<p>There is no public API, so <code>idokep.php</code> scrapes the city page and returns a JSON object with the current conditions, UV, rainfall totals, an hourly strip and a three-day forecast.</p>
+<div class="code-block"><div class="code-label">YAML</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>custom-api<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Időkép, Szeged<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>15m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*idokep_proxy</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">parameters</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">city</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Szeged<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">lat</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">46.253</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">lon</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">20.149</span></span></span></code></pre></div>
+</div><p>The template pulls fields out with <code>.JSON.Int</code> and <code>.JSON.String</code>, then colours the temperature when it goes above 30 or below 5 degrees:</p>
+<div class="code-block"><div class="code-label">Weather template (excerpt)</div>
+  <div class="highlight" title="Weather template (excerpt)"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>{{<span style="color:#fff"> </span>$temp := .JSON.Int &#34;current.temp&#34; }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>$sky  := .JSON.String &#34;current.sky&#34; }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>$tclr := &#34;&#34; }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>if gt $temp 30 }}{{ $tclr = &#34;color:#c0392b; font-weight:800;&#34; }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>else if lt $temp 5 }}{{ $tclr = &#34;color:#2471a3; font-weight:800;&#34; }}{{ end }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>&lt;span style=&#34;font-size:2.4rem; font-weight:800; {{ $tclr }}&#34;&gt;{{ $temp }}°&lt;/span&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>&lt;div class=&#34;size-h4&#34;&gt;{{ $sky }}&lt;/div&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>range .JSON.Array &#34;hours&#34; }}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>&lt;div style=&#34;text-align:center; min-width:28px;&#34;&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>&lt;div class=&#34;size-h6 color-paragraph&#34;&gt;{{ .String &#34;hour&#34; }}&lt;/div&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>&lt;img src=&#34;{{ .String &#34;icon_url&#34; }}&#34; width=&#34;24&#34; height=&#34;24&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>&lt;div class=&#34;size-h5&#34;&gt;{{ .Int &#34;temp&#34; }}°&lt;/div&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>&lt;/div&gt;<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>{{<span style="color:#fff"> </span>end }}</span></span></code></pre></div>
+</div><aside class="callout callout-note">
+  <p class="callout-title"><i class="fa fa-info-circle"></i>The price of scraping</p>
+  <p>When the site redesigns, the widget breaks. It has happened twice. Both times the fix was a fifteen-minute change to one regex, which I consider an acceptable rent for data nobody sells me.</p>
+</aside><h3 id="air-quality-from-aqicn">Air quality from AQICN<a class="heading-anchor" href="#air-quality-from-aqicn" aria-label="Link to this section">#</a></h3>
+<p><a href="https://aqicn.org">AQICN</a> aggregates readings from government monitoring stations in more than a hundred countries. It reports the US EPA index, a 0 to 500 scale where higher is worse, along with the individual pollutants: PM2.5 (the fine particulates that matter most for health), PM10, ozone, nitrogen dioxide, sulphur dioxide and carbon monoxide.</p>
+<p><code>aqicn.php</code> reads the city page and returns the composite value, its category, and the per-pollutant numbers.</p>
+<div class="code-block"><div class="code-label">YAML</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>custom-api<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Air quality<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>30m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*aqicn_proxy</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">parameters</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>https://aqicn.org/city/hungary/szeged/szeged2/</span></span></code></pre></div>
+</div><p>In winter this widget earns its place. When wood smoke settles over the city the PM2.5 number climbs well before anything looks wrong outside.</p>
+<h3 id="calendars">Calendars<a class="heading-anchor" href="#calendars" aria-label="Link to this section">#</a></h3>
+<p><code>icsproxy.php</code> fetches a Google Calendar private ICS URL, parses the events, filters to the next N days, converts timestamps to the configured timezone and returns a flat JSON array. Two widgets share one template and differ only in the URL:</p>
+<div class="code-block"><div class="code-label">YAML</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>custom-api<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Calendar, personal<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>15m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*ical_proxy</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">parameters</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>https://calendar.google.com/calendar/ical/&lt;CALENDAR_ID&gt;/private-&lt;SECRET&gt;/basic.ics<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">tz</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Europe/Budapest<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">days</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">60</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">limit</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">8</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">template</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#57606a">*cal_tpl</span></span></span></code></pre></div>
+</div><aside class="callout callout-warning">
+  <p class="callout-title"><i class="fa fa-exclamation-triangle"></i>That URL is a password</p>
+  <p>The <code>private-&lt;SECRET&gt;</code> segment grants read access to the entire calendar to anyone who has it. It does not belong in a file you commit. Substitute it at deploy time or pull it from an environment variable and an untracked include.</p>
+</aside><p>The parsing itself turned out to be the hardest part of the whole project, for reasons covered in the <a href="/posts/eink-weather-dashboard/">e-ink dashboard post</a>, which uses the same proxy: recurring events with single-instance edits do not behave the way a naive parser expects.</p>
+<h3 id="youtube">YouTube<a class="heading-anchor" href="#youtube" aria-label="Link to this section">#</a></h3>
+<p>Every YouTube channel publishes an Atom feed at <code>https://www.youtube.com/feeds/videos.xml?channel_id=UC…</code> with no authentication at all. <code>youtube.php</code> reads a CSV of channel IDs, fetches all of them in parallel with <code>curl_multi</code>, merges the entries, sorts by publish date and returns the newest.</p>
+<div class="code-block"><div class="code-label">youtube.php (excerpt)</div>
+  <div class="highlight" title="youtube.php (excerpt)"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#953800">$multi</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">curl_multi_init</span><span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">array_keys</span><span style="color:#1f2328">(</span><span style="color:#953800">$channels</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$cid</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$h</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">curl_init</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;https://www.youtube.com/feeds/videos.xml?channel_id=&#39;</span> <span style="color:#0550ae">.</span> <span style="color:#953800">$cid</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">curl_setopt_array</span><span style="color:#1f2328">(</span><span style="color:#953800">$h</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">[</span><span style="color:#1f2328">CURLOPT_RETURNTRANSFER</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">CURLOPT_TIMEOUT</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#0550ae">8</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                           <span style="color:#1f2328">CURLOPT_ENCODING</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;gzip&#39;</span><span style="color:#1f2328">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">curl_multi_add_handle</span><span style="color:#1f2328">(</span><span style="color:#953800">$multi</span><span style="color:#1f2328">,</span> <span style="color:#953800">$h</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">do</span> <span style="color:#1f2328">{</span> <span style="color:#1f2328">curl_multi_exec</span><span style="color:#1f2328">(</span><span style="color:#953800">$multi</span><span style="color:#1f2328">,</span> <span style="color:#953800">$running</span><span style="color:#1f2328">);</span> <span style="color:#1f2328">curl_multi_select</span><span style="color:#1f2328">(</span><span style="color:#953800">$multi</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">0.1</span><span style="color:#1f2328">);</span> <span style="color:#1f2328">}</span> <span style="color:#cf222e">while</span> <span style="color:#1f2328">(</span><span style="color:#953800">$running</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// then, per feed, take the two newest entries:
+</span></span></span><span style="display:flex;"><span><span style="color:#1f2328">preg_match_all</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;#&lt;entry&gt;(.*?)&lt;/entry&gt;#s&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$body</span><span style="color:#1f2328">,</span> <span style="color:#953800">$entries</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#953800">$entries</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span> <span style="color:#cf222e">as</span> <span style="color:#953800">$entry</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">preg_match</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;#&lt;yt:videoId&gt;([^&lt;]+)&lt;/yt:videoId&gt;#&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$entry</span><span style="color:#1f2328">,</span> <span style="color:#953800">$mv</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">preg_match</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;#&lt;title&gt;([^&lt;]+)&lt;/title&gt;#&#39;</span><span style="color:#1f2328">,</span>           <span style="color:#953800">$entry</span><span style="color:#1f2328">,</span> <span style="color:#953800">$mt</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#953800">$videos</span><span style="color:#1f2328">[]</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;video_id&#39;</span>  <span style="color:#0550ae">=&gt;</span> <span style="color:#953800">$mv</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;url&#39;</span>       <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;https://www.youtube.com/watch?v=&#39;</span> <span style="color:#0550ae">.</span> <span style="color:#953800">$mv</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;title&#39;</span>     <span style="color:#0550ae">=&gt;</span> <span style="color:#1f2328">html_entity_decode</span><span style="color:#1f2328">(</span><span style="color:#953800">$mt</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">ENT_QUOTES</span> <span style="color:#0550ae">|</span> <span style="color:#1f2328">ENT_HTML5</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;UTF-8&#39;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#39;thumbnail&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#1f2328">sprintf</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;https://i.ytimg.com/vi/%s/mqdefault.jpg&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$mv</span><span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">usort</span><span style="color:#1f2328">(</span><span style="color:#953800">$videos</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">fn</span><span style="color:#1f2328">(</span><span style="color:#953800">$a</span><span style="color:#1f2328">,</span> <span style="color:#953800">$b</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#1f2328">strcmp</span><span style="color:#1f2328">(</span><span style="color:#953800">$b</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;published&#39;</span><span style="color:#1f2328">],</span> <span style="color:#953800">$a</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;published&#39;</span><span style="color:#1f2328">]));</span></span></span></code></pre></div>
+</div><p>Doing this sequentially took about eight seconds for thirty channels. In parallel it is under one. Regex parsing of XML is a sin in general, but for a feed format this rigid it has survived years without a single failure.</p>
+<h3 id="news">News<a class="heading-anchor" href="#news" aria-label="Link to this section">#</a></h3>
+<p><code>topnews.php</code> takes a <code>site</code> parameter and runs a per-site scraper. The sites fall into two tabbed groups: news and cars. Clicking a tab switches source, and so do the left and right arrow keys.</p>
+<h3 id="reddit">Reddit<a class="heading-anchor" href="#reddit" aria-label="Link to this section">#</a></h3>
+<p>Fourteen subreddits covering technology, science, AI, hardware, cars and local topics. This one has a story.</p>
+<p>The obvious approach is Reddit&rsquo;s RSS feed, and that is where I started. The problem is that the RSS endpoint ignores the time period parameter, so <code>?t=day</code> gets you the same list as <code>?t=all</code> and the widget shows the same handful of famous posts forever. The JSON endpoint on <code>old.reddit.com</code> respects the period, so <code>reddit.php</code> uses that instead, with browser cookies pasted into the script rather than an OAuth application:</p>
+<div class="code-block"><div class="code-label">reddit.php: input checks</div>
+  <div class="highlight" title="reddit.php: input checks"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#953800">$sub</span>    <span style="color:#0550ae">=</span> <span style="color:#1f2328">preg_replace</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;/[^A-Za-z0-9_]/&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">,</span> <span style="color:#953800">$_GET</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;sub&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$period</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">in_array</span><span style="color:#1f2328">(</span><span style="color:#953800">$_GET</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;period&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;hour&#39;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;day&#39;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;week&#39;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;month&#39;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;year&#39;</span><span style="color:#1f2328">,</span><span style="color:#0a3069">&#39;all&#39;</span><span style="color:#1f2328">],</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">?</span> <span style="color:#953800">$_GET</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;period&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">:</span> <span style="color:#0a3069">&#39;day&#39;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$limit</span>  <span style="color:#0550ae">=</span> <span style="color:#1f2328">min</span><span style="color:#1f2328">(</span><span style="color:#1f2328">max</span><span style="color:#1f2328">((</span><span style="color:#1f2328">int</span><span style="color:#1f2328">)(</span><span style="color:#953800">$_GET</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;limit&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0550ae">5</span><span style="color:#1f2328">),</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">),</span> <span style="color:#0550ae">25</span><span style="color:#1f2328">);</span></span></span></code></pre></div>
+</div><p>This is the least durable thing in the whole setup and I know it. The cookies expire, and then the widget shows an error until I refresh them. Registering a proper API client would fix that. I have not, because the fix takes two minutes about twice a year.</p>
+<h3 id="the-built-in-widgets">The built-in widgets<a class="heading-anchor" href="#the-built-in-widgets" aria-label="Link to this section">#</a></h3>
+<p>Markets, uptime monitoring and RSS need no proxy at all:</p>
+<div class="code-block"><div class="code-label">glance.yml: built-in widgets</div>
+  <div class="highlight" title="glance.yml: built-in widgets"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>markets<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Markets<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>30m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">markets</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- {<span style="color:#fff"> </span><span style="color:#0550ae">symbol</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#34;^GSPC&#34;</span><span style="color:#0550ae">,   name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>S&amp;P 500 }<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- {<span style="color:#fff"> </span><span style="color:#0550ae">symbol</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">EURHUF=X,  name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>EUR / HUF }<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- {<span style="color:#fff"> </span><span style="color:#0550ae">symbol</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">USDHUF=X,  name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>USD / HUF }<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>monitor<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>Uptime<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cache</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>5m<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">sites</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- {<span style="color:#fff"> </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">site-one.example,   url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>https://site-one.example,   check-url: https://site-one.example }<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- {<span style="color:#fff"> </span><span style="color:#0550ae">title</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">site-two.example,   url</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>https://site-two.example,   check-url: https://site-two.example }</span></span></code></pre></div>
+</div><p>The uptime widget has already paid for the whole project once, by showing a red square on a Sunday morning about twenty minutes after a certificate renewal quietly failed.</p>
+<h2 id="restyling-a-dashboard-with-no-theming-hooks">Restyling a dashboard with no theming hooks<a class="heading-anchor" href="#restyling-a-dashboard-with-no-theming-hooks" aria-label="Link to this section">#</a></h2>
+<p>Glance exposes a few colour variables and nothing else. But a <code>type: html</code> widget renders raw markup, so one of those placed at the top of the left column can load a web font and restyle the entire page with global CSS:</p>
+<div class="code-block"><div class="code-label">glance.yml: style injection</div>
+  <div class="highlight" title="glance.yml: style injection"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#0550ae">type</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>html<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">source</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">|</span><span style="color:#0a3069">
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    &lt;link href=&#34;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap&#34; rel=&#34;stylesheet&#34;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    &lt;style&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      *, *::before, *::after { font-family: &#39;Inter&#39;, system-ui, sans-serif !important; }
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      /* hide headers on standalone widgets, keep them on groups */
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      .widget:not(.widget-type-group) &gt; .widget-header { display: none !important; }
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      /* move the page nav bar to the bottom of the viewport */
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      .header-container { position: fixed !important; bottom: 0 !important; top: auto !important;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                          left: 0; right: 0; z-index: 200; }
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">      .page-wrapper { padding-top: 0 !important; padding-bottom: 56px !important; }
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    &lt;/style&gt;</span></span></span></code></pre></div>
+</div><p>The same widget injects JavaScript that adds a direct link to each news tab, puts arrow buttons into the group headers, and binds the keyboard arrows so every tabbed group steps at once:</p>
+<div class="code-block"><div class="code-label">HTML</div>
+  <div class="highlight"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#1f2328">&lt;</span><span style="color:#0550ae">script</span><span style="color:#1f2328">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">(</span><span style="color:#cf222e">function</span> <span style="color:#1f2328">()</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#6639ba">document</span><span style="color:#1f2328">.</span><span style="color:#1f2328">addEventListener</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;keydown&#39;</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">function</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">e</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">e</span><span style="color:#1f2328">.</span><span style="color:#1f2328">target</span><span style="color:#1f2328">.</span><span style="color:#1f2328">tagName</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;INPUT&#39;</span> <span style="color:#0550ae">||</span> <span style="color:#1f2328">e</span><span style="color:#1f2328">.</span><span style="color:#1f2328">target</span><span style="color:#1f2328">.</span><span style="color:#1f2328">isContentEditable</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">e</span><span style="color:#1f2328">.</span><span style="color:#1f2328">key</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;ArrowLeft&#39;</span><span style="color:#1f2328">)</span>  <span style="color:#1f2328">navAllGroups</span><span style="color:#1f2328">(</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">e</span><span style="color:#1f2328">.</span><span style="color:#1f2328">key</span> <span style="color:#0550ae">===</span> <span style="color:#0a3069">&#39;ArrowRight&#39;</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">navAllGroups</span><span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">});</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">})();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">&lt;/</span><span style="color:#0550ae">script</span><span style="color:#1f2328">&gt;</span></span></span></code></pre></div>
+</div><aside class="callout callout-note">
+  <p class="callout-title"><i class="fa fa-info-circle"></i>This will break one day</p>
+  <p>This is unquestionably a hack, and it depends on class names the Glance author never promised to keep. An upgrade will eventually break it. That is the deal you accept in exchange for not waiting on a theming feature.</p>
+</aside><h3 id="launch-buttons-carefully">Launch buttons, carefully<a class="heading-anchor" href="#launch-buttons-carefully" aria-label="Link to this section">#</a></h3>
+<p>A second HTML widget holds quick-launch buttons. Each one calls <code>launch.php</code>, which opens a Chromium window on the machine running the web server:</p>
+<div class="code-block"><div class="code-label">Launch button</div>
+  <div class="highlight" title="Launch button"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#1f2328">&lt;</span><span style="color:#0550ae">button</span> <span style="color:#1f2328">type</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;button&#34;</span> <span style="color:#1f2328">onclick</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">  fetch(&#39;http://localhost/glance/launch.php?app=chromium&amp;url=&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        + encodeURIComponent(&#39;https://calendar.google.com/&#39;), {cache:&#39;no-store&#39;})
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    .then(r =&gt; r.json())
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    .then(j =&gt; this.textContent = j.ok ? &#39;✓ launched&#39; : &#39;✕ &#39; + (j.error || &#39;failed&#39;));
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">&gt;</span>▶ Calendar<span style="color:#1f2328">&lt;/</span><span style="color:#0550ae">button</span><span style="color:#1f2328">&gt;</span></span></span></code></pre></div>
+</div><p>Spawning a process from an HTTP request is exactly the kind of thing that turns a home dashboard into somebody else&rsquo;s shell, so <code>launch.php</code> refuses anything that is not from loopback and only opens hosts on an explicit allowlist:</p>
+<div class="code-block"><div class="code-label">launch.php: guards</div>
+  <div class="highlight" title="launch.php: guards"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#953800">$remote</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span><span style="color:#1f2328">string</span><span style="color:#1f2328">)(</span><span style="color:#953800">$_SERVER</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;REMOTE_ADDR&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span><span style="color:#0550ae">!</span><span style="color:#1f2328">in_array</span><span style="color:#1f2328">(</span><span style="color:#953800">$remote</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;127.0.0.1&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;::1&#39;</span><span style="color:#1f2328">],</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">))</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">http_response_code</span><span style="color:#1f2328">(</span><span style="color:#0550ae">403</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">echo</span> <span style="color:#1f2328">json_encode</span><span style="color:#1f2328">([</span><span style="color:#0a3069">&#39;ok&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;error&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;forbidden&#39;</span><span style="color:#1f2328">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">exit</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$ALLOWED_HOSTS</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;calendar.google.com&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;www.youtube.com&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;youtube.com&#39;</span><span style="color:#1f2328">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$parsed</span> <span style="color:#0550ae">=</span> <span style="color:#1f2328">parse_url</span><span style="color:#1f2328">((</span><span style="color:#1f2328">string</span><span style="color:#1f2328">)(</span><span style="color:#953800">$_GET</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;url&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">$host</span>   <span style="color:#0550ae">=</span> <span style="color:#1f2328">strtolower</span><span style="color:#1f2328">((</span><span style="color:#1f2328">string</span><span style="color:#1f2328">)(</span><span style="color:#953800">$parsed</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;host&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#1f2328">((</span><span style="color:#953800">$parsed</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;scheme&#39;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">??</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">!==</span> <span style="color:#0a3069">&#39;https&#39;</span> <span style="color:#0550ae">||</span> <span style="color:#0550ae">!</span><span style="color:#1f2328">in_array</span><span style="color:#1f2328">(</span><span style="color:#953800">$host</span><span style="color:#1f2328">,</span> <span style="color:#953800">$ALLOWED_HOSTS</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">))</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">http_response_code</span><span style="color:#1f2328">(</span><span style="color:#0550ae">400</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">echo</span> <span style="color:#1f2328">json_encode</span><span style="color:#1f2328">([</span><span style="color:#0a3069">&#39;ok&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;error&#39;</span> <span style="color:#0550ae">=&gt;</span> <span style="color:#0a3069">&#39;url not allowed&#39;</span><span style="color:#1f2328">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">exit</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span></span></span></code></pre></div>
+</div><p>An allowlist rather than a blocklist, and a scheme check, because <code>parse_url</code> on something like <code>javascript:</code> or a URL with an embedded userinfo section will happily hand you a surprise.</p>
+<aside class="callout callout-caution">
+  <p class="callout-title"><i class="fa fa-bolt"></i>LAN only</p>
+  <p>Even with those checks, this endpoint stays on the LAN and behind loopback. I would not expose it to the internet under any circumstances.</p>
+</aside><p>A second button restarts the Glance service to clear every widget cache at once, which is useful when a source has returned garbage and cached it for half an hour:</p>
+<div class="code-block"><div class="code-label">Restart handler (excerpt)</div>
+  <div class="highlight" title="Restart handler (excerpt)"><pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#0550ae">@</span><span style="color:#1f2328">exec</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;sudo /bin/systemctl restart glance 2&gt;/dev/null&#39;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">usleep</span><span style="color:#1f2328">(</span><span style="color:#0550ae">2500000</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// then probe http://127.0.0.1:8080/ and report whether it came back up
+</span></span></span></code></pre></div>
+</div><h2 id="what-i-would-tell-someone-starting-this">What I would tell someone starting this<a class="heading-anchor" href="#what-i-would-tell-someone-starting-this" aria-label="Link to this section">#</a></h2>
+<ol>
+<li>
+<p><strong>Set the cache times deliberately.</strong> It is tempting to refresh everything every minute, and then you are hitting a dozen sites constantly for data that changes twice a day. Nothing needs to be faster than this:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Widget</th>
+					<th>Cache</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Uptime</td>
+					<td>5 minutes</td>
+			</tr>
+			<tr>
+					<td>Weather, calendars</td>
+					<td>15 minutes</td>
+			</tr>
+			<tr>
+					<td>Air quality, news, markets</td>
+					<td>30 minutes</td>
+			</tr>
+	</tbody>
+</table>
+</li>
+<li>
+<p><strong>Write the proxies to fail loudly.</strong> Every one of mine returns <code>{&quot;error&quot;: &quot;...&quot;}</code> with a message and a zero count, and every template checks for it. A dashboard that shows wrong data confidently is worse than one that shows a red line.</p>
+</li>
+<li>
+<p><strong>Keep the secrets out of the YAML from day one.</strong> It is far easier than trying to scrub a config file later, and the whole point of a file this readable is that you can share it.</p>
+</li>
+</ol>
+<p>Everything here runs on the LAN. There is no account, no vendor, no analytics, and the only external service in the whole thing is a calendar URL that I could revoke in a minute. The config is one text file in git. When the NAS gets replaced, the dashboard moves with a copy and a <code>systemctl enable</code>.</p>
+
+    </article>
+
+    
+    <aside class="post-related">
+      <p class="post-related-title">Related reading</p>
+      <div class="post-related-grid">
+      
+        <a class="post-related-card" href="/posts/eink-weather-dashboard/">
+          <img src="/images/posts/eink-weather-dashboard-card.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32</strong>
+            <span>A Waveshare three-colour panel, an ESP32 in deep sleep, and a Python renderer that turns three JSON …</span>
+          </span>
+        </a>
+      
+        <a class="post-related-card" href="/posts/arduino-raspberry-air-quality-iot/">
+          <img src="/images/posts/arduino-raspberry-air-quality-iot.png" alt="" loading="lazy">
+          <span class="post-related-text">
+            <strong>Air quality monitoring IOT – Arduino &amp; sensors connected to a Raspberry Pi</strong>
+            
+          </span>
+        </a>
+      
+      </div>
+    </aside>
+    
+
+    
+    <div class="post-tags clr">
+      <a href="/tags/dashboard/">dashboard</a><a href="/tags/glance/">glance</a><a href="/tags/self-hosted/">self-hosted</a><a href="/tags/home-automation/">home automation</a><a href="/tags/php/">php</a><a href="/tags/privacy/">privacy</a>
+    </div>
+    
+
+    <nav class="single-nav clr">
+      
+      <div class="single-nav-left col span_12 clr-margin">
+        <a href="/posts/wordpress-to-hugo-migration/">&larr; Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages</a>
+      </div>
+      
+      
+      <div class="single-nav-right col span_12">
+        <a href="/posts/eink-weather-dashboard/">A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32 &rarr;</a>
+      </div>
+      
+    </nav>
+
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

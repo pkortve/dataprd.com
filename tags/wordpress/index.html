@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Wordpress | Dataprd.Com</title>
+  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="body term">
+
+<div id="wrap" class="container clr">
+
+  <div class="container-left clr">
+
+    <header id="masthead" class="site-header clr" role="banner">
+      <div class="logo">
+        
+        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        
+        <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
+      </div>
+    </header>
+
+    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+
+    <div id="toggle-wrap" class="clr">
+
+      <div id="navbar" class="navbar clr">
+        <nav id="site-navigation" class="navigation main-navigation clr" role="navigation">
+          <ul class="nav-menu dropdown-menu">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            
+            <li>
+              <a href="/categories/cluster-based-data-analytics-tutorials/">Cluster Based Data Analytics Tutorials</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-security/">Data Security</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-analytics-tools/">Data Analytics Tools</a>
+            </li>
+            
+            <li>
+              <a href="/categories/project--knowledge-management/">Project &amp; Knowledge Management</a>
+            </li>
+            
+            <li>
+              <a href="/categories/data-governance/">Data Governance</a>
+            </li>
+            
+            <li>
+              <a href="/categories/electronics/">Electronics</a>
+            </li>
+            
+            
+            <li>
+              <a href="/about/">About</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+
+      <div id="secondary" class="sidebar-container" role="complementary">
+        <div class="sidebar-inner widget-area">
+          
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="main" class="container-right site-main row clr">
+    
+<div id="primary" class="content-area clr">
+  <div id="content" class="site-content" role="main">
+    <header class="page-header archive-header">
+      <h1 class="page-header-title archive-title">Wordpress</h1>
+    </header>
+    <div id="infinite-wrap" class="grid clr">
+      
+      <article class="loop-entry clr">
+        <a href="/posts/wordpress-to-hugo-migration/" class="loop-entry-img-link">
+          
+          <img src="/images/posts/wordpress-to-hugo-migration-card.png" alt="Wordpress" loading="lazy">
+          
+        </a>
+        <div class="loop-entry-details">
+          <header><h2><a href="/posts/wordpress-to-hugo-migration/">Migrating from WordPress to Hugo: Speed, Security, and GitHub Pages</a></h2></header>
+          <div class="loop-entry-excerpt">
+            <p>Why I retired the PHP and MySQL stack behind this blog, how the SQL dump was converted …</p>
+          </div>
+        </div>
+      </article>
+      
+    </div>
+    
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<div id="copyright">
+  <p>&copy; 2026 Dataprd.Com</p>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('toggle-btn');
+  var wrap = document.getElementById('toggle-wrap');
+  if(btn && wrap) {
+    btn.addEventListener('click', function(){
+      wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    });
+  }
+  
+  if (!navigator.clipboard) return;
+  document.querySelectorAll('.longform .code-block').forEach(function(block){
+    var code = block.querySelector('pre code') || block.querySelector('pre');
+    if (!code) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'code-copy';
+    b.textContent = 'Copy';
+    b.addEventListener('click', function(){
+      navigator.clipboard.writeText(code.innerText).then(function(){
+        b.textContent = 'Copied';
+        setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+      });
+    });
+    block.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

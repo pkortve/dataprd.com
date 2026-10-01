@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Dashboard on Dataprd.Com</title>
+		<link>https://dataprd.com/tags/dashboard/</link>
+		<description>Recent content in Dashboard on Dataprd.Com</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 03 Jun 2026 13:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://dataprd.com/tags/dashboard/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Building a Self-Hosted Personal Dashboard with Glance</title>
+				<link>https://dataprd.com/posts/personal-dashboard-glance/</link>
+				<pubDate>Wed, 03 Jun 2026 13:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/posts/personal-dashboard-glance/</guid>
+				<description>&lt;p&gt;I used to start the day by going through the same handful of browser tabs: weather, calendar, news, markets, YouTube. I wanted all of it on one screen instead.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/glanceapp/glance&#34;&gt;Glance&lt;/a&gt; is an open source, self-hosted dashboard. It ships as a single binary with no database, and the whole page (widgets, data sources, refresh intervals, layout) is declared in one YAML file, &lt;code&gt;glance.yml&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;My config has grown to about 730 lines, plus roughly 2,000 lines of PHP in the proxy layer that feeds the parts Glance cannot fetch on its own. This post covers what is on the screen, where the data comes from, and why the PHP layer exists at all.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>A 7.5-inch E-ink Weather &amp; Calendar Dashboard Powered by ESP32</title>
+				<link>https://dataprd.com/posts/eink-weather-dashboard/</link>
+				<pubDate>Wed, 03 Jun 2026 12:00:00 +0000</pubDate>
+				<guid>https://dataprd.com/posts/eink-weather-dashboard/</guid>
+				<description>&lt;p&gt;A dedicated weather and calendar display for the wall: a Waveshare 7.5&amp;quot; three-colour e-ink panel driven by an ESP32. It holds its image with no power, has no backlight, and reads the same PHP proxies as the &lt;a href=&#34;https://dataprd.com/posts/personal-dashboard-glance/&#34;&gt;Glance dashboard&lt;/a&gt;. It refreshes every two hours.&lt;/p&gt;&#xA;&lt;p&gt;&lt;span class=&#34;entry-figure&#34;&gt;&lt;img src=&#34;https://dataprd.com/images/posts/eink-dashboard-render.png&#34; alt=&#34;The rendered dashboard: weather and air quality on the left, upcoming events on the right&#34; width=&#34;800&#34; height=&#34;480&#34; loading=&#34;lazy&#34; decoding=&#34;async&#34;&gt;&lt;span class=&#34;entry-caption&#34;&gt;Renderer output before it is packed into a bitmap. The real panel shows Hungarian; labels here are translated and the calendar entries are placeholders.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
