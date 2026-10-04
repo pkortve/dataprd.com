@@ -2,10 +2,38 @@
 <html lang="en-us">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Setting up a firewall to secure a Hadoop cluster&#39;s network with Shorewall | Dataprd.Com</title>
-  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <meta name="description" content="Shorewall is a tool to configure Linux inbuilt IPTables in an easy and understandable way. Assume we have a basic setup: Lan | Firewall with Proxy server | …" />
+<link rel="canonical" href="https://dataprd.com/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="alternate" type="application/rss+xml" title="Dataprd.Com" href="https://dataprd.com/index.xml" />
+<meta property="og:site_name" content="Dataprd.Com" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Setting up a firewall to secure a Hadoop cluster&#39;s network with Shorewall" />
+<meta property="og:description" content="Shorewall is a tool to configure Linux inbuilt IPTables in an easy and understandable way. Assume we have a basic setup: Lan | Firewall with Proxy server | …" />
+<meta property="og:url" content="https://dataprd.com/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/" />
+<meta property="og:image" content="https://dataprd.com/images/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall.png" />
+<meta property="og:image:width" content="880" />
+<meta property="og:image:height" content="200" />
+<meta property="article:published_time" content="2014-03-14T13:40:59Z" />
+<meta property="article:modified_time" content="2014-03-14T13:40:59Z" />
+<meta property="article:author" content="Peter Kortvelyesi" />
+<meta property="article:section" content="Data security" />
+<meta property="article:tag" content="hadoop" />
+<meta property="article:tag" content="security" />
+<meta property="article:tag" content="shorewall" />
+<meta property="article:tag" content="firewall" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Setting up a firewall to secure a Hadoop cluster&#39;s network with Shorewall" />
+<meta name="twitter:description" content="Shorewall is a tool to configure Linux inbuilt IPTables in an easy and understandable way. Assume we have a basic setup: Lan | Firewall with Proxy server | …" />
+<meta name="twitter:image" content="https://dataprd.com/images/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall.png" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://dataprd.com/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/#article","@type":"BlogPosting","articleSection":"Data security","author":{"@id":"https://dataprd.com/#author"},"dateModified":"2014-03-14T13:40:59Z","datePublished":"2014-03-14T13:40:59Z","description":"Shorewall is a tool to configure Linux inbuilt IPTables in an easy and understandable way. Assume we have a basic setup: Lan | Firewall with Proxy server | …","headline":"Setting up a firewall to secure a Hadoop cluster\u0026#39;s network with Shorewall","image":"https://dataprd.com/images/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall.png","inLanguage":"en-US","isPartOf":{"@id":"https://dataprd.com/#website"},"keywords":"hadoop, security, shorewall, firewall","mainEntityOfPage":"https://dataprd.com/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/","publisher":{"@id":"https://dataprd.com/#author"},"wordCount":496},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://dataprd.com/","name":"Home","position":1},{"@type":"ListItem","item":"https://dataprd.com/categories/data-security/","name":"Data Security","position":2},{"@type":"ListItem","name":"Setting up a firewall to secure a Hadoop cluster's network with Shorewall","position":3}]},{"@id":"https://dataprd.com/#website","@type":"WebSite","description":"Blog on data analytics, data architecture, cloud based data environments","inLanguage":"en-US","name":"Dataprd.Com","publisher":{"@id":"https://dataprd.com/#author"},"url":"https://dataprd.com/"},{"@id":"https://dataprd.com/#author","@type":"Person","image":"https://dataprd.com/images/uploads/2014/02/Peter_Kortvelyesi.jpg","jobTitle":"Data Solution Architect","name":"Peter Kortvelyesi","sameAs":["https://www.linkedin.com/in/kortve"],"url":"https://dataprd.com/about/"}]}</script>
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
@@ -19,13 +47,13 @@
     <header id="masthead" class="site-header clr" role="banner">
       <div class="logo">
         
-        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        <p class="site-title"><a href="/" rel="home">Dataprd.Com</a></p>
         
         <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
       </div>
     </header>
 
-    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+    <a href="javascript:void(0)" id="toggle-btn" aria-label="Toggle menu"><i class="fa fa-bars"></i></a>
 
     <div id="toggle-wrap" class="clr">
 
@@ -91,7 +119,7 @@
         <li><i class="fa fa-clock-o"></i>March 14, 2014</li>
         
         <li><i class="fa fa-folder-open"></i>
-          <a href="/categories/data-security/">Data security</a>
+          <a href="/categories/data-security/">Data Security</a>
         </li>
         
         
@@ -285,7 +313,7 @@
 
     
     <div class="post-tags clr">
-      <a href="/tags/hadoop/">hadoop</a><a href="/tags/security/">security</a><a href="/tags/shorewall/">shorewall</a><a href="/tags/firewall/">firewall</a>
+      <a href="/tags/hadoop/">Hadoop</a><a href="/tags/security/">Security</a><a href="/tags/shorewall/">Shorewall</a><a href="/tags/firewall/">Firewall</a>
     </div>
     
 

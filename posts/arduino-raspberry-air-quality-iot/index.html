@@ -2,10 +2,40 @@
 <html lang="en-us">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Air quality monitoring IoT – Arduino &amp; sensors connected to a Raspberry Pi | Dataprd.Com</title>
-  <meta name="description" content="Blog on data analytics, data architecture, cloud based data environments" />
+  <meta name="description" content="I was very interested in monitoring the surrounding air’s quality, so I built a box that monitors Particulate Matter (PM), gas concentrations, temperature …" />
+<link rel="canonical" href="https://dataprd.com/posts/arduino-raspberry-air-quality-iot/" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="alternate" type="application/rss+xml" title="Dataprd.Com" href="https://dataprd.com/index.xml" />
+<meta property="og:site_name" content="Dataprd.Com" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Air quality monitoring IoT – Arduino &amp; sensors connected to a Raspberry Pi" />
+<meta property="og:description" content="I was very interested in monitoring the surrounding air’s quality, so I built a box that monitors Particulate Matter (PM), gas concentrations, temperature …" />
+<meta property="og:url" content="https://dataprd.com/posts/arduino-raspberry-air-quality-iot/" />
+<meta property="og:image" content="https://dataprd.com/images/posts/arduino-raspberry-air-quality-iot.png" />
+<meta property="og:image:width" content="880" />
+<meta property="og:image:height" content="200" />
+<meta property="article:published_time" content="2017-08-26T16:42:00Z" />
+<meta property="article:modified_time" content="2017-08-26T16:42:00Z" />
+<meta property="article:author" content="Peter Kortvelyesi" />
+<meta property="article:section" content="Electronics" />
+<meta property="article:tag" content="visualizing" />
+<meta property="article:tag" content="dataset" />
+<meta property="article:tag" content="big data analytics" />
+<meta property="article:tag" content="iot" />
+<meta property="article:tag" content="raspberry pi zero w" />
+<meta property="article:tag" content="internet of things" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Air quality monitoring IoT – Arduino &amp; sensors connected to a Raspberry Pi" />
+<meta name="twitter:description" content="I was very interested in monitoring the surrounding air’s quality, so I built a box that monitors Particulate Matter (PM), gas concentrations, temperature …" />
+<meta name="twitter:image" content="https://dataprd.com/images/posts/arduino-raspberry-air-quality-iot.png" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://dataprd.com/posts/arduino-raspberry-air-quality-iot/#article","@type":"BlogPosting","articleSection":"Electronics","author":{"@id":"https://dataprd.com/#author"},"dateModified":"2017-08-26T16:42:00Z","datePublished":"2017-08-26T16:42:00Z","description":"I was very interested in monitoring the surrounding air’s quality, so I built a box that monitors Particulate Matter (PM), gas concentrations, temperature …","headline":"Air quality monitoring IoT – Arduino \u0026amp; sensors connected to a Raspberry Pi","image":"https://dataprd.com/images/posts/arduino-raspberry-air-quality-iot.png","inLanguage":"en-US","isPartOf":{"@id":"https://dataprd.com/#website"},"keywords":"visualizing, dataset, big data analytics, iot, raspberry pi zero w, internet of things, arduino, sensor, sensors, gas sensor, pm sensor, dust sensor, pm10, pm2.5, air quality, mq135, dsm501a, ppd42ns, dht22, lcm1602","mainEntityOfPage":"https://dataprd.com/posts/arduino-raspberry-air-quality-iot/","publisher":{"@id":"https://dataprd.com/#author"},"wordCount":3277},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://dataprd.com/","name":"Home","position":1},{"@type":"ListItem","item":"https://dataprd.com/categories/electronics/","name":"Electronics","position":2},{"@type":"ListItem","name":"Air quality monitoring IoT – Arduino \u0026 sensors connected to a Raspberry Pi","position":3}]},{"@id":"https://dataprd.com/#website","@type":"WebSite","description":"Blog on data analytics, data architecture, cloud based data environments","inLanguage":"en-US","name":"Dataprd.Com","publisher":{"@id":"https://dataprd.com/#author"},"url":"https://dataprd.com/"},{"@id":"https://dataprd.com/#author","@type":"Person","image":"https://dataprd.com/images/uploads/2014/02/Peter_Kortvelyesi.jpg","jobTitle":"Data Solution Architect","name":"Peter Kortvelyesi","sameAs":["https://www.linkedin.com/in/kortve"],"url":"https://dataprd.com/about/"}]}</script>
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
@@ -19,13 +49,13 @@
     <header id="masthead" class="site-header clr" role="banner">
       <div class="logo">
         
-        <h2><a href="/" rel="home">Dataprd.Com</a></h2>
+        <p class="site-title"><a href="/" rel="home">Dataprd.Com</a></p>
         
         <p class="site-description">Blog on data analytics, data architecture, cloud based data environments</p>
       </div>
     </header>
 
-    <a href="javascript:void(0)" id="toggle-btn"><i class="fa fa-bars"></i></a>
+    <a href="javascript:void(0)" id="toggle-btn" aria-label="Toggle menu"><i class="fa fa-bars"></i></a>
 
     <div id="toggle-wrap" class="clr">
 
@@ -688,7 +718,7 @@
 
     
     <div class="post-tags clr">
-      <a href="/tags/visualizing/">visualizing</a><a href="/tags/dataset/">dataset</a><a href="/tags/big-data-analytics/">big data analytics</a><a href="/tags/iot/">iot</a><a href="/tags/raspberry-pi-zero-w/">raspberry pi zero w</a><a href="/tags/internet-of-things/">internet of things</a><a href="/tags/arduino/">arduino</a><a href="/tags/sensor/">sensor</a><a href="/tags/sensors/">sensors</a><a href="/tags/gas-sensor/">gas sensor</a><a href="/tags/pm-sensor/">pm sensor</a><a href="/tags/dust-sensor/">dust sensor</a><a href="/tags/pm10/">pm10</a><a href="/tags/pm2.5/">pm2.5</a><a href="/tags/air-quality/">air quality</a><a href="/tags/mq135/">mq135</a><a href="/tags/dsm501a/">dsm501a</a><a href="/tags/ppd42ns/">ppd42ns</a><a href="/tags/dht22/">dht22</a><a href="/tags/lcm1602/">lcm1602</a>
+      <a href="/tags/visualizing/">Visualizing</a><a href="/tags/dataset/">Dataset</a><a href="/tags/big-data-analytics/">Big Data Analytics</a><a href="/tags/iot/">Iot</a><a href="/tags/raspberry-pi-zero-w/">Raspberry Pi Zero W</a><a href="/tags/internet-of-things/">Internet of Things</a><a href="/tags/arduino/">Arduino</a><a href="/tags/sensor/">Sensor</a><a href="/tags/sensors/">Sensors</a><a href="/tags/gas-sensor/">Gas Sensor</a><a href="/tags/pm-sensor/">Pm Sensor</a><a href="/tags/dust-sensor/">Dust Sensor</a><a href="/tags/pm10/">Pm10</a><a href="/tags/pm2.5/">Pm2.5</a><a href="/tags/air-quality/">Air Quality</a><a href="/tags/mq135/">Mq135</a><a href="/tags/dsm501a/">Dsm501a</a><a href="/tags/ppd42ns/">Ppd42ns</a><a href="/tags/dht22/">Dht22</a><a href="/tags/lcm1602/">Lcm1602</a>
     </div>
     
 

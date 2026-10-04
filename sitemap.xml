@@ -2,484 +2,188 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://dataprd.com/posts/</loc>
+    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+  </url><url>
     <loc>https://dataprd.com/categories/</loc>
     <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/categories/data-analytics-tools/</loc>
     <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-extraction/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/</loc>
     <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/json/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/llm/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/openrouter/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/php/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/posts/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/pricing/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/</loc>
-    <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/llm-price-list-extraction/</loc>
     <lastmod>2026-08-15T09:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/categories/data-security/</loc>
     <lastmod>2026-06-03T14:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/github-pages/</loc>
-    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/hugo/</loc>
-    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/wordpress-to-hugo-migration/</loc>
     <lastmod>2026-06-03T14:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/static-site/</loc>
-    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/web-hosting/</loc>
-    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/wordpress/</loc>
-    <lastmod>2026-06-03T14:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/personal-dashboard-glance/</loc>
     <lastmod>2026-06-03T13:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dashboard/</loc>
-    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/glance/</loc>
-    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/home-automation/</loc>
-    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/privacy/</loc>
-    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/self-hosted/</loc>
-    <lastmod>2026-06-03T13:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/eink-weather-dashboard/</loc>
     <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/e-ink/</loc>
-    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/categories/electronics/</loc>
     <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/esp32/</loc>
-    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/iot/</loc>
-    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/python/</loc>
-    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/waveshare/</loc>
-    <lastmod>2026-06-03T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/air-quality/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/arduino-raspberry-air-quality-iot/</loc>
     <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/arduino/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/big-data-analytics/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dataset/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dht22/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dsm501a/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dust-sensor/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/gas-sensor/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/internet-of-things/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/lcm1602/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/mq135/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/pm-sensor/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/pm10/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/pm2.5/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/ppd42ns/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/raspberry-pi-zero-w/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/sensor/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/sensors/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/visualizing/</loc>
-    <lastmod>2017-08-26T16:42:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/agile/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/codendi/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/collabtive/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/crystal/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dotproject/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dynamic-systems-development/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/extreme-programming/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/feature-driven-development/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/it-support-for-project-management-processes/</loc>
     <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/kanban/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/lean/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/planner/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/categories/project--knowledge-management/</loc>
     <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/project-management/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/projectpier/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/redmine/</loc>
-    <lastmod>2017-08-26T13:07:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/categories/data-governance/</loc>
     <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-governance/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/data-governance-in-the-big-data-and-hadoop-world-whitepaper/</loc>
     <lastmod>2017-08-25T16:11:15+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
-    <loc>https://dataprd.com/tags/data-lake/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-security/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/hadoop/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/security/</loc>
-    <lastmod>2017-08-25T16:11:15+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/apache-kylin/</loc>
+    <loc>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</loc>
     <lastmod>2017-01-09T21:13:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/configure-apache-kylin-with-odbc-to-wowk-with-ms-powerbi/</loc>
     <lastmod>2017-01-09T21:13:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/interactive-visualization/</loc>
-    <lastmod>2017-01-09T21:13:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/powerbi/</loc>
-    <lastmod>2017-01-09T21:13:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-cube/</loc>
-    <lastmod>2017-01-09T20:24:45+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/evaluation-of-apache-kylin-1-5-4-1-with-hdp-2-5-performance-comparison-w-hive/</loc>
     <lastmod>2017-01-09T20:24:45+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/hive/</loc>
-    <lastmod>2017-01-09T20:24:45+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/performance/</loc>
-    <lastmod>2017-01-09T20:24:45+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/top-7-challenges-of-building-a-data-lake/</loc>
     <lastmod>2017-01-07T18:26:42+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/comparison/</loc>
-    <lastmod>2014-08-08T17:40:07+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/performance-test-pig-vs-hive-code-examples/</loc>
     <lastmod>2014-08-08T17:40:07+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/pig/</loc>
-    <lastmod>2014-08-08T17:40:07+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/query/</loc>
-    <lastmod>2014-08-08T17:40:07+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/tutorial/</loc>
-    <lastmod>2014-08-08T17:40:07+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/ambari/</loc>
-    <lastmod>2014-08-08T17:12:52+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/create-hadoop-cluster-easily-using-pxe-boot-kickstart-puppet-ambari-auto-deploy-nodes/</loc>
     <lastmod>2014-08-08T17:12:52+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/puppet/</loc>
-    <lastmod>2014-08-08T17:12:52+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/analysis-tutorial-tableau-desktop/</loc>
     <lastmod>2014-05-11T17:09:31+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-mining/</loc>
-    <lastmod>2014-05-11T17:09:31+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/tableau/</loc>
-    <lastmod>2014-05-11T17:09:31+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/data-analysis-results-weather-trends-diagram/</loc>
     <lastmod>2014-03-24T09:19:56+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/data-analysis-results-weather-trends-map/</loc>
     <lastmod>2014-03-24T09:19:56+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/firewall/</loc>
-    <lastmod>2014-03-14T13:40:59+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/setting-up-a-firewall-to-secure-hadoop-clusters-network-with-shorewall/</loc>
     <lastmod>2014-03-14T13:40:59+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/shorewall/</loc>
-    <lastmod>2014-03-14T13:40:59+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/security-of-a-hadoop-cluster/</loc>
     <lastmod>2014-03-14T13:30:30+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/browser-automation/</loc>
-    <lastmod>2014-03-13T13:31:28+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/data-mining-web-python-mechanize-tutorial/</loc>
     <lastmod>2014-03-13T13:31:28+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/example/</loc>
-    <lastmod>2014-03-13T13:31:28+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/selenium/</loc>
-    <lastmod>2014-03-13T13:31:28+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/web-data/</loc>
-    <lastmod>2014-03-13T13:31:28+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/data-mining-web-selenium-tutorial/</loc>
     <lastmod>2014-03-13T13:30:28+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/kindle/</loc>
-    <lastmod>2014-03-13T13:29:27+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/send-to-kindle/</loc>
-    <lastmod>2014-03-13T13:29:27+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/send-to-kindle-email/</loc>
-    <lastmod>2014-03-13T13:29:27+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/send-to-kindle-via-email-using-browser-automation/</loc>
     <lastmod>2014-03-13T13:29:27+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/analysis-fundamentals-tutorial/</loc>
     <lastmod>2014-03-13T13:29:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/acquire-dataset-tutorial/</loc>
     <lastmod>2014-03-13T13:28:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/analysis-environment-tutorial/</loc>
     <lastmod>2014-03-13T13:27:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/hadoop-pig-tutorial/</loc>
     <lastmod>2014-03-13T13:26:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/gis-map-data-visualization-tutorial-1/</loc>
     <lastmod>2014-03-13T13:25:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/sed-linux-example-tutorial/</loc>
     <lastmod>2014-03-13T13:24:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/gis-map-data-visualization-tutorial-2/</loc>
     <lastmod>2014-03-13T13:23:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/html-charts-data-visualization-tutorial/</loc>
     <lastmod>2014-03-13T13:22:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/analysis-results-presentation-tutorial/</loc>
     <lastmod>2014-03-13T13:21:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/android/</loc>
-    <lastmod>2014-03-13T13:13:23+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/data-security-on-android/</loc>
     <lastmod>2014-03-13T13:13:23+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/asterisk/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/bind/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/caldav/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/cardav/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/communication/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dhcpd/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/elastics/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/imaps/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/ldap/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/linux/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/nagios/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/openvpon/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/owncloud/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/postfix/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/secure-environment-for-communication/</loc>
     <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/smtps/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/ssh/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/xampp/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/zimbra/</loc>
-    <lastmod>2014-03-13T13:11:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/davdroid/</loc>
-    <lastmod>2014-03-13T13:09:25+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/dyndns/</loc>
-    <lastmod>2014-03-13T13:09:25+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/namecheap/</loc>
-    <lastmod>2014-03-13T13:09:25+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/set-up-owncloud-for-personal-data-management-and-android-sync/</loc>
     <lastmod>2014-03-13T13:09:25+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/big-data/</loc>
-    <lastmod>2014-03-13T13:08:56+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/e-learning/</loc>
-    <lastmod>2014-03-13T13:08:56+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/e-learning-framework-on-line-tests/</loc>
     <lastmod>2014-03-13T13:08:56+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/moodle/</loc>
-    <lastmod>2014-03-13T13:08:56+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/online-tests/</loc>
-    <lastmod>2014-03-13T13:08:56+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/tests/</loc>
-    <lastmod>2014-03-13T13:08:56+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/a-multi-tiered-big-data-warehouse-processing-facility/</loc>
     <lastmod>2014-03-12T18:17:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/data-warehouse/</loc>
-    <lastmod>2014-03-12T18:17:16+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/plan/</loc>
-    <lastmod>2014-03-12T18:17:16+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/a-big-data-course/</loc>
     <lastmod>2014-03-12T09:26:36+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/training/</loc>
-    <lastmod>2014-03-12T09:26:36+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/posts/environment-setup-big-data-analytics/</loc>
     <lastmod>2014-03-04T15:18:50+00:00</lastmod>
-  </url><url>
-    <loc>https://dataprd.com/tags/mapreduce/</loc>
-    <lastmod>2014-03-04T15:18:50+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url><url>
     <loc>https://dataprd.com/about/</loc>
     <lastmod>2014-02-25T09:53:21+00:00</lastmod>
+    <changefreq>monthly</changefreq>
   </url>
 </urlset>

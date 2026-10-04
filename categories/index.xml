@@ -35,13 +35,6 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Cluster Based Data Analytics Tutorials</title>
-				<link>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</link>
-				<pubDate>Sat, 26 Aug 2017 16:42:00 +0000</pubDate>
-				<guid>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>Project &amp; Knowledge Management</title>
 				<link>https://dataprd.com/categories/project--knowledge-management/</link>
 				<pubDate>Sat, 26 Aug 2017 13:07:00 +0000</pubDate>
@@ -53,6 +46,13 @@
 				<link>https://dataprd.com/categories/data-governance/</link>
 				<pubDate>Fri, 25 Aug 2017 16:11:15 +0000</pubDate>
 				<guid>https://dataprd.com/categories/data-governance/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Cluster Based Data Analytics Tutorials</title>
+				<link>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</link>
+				<pubDate>Mon, 09 Jan 2017 21:13:16 +0000</pubDate>
+				<guid>https://dataprd.com/categories/cluster-based-data-analytics-tutorials/</guid>
 				<description></description>
 			</item>
 	</channel>

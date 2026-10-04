@@ -114,10 +114,10 @@ a:focus{outline:0}
 #masthead{position:relative;margin-bottom:30px}
 .logo{float:left}
 .logo a{padding:0;margin:0;text-decoration:none;display:inline-block}
-.logo h1 a,.logo h2 a{color:#000}
-.logo h1 a:hover,.logo h2 a:hover{color:#0d49fc;text-decoration:none}
+.logo h1 a,.logo h2 a,.logo .site-title a{color:#000}
+.logo h1 a:hover,.logo h2 a:hover,.logo .site-title a:hover{color:#0d49fc;text-decoration:none}
 .logo img{display:block;max-width:100%}
-.logo h1,.logo h2{font-size:28px;text-transform:uppercase;margin:0;line-height:1.3em;font-weight:bold}
+.logo h1,.logo h2,.logo .site-title{font-size:28px;text-transform:uppercase;margin:0;line-height:1.3em;font-weight:bold}
 p.site-description{font-size:13px;margin:4px 0 0;line-height:1.35em;color:#444}
 
 /* Navigation
